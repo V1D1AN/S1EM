@@ -1,0 +1,82 @@
+# Emerging Threats 
+#
+# This distribution may contain rules under two different licenses. 
+#
+#  Rules with sids 1 through 3464, and 100000000 through 100000908 are under the GPLv2.
+#  A copy of that license is available at http://www.gnu.org/licenses/gpl-2.0.html
+#
+#  Rules with sids 2000000 through 2799999 are from Emerging Threats and are covered under the BSD License 
+#  as follows:
+#
+#*************************************************************
+#  Copyright (c) 2003-2021, Emerging Threats
+#  All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
+#  following conditions are met:
+#  
+#  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following 
+#    disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
+#  * Neither the name of the nor the names of its contributors may be used to endorse or promote products derived 
+#    from this software without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+#  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+#
+#*************************************************************
+#
+#
+#
+#
+
+# This Ruleset is EmergingThreats Open optimized for suricata-5.0-enhanced.
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP INVITE Message Flood TCP"; flow:established,to_server; content:"INVITE"; depth:6; threshold: type both , track by_src, count 100, seconds 60; reference:url,doc.emergingthreats.net/2003192; classtype:attempted-dos; sid:2003192; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP INVITE Message Flood UDP"; content:"INVITE"; depth:6; threshold: type both , track by_src, count 100, seconds 60; reference:url,doc.emergingthreats.net/2009698; classtype:attempted-dos; sid:2009698; rev:1; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP REGISTER Message Flood TCP"; flow:established,to_server; content:"REGISTER"; depth:8; threshold: type both , track by_src, count 100, seconds 60; reference:url,doc.emergingthreats.net/2003193; classtype:attempted-dos; sid:2003193; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP REGISTER Message Flood UDP"; content:"REGISTER"; depth:8; threshold: type both , track by_src, count 100, seconds 60; reference:url,doc.emergingthreats.net/2009699; classtype:attempted-dos; sid:2009699; rev:1; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP SIP UDP Softphone INVITE overflow"; dsize:>1000; content:"INVITE"; depth:6; nocase; pcre:"/\r?\n\r?\n/R"; isdataat:1000,relative; reference:bugtraq,16213; reference:cve,2006-0189; reference:url,doc.emergingthreats.net/bin/view/Main/2002848; classtype:attempted-user; sid:2002848; rev:7; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP MultiTech SIP UDP Overflow"; content:"INVITE"; nocase; depth:6; isdataat:65,relative; content:!"|0a|"; within:61; reference:cve,2005-4050; reference:url,doc.emergingthreats.net/2003237; classtype:attempted-user; sid:2003237; rev:8; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET 5060 -> $EXTERNAL_NET any (msg:"ET VOIP Multiple Unauthorized SIP Responses TCP"; flow:established,from_server; content:"SIP/2.0 401 Unauthorized"; depth:24; threshold: type both, track by_src, count 5, seconds 360; reference:url,doc.emergingthreats.net/2003194; classtype:attempted-dos; sid:2003194; rev:6; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 5060 -> $EXTERNAL_NET any (msg:"ET VOIP Multiple Unauthorized SIP Responses UDP"; content:"SIP/2.0 401 Unauthorized"; depth:24; threshold: type both, track by_src, count 5, seconds 360; reference:url,doc.emergingthreats.net/2009700; classtype:attempted-dos; sid:2009700; rev:1; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert http $EXTERNAL_NET any -> $HOME_NET $HTTP_PORTS (msg:"ET VOIP Centrality IP Phone (PA-168 Chipset) Session Hijacking"; flow:established,to_server; content:"POST "; nocase; depth:5; uricontent:"/g"; nocase; content:"back=++Back++"; nocase; pcre:"/^\/g($|[?#])/Ui"; reference:url,www.milw0rm.com/exploits/3189; reference:url,doc.emergingthreats.net/bin/view/Main/2003329; reference:cve,2007-0528; classtype:attempted-user; sid:2003329; rev:6; metadata:created_at 2010_07_30, updated_at 2019_08_22;)
+
+#alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP Asterisk Register with no URI or Version DOS Attempt"; content:"REGISTER|0d 0a|"; nocase; depth:10; content:!"SIP/"; distance:0; reference:url,labs.musecurity.com/advisories/MU-200703-01.txt; reference:url,tools.ietf.org/html/rfc3261; reference:url,doc.emergingthreats.net/2003474; classtype:attempted-dos; sid:2003474; rev:6; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP Modified Sipvicious Asterisk PBX User-Agent"; content:"|0d 0a|User-Agent|3A| Asterisk PBX"; nocase; threshold: type limit, count 1, seconds 60, track by_src; reference:url,blog.sipvicious.org/2010/11/distributed-sip-scanning-during.html; classtype:attempted-recon; sid:2012296; rev:2; metadata:created_at 2011_02_06, updated_at 2011_02_06;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP Possible Inbound VOIP Scan/Misuse With User-Agent Zoiper"; content:"|0d 0a|User-Agent|3A| Zoiper"; nocase; threshold: type limit, count 1, seconds 60, track by_src; reference:url,blog.sipvicious.org/2010/12/11-million-euro-loss-in-voip-fraud-and.html; classtype:attempted-recon; sid:2012297; rev:2; metadata:created_at 2011_02_06, updated_at 2011_02_06;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP Possible Modified Sipvicious OPTIONS Scan"; content:"OPTIONS "; depth:8; content:"ccxllrlflgig|22|<sip|3A|100"; nocase; distance:0; reference:url,code.google.com/p/sipvicious/; reference:url,blog.sipvicious.org/; classtype:attempted-recon; sid:2011422; rev:2; metadata:created_at 2010_09_28, updated_at 2010_09_28;)
+
+alert ip any any -> any 5060 (msg:"GPL VOIP SIP INVITE message flooding"; content:"INVITE"; depth:6; threshold: type both, track by_src, count 100, seconds 60; classtype:attempted-dos; sid:2100158; rev:4; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert ip any any -> any 5060 (msg:"GPL VOIP SIP 407 Proxy Authentication Required Flood"; content:"SIP/2.0 407 Proxy Authentication Required"; depth:42; threshold: type both, track by_src, count 100, seconds 60; classtype:attempted-dos; sid:2100163; rev:4; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"GPL VOIP EXPLOIT SIP UDP Softphone overflow attempt"; content:"|3B|branch|3D|"; content:"a|3D|"; pcre:"/^a\x3D[^\n]{1000,}/smi"; reference:bugtraq,16213; reference:cve,2006-0189; classtype:misc-attack; sid:2100223; rev:2; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert ip any 5060 -> any any (msg:"GPL VOIP SIP 401 Unauthorized Flood"; content:"SIP/2.0 401 Unauthorized"; depth:24; threshold: type both, track by_dst, count 100, seconds 60; classtype:attempted-dos; sid:2100162; rev:5; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 1720 (msg:"ET VOIP Possible Misuse Call from MERA RTU"; flow:to_server,established; content:"|22 c0 09 00 7a b7 07|MERA RTU|08|"; classtype:misc-attack; sid:2022022; rev:1; metadata:created_at 2015_11_02, updated_at 2015_11_02;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 1720 (msg:"ET VOIP Q.931 Call Setup - Inbound"; flow:to_server,established; content:"|08|"; offset:4; depth:1; content:"|05 04|"; distance:3; within:2; classtype:misc-activity; sid:2022023; rev:1; metadata:created_at 2015_11_02, updated_at 2015_11_02;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 1720 (msg:"ET VOIP H.323 in Q.931 Call Setup - Inbound"; flow:to_server,established; content:"|08|"; offset:4; depth:1; byte_jump:1,0,relative; content:"|05 04|"; within:2; byte_jump:1,0,relative; content:"|70|"; byte_jump:1,0,relative; content:"|7E|"; within:1; byte_test:1,!&,0x0F,3,relative; isdataat:31; classtype:misc-activity; sid:2022024; rev:1; metadata:created_at 2015_11_02, updated_at 2015_11_02;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 1720 (msg:"ET VOIP Possible Misuse Call from Cisco ooh323"; flow:to_server,established; content:"|28 06|cisco|00|"; offset:14; depth:8; content:"|b8 00 00 27 05|ooh323|06|"; within:60; reference:url,videonationsltd.co.uk/2015/04/h-323-cisco-spam-calls/; classtype:misc-attack; sid:2021066; rev:2; metadata:created_at 2015_05_07, updated_at 2020_08_19;)
+

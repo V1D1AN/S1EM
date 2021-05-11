@@ -1,0 +1,84 @@
+{
+  "version": 10100,
+  "index_patterns": [
+    "stoq-*"
+  ],
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "refresh_interval": "10s",
+      "codec": "best_compression",
+      "mapping": {
+        "total_fields": {
+          "limit": 8192
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "results": {
+        "dynamic": true,
+        "type": "object",
+        "properties": {
+           "workers": {
+               "dynamic": true,
+               "type": "object",
+               "properties": {
+                  "lief": {
+                     "dynamic": true,
+                     "type": "object",
+                     "properties": {
+                        "resources_manager": {
+                             "dynamic": true,
+                             "type": "object",
+                             "properties": {
+                                "icons": {
+                                    "dynamic": true,
+                                    "type": "object",
+                                    "properties": {
+                                         "pixels": {
+                                             "type": "text",
+				             "fields": {
+                                                 "keyword": {
+                                                 "type": "keyword",
+                                                 "ignore_above": 256
+                                                 }
+                                             }
+                                         }
+                                    }
+                                 }
+                              }
+                           }
+                        }
+                     },
+                   "yara": {
+                     "dynamic": true,
+                     "type": "object",
+                     "properties": {
+                        "matches": {
+                             "dynamic": true,
+                             "type": "object",
+                             "properties": {
+                                "strings": {
+                                      "type": "text",
+				      "fields": {
+                                         "keyword": {
+                                            "type": "keyword",
+                                            "ignore_above": 256
+                                            }
+                                         }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+               }
+            }   
+         }
+      }
+   }
+}
+

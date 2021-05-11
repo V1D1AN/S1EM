@@ -1,0 +1,80 @@
+# Emerging Threats 
+#
+# This distribution may contain rules under two different licenses. 
+#
+#  Rules with sids 1 through 3464, and 100000000 through 100000908 are under the GPLv2.
+#  A copy of that license is available at http://www.gnu.org/licenses/gpl-2.0.html
+#
+#  Rules with sids 2000000 through 2799999 are from Emerging Threats and are covered under the BSD License 
+#  as follows:
+#
+#*************************************************************
+#  Copyright (c) 2003-2021, Emerging Threats
+#  All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
+#  following conditions are met:
+#  
+#  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following 
+#    disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
+#  * Neither the name of the nor the names of its contributors may be used to endorse or promote products derived 
+#    from this software without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+#  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+#
+#*************************************************************
+#
+#
+#
+#
+
+# This Ruleset is EmergingThreats Open optimized for suricata-5.0-enhanced.
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 AUTH overflow attempt"; flow:to_server,established; content:"AUTH"; nocase; isdataat:50,relative; pcre:"/^AUTH\s[^\n]{50}/smi"; reference:bugtraq,830; reference:cve,1999-0822; reference:nessus,10184; classtype:attempted-admin; sid:2101936; rev:9; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 LIST overflow attempt"; flow:to_server,established; content:"LIST"; nocase; isdataat:10,relative; pcre:"/^LIST\s[^\n]{10}/smi"; reference:bugtraq,948; reference:cve,2000-0096; reference:nessus,10197; classtype:attempted-admin; sid:2101937; rev:8; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 XTND overflow attempt"; flow:to_server,established; content:"XTND"; nocase; isdataat:50,relative; pcre:"/^XTND\s[^\n]{50}/smi"; classtype:attempted-admin; sid:2101938; rev:5; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 APOP overflow attempt"; flow:to_server,established; content:"APOP"; nocase; isdataat:256,relative; pcre:"/^APOP\s[^\n]{256}/smi"; reference:bugtraq,1652; reference:cve,2000-0840; reference:cve,2000-0841; reference:nessus,10559; classtype:attempted-admin; sid:2101635; rev:14; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 POP3 PASS overflow attempt"; flow:to_server,established; content:"PASS"; nocase; isdataat:50,relative; pcre:"/^PASS\s[^\n]{50}/smi"; reference:bugtraq,791; reference:cve,1999-1511; reference:nessus,10325; classtype:attempted-admin; sid:2101634; rev:15; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 USER format string attempt"; flow:to_server,established; content:"USER"; nocase; pcre:"/^USER\s+[^\n]*?%/smi"; reference:bugtraq,10976; reference:bugtraq,7667; reference:cve,2003-0391; reference:nessus,11742; classtype:attempted-admin; sid:2102250; rev:6; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 UIDL negative argument attempt"; flow:to_server,established; content:"UIDL"; nocase; pcre:"/^UIDL\s+-\d/smi"; reference:bugtraq,6053; reference:cve,2002-1539; reference:nessus,11570; classtype:misc-attack; sid:2102122; rev:11; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 DELE negative argument attempt"; flow:to_server,established; content:"DELE"; nocase; pcre:"/^DELE\s+-\d/smi"; reference:bugtraq,6053; reference:bugtraq,7445; reference:cve,2002-1539; classtype:misc-attack; sid:2102121; rev:10; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 RSET overflow attempt"; flow:to_server,established; content:"RSET"; nocase; isdataat:10,relative; pcre:"/^RSET\s[^\n]{10}/smi"; classtype:attempted-admin; sid:2102112; rev:4; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 DELE overflow attempt"; flow:to_server,established; content:"DELE"; nocase; isdataat:10,relative; pcre:"/^DELE\s[^\n]{10}/smi"; classtype:attempted-admin; sid:2102111; rev:4; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 STAT overflow attempt"; flow:to_server,established; content:"STAT"; nocase; isdataat:10,relative; pcre:"/^STAT\s[^\n]{10}/smi"; classtype:attempted-admin; sid:2102110; rev:4; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 TOP overflow attempt"; flow:to_server,established; content:"TOP"; nocase; isdataat:10,relative; pcre:"/^TOP\s[^\n]{10}/smi"; classtype:attempted-admin; sid:2102109; rev:4; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 CAPA overflow attempt"; flow:to_server,established; content:"CAPA"; nocase; isdataat:10,relative; pcre:"/^CAPA\s[^\n]{10}/smi"; classtype:attempted-admin; sid:2102108; rev:4; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 x86 BSD overflow"; flow:to_server,established; content:"^|0E|1|C0 B0 3B 8D|~|0E 89 FA 89 F9|"; reference:bugtraq,133; reference:cve,1999-0006; reference:nessus,10196; classtype:attempted-admin; sid:2100286; rev:13; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 x86 BSD overflow 2"; flow:to_server,established; content:"h]^|FF D5 FF D4 FF F5 8B F5 90|f1"; classtype:attempted-admin; sid:2100287; rev:8; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 x86 Linux overflow"; flow:to_server,established; content:"|D8|@|CD 80 E8 D9 FF FF FF|/bin/sh"; classtype:attempted-admin; sid:2100288; rev:8; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 x86 SCO overflow"; flow:to_server,established; content:"V|0E|1|C0 B0 3B 8D|~|12 89 F9 89 F9|"; reference:bugtraq,156; reference:cve,1999-0006; classtype:attempted-admin; sid:2100289; rev:11; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 APOP USER overflow attempt"; flow:to_server,established; content:"APOP"; nocase; isdataat:256,relative; pcre:"/^APOP\s+USER\s[^\n]{256}/smi"; reference:bugtraq,9794; classtype:attempted-admin; sid:2102409; rev:2; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 PASS format string attempt"; flow:to_server,established; content:"PASS"; nocase; pcre:"/^PASS\s+[^\n]*?%/smi"; reference:bugtraq,10976; classtype:attempted-admin; sid:2102666; rev:2; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 110 (msg:"GPL POP3 USER overflow attempt"; flow:to_server,established; content:"USER"; nocase; isdataat:50,relative; pcre:"/^USER\s[^\n]{50}/smi"; reference:bugtraq,11256; reference:bugtraq,789; reference:cve,1999-0494; reference:nessus,10311; classtype:attempted-admin; sid:2101866; rev:14; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+

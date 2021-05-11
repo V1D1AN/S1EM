@@ -1,0 +1,25 @@
+[global]
+  sendAnonymousUsage = false
+
+[log]
+  level = "INFO"
+  format = "common"
+
+[providers]
+  [providers.docker]
+    endpoint = "unix:///var/run/docker.sock"
+    watch = true
+    exposedByDefault = false
+    swarmMode = false
+	
+[accessLog]
+  filePath = "/tmp/access.log"
+
+[api]
+  dashboard = true
+  debug = false
+
+[entryPoints]
+  [entryPoints.secure]
+    address = ":443"
+

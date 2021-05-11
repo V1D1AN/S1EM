@@ -1,0 +1,80 @@
+# Emerging Threats 
+#
+# This distribution may contain rules under two different licenses. 
+#
+#  Rules with sids 1 through 3464, and 100000000 through 100000908 are under the GPLv2.
+#  A copy of that license is available at http://www.gnu.org/licenses/gpl-2.0.html
+#
+#  Rules with sids 2000000 through 2799999 are from Emerging Threats and are covered under the BSD License 
+#  as follows:
+#
+#*************************************************************
+#  Copyright (c) 2003-2021, Emerging Threats
+#  All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
+#  following conditions are met:
+#  
+#  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following 
+#    disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
+#  * Neither the name of the nor the names of its contributors may be used to endorse or promote products derived 
+#    from this software without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+#  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+#
+#*************************************************************
+#
+#
+#
+#
+
+# This Ruleset is EmergingThreats Open optimized for suricata-5.0-enhanced.
+
+alert udp $HOME_NET any -> $EXTERNAL_NET 69 (msg:"ET TFTP Outbound TFTP Data Transfer"; content:"|00 03|"; depth:2; reference:url,doc.emergingthreats.net/2008117; classtype:policy-violation; sid:2008117; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET 69 (msg:"ET TFTP Outbound TFTP ACK"; content:"|00 04|"; depth:2; reference:url,doc.emergingthreats.net/2008118; classtype:policy-violation; sid:2008118; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET 69 (msg:"ET TFTP Outbound TFTP Error Message"; content:"|00 05|"; depth:2; reference:url,doc.emergingthreats.net/2008119; classtype:policy-violation; sid:2008119; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp any any -> any 69 (msg:"GPL TFTP GET filename overflow attempt"; content:"|00 01|"; depth:2; isdataat:100,relative; content:!"|00|"; within:100; reference:bugtraq,5328; reference:cve,2002-0813; classtype:attempted-admin; sid:2101941; rev:10; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert udp $EXTERNAL_NET any -> $HOME_NET 69 (msg:"GPL TFTP root directory"; content:"|00 01|/"; depth:3; reference:cve,1999-0183; classtype:bad-unknown; sid:2100520; rev:6; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert udp $EXTERNAL_NET any -> $HOME_NET 69 (msg:"GPL TFTP parent directory"; content:".."; offset:2; reference:cve,1999-0183; reference:cve,2002-1209; classtype:bad-unknown; sid:2100519; rev:7; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 69 (msg:"GPL TFTP Put"; content:"|00 02|"; depth:2; reference:cve,1999-0183; classtype:bad-unknown; sid:2100518; rev:8; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert udp any any -> any 69 (msg:"GPL TFTP PUT filename overflow attempt"; content:"|00 02|"; depth:2; isdataat:100,relative; content:!"|00|"; within:100; reference:bugtraq,7819; reference:bugtraq,8505; reference:cve,2003-0380; classtype:attempted-admin; sid:2102337; rev:9; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert udp $EXTERNAL_NET any -> $HOME_NET 69 (msg:"GPL TFTP NULL command attempt"; content:"|00 00|"; depth:2; reference:bugtraq,7575; classtype:bad-unknown; sid:2102336; rev:4; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert udp any any -> any 69 (msg:"GPL TFTP GET shadow"; content:"|00 01|"; depth:2; content:"shadow"; offset:2; nocase; classtype:successful-admin; sid:2101442; rev:5; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert udp any any -> any 69 (msg:"GPL TFTP GET passwd"; content:"|00 01|"; depth:2; content:"passwd"; offset:2; nocase; classtype:successful-admin; sid:2101443; rev:5; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert udp $EXTERNAL_NET any -> $HOME_NET 69 (msg:"GPL TFTP Get"; content:"|00 01|"; depth:2; classtype:bad-unknown; sid:2101444; rev:4; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert udp any any -> any 69 (msg:"GPL TFTP GET Admin.dll"; content:"|00 01|"; depth:2; content:"admin.dll"; offset:2; nocase; reference:url,www.cert.org/advisories/CA-2001-26.html; classtype:successful-admin; sid:2101289; rev:5; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert udp any any -> any 69 (msg:"GPL TFTP GET nc.exe"; content:"|00 01|"; depth:2; content:"nc.exe"; offset:2; nocase; classtype:successful-admin; sid:2101441; rev:5; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 69 (msg:"GPL TFTP MISC TFTP32 Get Format string attempt"; content:"|00 01 25 2E|"; depth:4; reference:url,www.securityfocus.com/archive/1/422405/30/0/threaded; reference:url,www.critical.lt/?vulnerabilities/200; classtype:attempted-admin; sid:2101222; rev:3; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert udp $EXTERNAL_NET any -> $HOME_NET 69 (msg:"ET TFTP TFTPGUI Long Transport Mode Buffer Overflow"; content:"|00 02|"; depth:2; content:"|00|"; distance:0; within:50; content:!"|00|"; distance:0; within:9; reference:url,www.exploit-db.com/exploits/12482/; reference:url,packetstormsecurity.org/files/view/96395/tftputilgui-dos.rb.txt; reference:url,securityfocus.com/bid/39872/; classtype:attempted-dos; sid:2012051; rev:2; metadata:created_at 2010_12_14, updated_at 2020_08_20;)
+
+alert udp $HOME_NET any -> [$EXTERNAL_NET,!255.255.255.255] 69 (msg:"ET TFTP Outbound TFTP Read Request"; content:"|00 01|"; depth:2; reference:url,doc.emergingthreats.net/2008120; classtype:policy-violation; sid:2008120; rev:4; metadata:created_at 2010_07_30, updated_at 2017_01_12;)
+
+alert udp $HOME_NET any -> [$EXTERNAL_NET,!255.255.255.255] 69 (msg:"ET TFTP Outbound TFTP Write Request"; content:"|00 02|"; depth:2; reference:url,doc.emergingthreats.net/2008116; classtype:policy-violation; sid:2008116; rev:4; metadata:created_at 2010_07_30, updated_at 2017_01_25;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET 69 (msg:"ET TFTP Outbound TFTP Data Transfer with Cisco config"; content:"|00 03|"; depth:2; content:"|0a 21 20|version|20|"; distance:2; within:12; classtype:policy-violation; sid:2015857; rev:5; metadata:created_at 2012_10_31, former_category TFTP, updated_at 2017_07_19;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET 69 (msg:"ET TFTP Outbound TFTP Data Transfer With Cisco Config 2"; content:"|00 03|"; depth:2; content:"NVRAM config last update"; distance:0; classtype:policy-violation; sid:2024481; rev:2; metadata:affected_product Cisco_ASA, affected_product Cisco_PIX, affected_product CISCO_Catalyst, attack_target Networking_Equipment, created_at 2017_07_19, deployment Perimeter, former_category TFTP, performance_impact Moderate, signature_severity Major, updated_at 2017_07_19;)
+

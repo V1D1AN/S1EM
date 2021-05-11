@@ -1,0 +1,278 @@
+# Emerging Threats 
+#
+# This distribution may contain rules under two different licenses. 
+#
+#  Rules with sids 1 through 3464, and 100000000 through 100000908 are under the GPLv2.
+#  A copy of that license is available at http://www.gnu.org/licenses/gpl-2.0.html
+#
+#  Rules with sids 2000000 through 2799999 are from Emerging Threats and are covered under the BSD License 
+#  as follows:
+#
+#*************************************************************
+#  Copyright (c) 2003-2021, Emerging Threats
+#  All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
+#  following conditions are met:
+#  
+#  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following 
+#    disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
+#  * Neither the name of the nor the names of its contributors may be used to endorse or promote products derived 
+#    from this software without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+#  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+#
+#*************************************************************
+#
+#
+#
+#
+
+# This Ruleset is EmergingThreats Open optimized for suricata-5.0-enhanced.
+
+alert tcp $HOME_NET 1024: -> $EXTERNAL_NET 1024: (msg:"ET P2P Ares Server Connection"; flow:established,to_server; dsize:<70; content:"r|be|bloop|00|dV"; content:"Ares|00 0a|"; distance:16; reference:url,aresgalaxy.sourceforge.net; reference:url,doc.emergingthreats.net/bin/view/Main/2008591; classtype:policy-violation; sid:2008591; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET 6969 (msg:"ET P2P BitTorrent Announce"; flow: to_server,established; content:"/announce"; reference:url,bitconjurer.org/BitTorrent/protocol.html; reference:url,doc.emergingthreats.net/bin/view/Main/2000369; classtype:policy-violation; sid:2000369; rev:6; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P Edonkey IP Request"; dsize:4; content:"|e3 1b|"; depth:2; flowbits:set,BEedk.ip.requestect; flowbits:noalert; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003308; classtype:policy-violation; sid:2003308; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $EXTERNAL_NET 1024:65535 -> $HOME_NET 1024:65535 (msg:"ET P2P Edonkey IP Reply"; flowbits:isset,BEedk.ip.requestect; dsize:<20; content:"|e3 1c|"; depth:2; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003309; classtype:policy-violation; sid:2003309; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $EXTERNAL_NET 1024:65535 -> $HOME_NET 1024:65535 (msg:"ET P2P Edonkey IP Query End"; dsize:<20; content:"|e3 1d|"; depth:2; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003316; classtype:policy-violation; sid:2003316; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $EXTERNAL_NET 1024:65535 -> $HOME_NET 1024:65535 (msg:"ET P2P Edonkey Publicize File ACK"; dsize:<20; content:"|e3 0d|"; depth:2; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003311; classtype:policy-violation; sid:2003311; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P Edonkey Connect Request"; dsize:25; content:"|e3 0a|"; depth:2; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003312; classtype:policy-violation; sid:2003312; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P Edonkey Search Request (by file hash)"; dsize:19; content:"|e3 0e 14|"; depth:3; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003314; classtype:policy-violation; sid:2003314; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P Edonkey Get Sources Request (by hash)"; dsize:19; content:"|e3 9a|"; depth:2; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003318; classtype:policy-violation; sid:2003318; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert tcp $EXTERNAL_NET 1024:65535 -> $HOME_NET 4660:4799 (msg:"ET P2P Edonkey Server Status"; flow:established; dsize:14; content:"|e3 09 00 00 00 34|"; depth:6; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003324; classtype:policy-violation; sid:2003324; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P GnucDNA UDP Ultrapeer Traffic"; content:"SCP@|83|DNA@"; threshold: type both,track by_src,count 10,seconds 600; reference:url,doc.emergingthreats.net/bin/view/Main/2002760; classtype:policy-violation; sid:2002760; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P Kazaa over UDP"; content:"KaZaA"; nocase; threshold: type threshold, track by_src,count 10, seconds 60; reference:url,www.kazaa.com/us/index.htm; reference:url,doc.emergingthreats.net/bin/view/Main/2001796; classtype:policy-violation; sid:2001796; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $EXTERNAL_NET 41170 -> $HOME_NET any (msg:"ET P2P Manolito Connection (1)"; dsize:<48; content:"|3d 4a d9|"; depth:3; reference:url,doc.emergingthreats.net/2009097; classtype:policy-violation; sid:2009097; rev:2; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 41170 (msg:"ET P2P Manolito Ping"; dsize:<24; content:"|3d|"; depth:1; content:"|d9|"; distance:1; content:"|ed bb|"; distance:13; threshold: type limit, track by_src, seconds 300, count 1; reference:url,doc.emergingthreats.net/2009098; classtype:policy-violation; sid:2009098; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 8247 -> $EXTERNAL_NET 8247 (msg:"ET P2P Octoshape UDP Session"; threshold: type both, count 2, seconds 60, track by_src; reference:url,msmvps.com/blogs/bradley/archive/2009/01/20/peer-to-peer-on-cnn.aspx; reference:url,doc.emergingthreats.net/2009986; classtype:trojan-activity; sid:2009986; rev:2; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp any any -> any any (msg:"ET P2P Phatbot Control Connection"; flow: established; content:"Wonk-"; content:"|00|#waste|00|"; within: 15; reference:url,www.lurhq.com/phatbot.html; reference:url,doc.emergingthreats.net/bin/view/Main/2000015; classtype:trojan-activity; sid:2000015; rev:6; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $EXTERNAL_NET 2234 -> $HOME_NET any (msg:"ET P2P Soulseek Filesearch Results"; flow: from_server,established; content:"|09 00 00 00 78|"; reference:url,www.slsknet.org; reference:url,doc.emergingthreats.net/bin/view/Main/2001187; classtype:policy-violation; sid:2001187; rev:6; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET 1024: (msg:"ET P2P TOR 1.0 Server Key Retrieval"; flow:established,to_server; content:"GET /tor/server/"; depth:16; threshold:type limit, track by_src, count 1, seconds 30; reference:url,tor.eff.org; reference:url,doc.emergingthreats.net/2002950; classtype:policy-violation; sid:2002950; rev:6; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET 1024: (msg:"ET P2P TOR 1.0 Status Update"; flow:established,to_server; content:"GET /tor/status/"; depth:16; threshold:type limit, track by_src, count 1, seconds 60; reference:url,tor.eff.org; reference:url,doc.emergingthreats.net/2002951; classtype:policy-violation; sid:2002951; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET 1024: (msg:"ET P2P TOR 1.0 Inbound Circuit Traffic"; flow:established; content:"TOR"; content:"<identity>"; rawbytes; distance:10; within:35; threshold:type limit, track by_src, count 1, seconds 120; reference:url,tor.eff.org; reference:url,doc.emergingthreats.net/2002952; classtype:policy-violation; sid:2002952; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET 1024: (msg:"ET P2P TOR 1.0 Outbound Circuit Traffic"; flow:established; content:"TOR"; content:"<identity>"; rawbytes; distance:10; within:35; threshold:type limit, track by_src, count 1, seconds 120; reference:url,tor.eff.org; reference:url,doc.emergingthreats.net/2002953; classtype:policy-violation; sid:2002953; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P BitTorrent DHT ping request"; content:"d1|3a|ad2|3a|id20|3a|"; depth:12; nocase; threshold: type both, count 1, seconds 300, track by_src; reference:url,wiki.theory.org/BitTorrentDraftDHTProtocol; reference:url,doc.emergingthreats.net/bin/view/Main/2008581; classtype:policy-violation; sid:2008581; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P BitTorrent DHT announce_peers request"; content:"d1|3a|ad2|3a|id20|3a|"; nocase; depth:14; content:"e1|3a|q13|3a|announce_peer1|3a|"; nocase; distance:55; threshold: type both, count 1, seconds 300, track by_src; reference:url,wiki.theory.org/BitTorrentDraftDHTProtocol; reference:url,doc.emergingthreats.net/bin/view/Main/2008585; classtype:policy-violation; sid:2008585; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P LimeWire P2P Traffic"; flow: established; content:"User-Agent|3a| LimeWire"; nocase; reference:url,www.limewire.com; reference:url,doc.emergingthreats.net/bin/view/Main/2001808; classtype:policy-violation; sid:2001808; rev:8; metadata:created_at 2010_07_30, updated_at 2019_10_15;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P LimeWire P2P Traffic"; flow: established; content:"Server|3a| LimeWire"; nocase; reference:url,www.limewire.com; reference:url,doc.emergingthreats.net/bin/view/Main/2007800; classtype:policy-violation; sid:2007800; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET 8247 (msg:"ET P2P Octoshape P2P streaming media"; content:"POST / HTTP/1."; depth:64; content:"Oshtcp-streamtype|3a|"; threshold: type limit, track by_src, count 1, seconds 600; reference:url,doc.emergingthreats.net/2010008; classtype:policy-violation; sid:2010008; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert http $HOME_NET any -> $EXTERNAL_NET $HTTP_PORTS (msg:"ET P2P ABC Torrent User-Agent (ABC/ABC-3.1.0)"; flow:to_server,established; content:"|0d 0a|User-Agent|3a| ABC/ABC"; nocase; reference:url,pingpong-abc.sourceforge.net; reference:url,doc.emergingthreats.net/bin/view/Main/2003475; classtype:trojan-activity; sid:2003475; rev:8; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P BitTorrent DHT nodes reply"; content:"d1|3a|rd2|3a|id20|3a|"; nocase; depth:12; content:"5|3a|nodes"; nocase; distance:20; within:7; threshold: type both, count 1, seconds 300, track by_src; reference:url,wiki.theory.org/BitTorrentDraftDHTProtocol; reference:url,doc.emergingthreats.net/bin/view/Main/2008583; classtype:policy-violation; sid:2008583; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Direct Connect Traffic (client-server)"; flow:from_client,established; content:"$MyINFO"; depth:7; reference:url,en.wikipedia.org/wiki/Direct_connect_file-sharing_application; reference:url,doc.emergingthreats.net/bin/view/Main/2002814; classtype:policy-violation; sid:2002814; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert tcp $HOME_NET any -> $EXTERNAL_NET 4660:4799 (msg:"ET P2P eDonkey File Status"; flow: to_server,established; content:"|e3 14|"; depth: 2; reference:url,www.edonkey.com; reference:url,doc.emergingthreats.net/bin/view/Main/2001296; classtype:policy-violation; sid:2001296; rev:9; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert tcp $HOME_NET any -> $EXTERNAL_NET 4660:4799 (msg:"ET P2P eDonkey File Status Request"; flow: to_server,established; content:"|e3 11|"; depth: 2; reference:url,www.edonkey.com; reference:url,doc.emergingthreats.net/bin/view/Main/2001297; classtype:policy-violation; sid:2001297; rev:10; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET 4660:4799 (msg:"ET P2P eDonkey Server Status Request"; content:"|e3 96|"; depth: 2; reference:url,www.edonkey.com; reference:url,doc.emergingthreats.net/bin/view/Main/2001298; classtype:policy-violation; sid:2001298; rev:9; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $HOME_NET 4660:4799 -> $EXTERNAL_NET any (msg:"ET P2P eDonkey Server Status"; content:"|e3 97|"; depth: 2; reference:url,www.edonkey.com; reference:url,doc.emergingthreats.net/bin/view/Main/2001299; classtype:policy-violation; sid:2001299; rev:9; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp any 1024: -> any 1024: (msg:"ET P2P Gnutella TCP Traffic"; flow: established,to_server; content:"GNUTELLA"; depth:8; content:"200 OK|0d 0a|"; within:15; threshold: type both,track by_src,count 5,seconds 360; reference:url,doc.emergingthreats.net/bin/view/Main/2007801; classtype:policy-violation; sid:2007801; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P KuGoo P2P Connection"; dsize:<30; content:"|64|"; depth:1; content:"|70|"; distance:5; content:"|50 37|"; distance:4; reference:url,koogoo.com; reference:url,doc.emergingthreats.net/2009966; classtype:policy-violation; sid:2009966; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp any any -> any any (msg:"ET P2P Overnet (Edonkey) Server Announce"; content:"|00 00 02 03 00 6c 6f 63|"; offset: 36; content:"|00 62 63 70 3a 2f 2f|"; distance: 1; reference:url,www.overnet.com; reference:url,doc.emergingthreats.net/bin/view/Main/2000335; classtype:policy-violation; sid:2000335; rev:9; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $EXTERNAL_NET 2240 -> $HOME_NET 1024: (msg:"ET P2P SoulSeek P2P Login Response"; flow:from_server,established; content:"|5c 01 00 00 01 00 00 00|"; depth:8; reference:url,www.slsknet.org; reference:url,doc.emergingthreats.net/2008611; classtype:policy-violation; sid:2008611; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P Vuze BT Connection"; flow:established; content:"|00 00|"; depth:2; content:"|05|AZVER|01|"; distance:5; within:7; content:"appid"; within:10; threshold:type limit, track by_src, count 10, seconds 600; reference:url,vuze.com; reference:url,doc.emergingthreats.net/2010139; classtype:policy-violation; sid:2010139; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET any (msg:"ET P2P Vuze BT UDP Connection (2)"; dsize:94; content:"|00 00 04|"; depth:3; content:"|00 00 00 00 00|"; distance:14; within:5; content:"|ff ff ff ff 00 00 00 00 02 05 21|"; distance:8; within:11; content:"|00 00 00 00 00 00|"; distance:25; within:6; content:"|00 00|"; distance:20; within:2; reference:url,vuze.com; reference:url,doc.emergingthreats.net/2010141; classtype:policy-violation; sid:2010141; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 1024:65535 (msg:"ET P2P Vuze BT UDP Connection (3)"; dsize:80; content:"|00 00 04|"; depth:3; content:"|00 00 00 00 00|"; distance:14; within:5; content:"|02 05 21 04|"; distance:4; within:4; threshold:type limit, track by_dst, count 10, seconds 600; reference:url,doc.emergingthreats.net/2010142; classtype:policy-violation; sid:2010142; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $EXTERNAL_NET any -> $HOME_NET 1024:65535 (msg:"ET P2P Vuze BT UDP Connection (4)"; dsize:<300; content:"|00 00 04|"; depth:3; content:"|00 00 00 00 00|"; distance:14; within:5; content:"|ff ff ff ff|"; distance:8; within:4; reference:url,doc.emergingthreats.net/2010143; classtype:policy-violation; sid:2010143; rev:3; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P eMule KAD Network Connection Request(2)"; dsize:35; content:"|e4 20|"; depth:2; threshold: type limit, count 5, seconds 600, track by_src; reference:url,emule-project.net; reference:url,doc.emergingthreats.net/2009968; classtype:policy-violation; sid:2009968; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P eMule KAD Network Firewalled Request"; dsize:35; content:"|e4 50|"; depth:2; threshold: type limit, count 5, seconds 600, track by_src; reference:url,emule-project.net; reference:url,doc.emergingthreats.net/2009969; classtype:policy-violation; sid:2009969; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P eMule KAD Network Server Status Request"; dsize:44; content:"|8c 97|"; depth:2; threshold: type limit, count 5, seconds 600, track by_src; reference:url,emule-project.net; reference:url,doc.emergingthreats.net/2009972; classtype:policy-violation; sid:2009972; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert tcp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P eMule KAD Network Send Username"; flow:established; content:"|e3|"; depth:1; content:"|00 00 00 01|"; distance:1; within:4; byte_test:1,<,51,37; threshold: type limit, count 5, seconds 600, track by_src; reference:url, emule-project.net; reference:url,doc.emergingthreats.net/2009973; classtype:policy-violation; sid:2009973; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Gnutella Connect"; flow: established,to_server; content:"GNUTELLA CONNECT/"; nocase; depth:17; reference:url,www.gnutella.com; reference:url,doc.emergingthreats.net/bin/view/Main/2001664; classtype:policy-violation; sid:2001664; rev:7; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Gnutella TCP Ultrapeer Traffic"; flow: established,to_server; content:"GNUTELLA"; depth:8; content:"X-Ultrapeer|3a| True"; nocase; threshold: type both,track by_src,count 5,seconds 3600; reference:url,doc.emergingthreats.net/bin/view/Main/2002761; classtype:policy-violation; sid:2002761; rev:6; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P Limewire P2P UDP Traffic"; dsize:35; content:"|49 50 40 83 53 43 50 41 00 00|"; offset:25; depth:10; threshold: type both, track by_src, count 1, seconds 360; reference:url,www.limewire.com; reference:url,doc.emergingthreats.net/bin/view/Main/2001809; classtype:policy-violation; sid:2001809; rev:8; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P BitTorrent DHT get_peers request"; content:"d1|3a|ad2|3a|id20|3a|"; nocase; offset:12; content:"9|3a|info_hash20|3a|"; nocase; distance:20; within:14; content:"e1|3a|q9|3a|get_peers1|3a|"; nocase; distance:20; threshold: type both, count 1, seconds 300, track by_src; reference:url,wiki.theory.org/BitTorrentDraftDHTProtocol; reference:url,doc.emergingthreats.net/bin/view/Main/2008584; classtype:policy-violation; sid:2008584; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp any any -> any 4660:4799 (msg:"ET P2P ed2k request part"; flow: to_server,established; content:"|e3|"; offset: 1; content:"|00 00 00 47|"; distance: 2; within: 4; reference:url,www.giac.org/practical/GCIH/Ian_Gosling_GCIH.pdf; reference:url,doc.emergingthreats.net/bin/view/Main/2000332; classtype:policy-violation; sid:2000332; rev:11; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp any any -> any 4660:4799 (msg:"ET P2P ed2k file request answer"; flow: to_server,established; content:"|e3|"; offset: 1; content:"|00 00 00 59|"; distance: 2; within: 4; reference:url,www.giac.org/practical/GCIH/Ian_Gosling_GCIH.pdf; reference:url,doc.emergingthreats.net/bin/view/Main/2000333; classtype:policy-violation; sid:2000333; rev:11; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert tcp $HOME_NET 4660:4799 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P Edonkey Client to Server Hello"; flow:established; dsize:>5; content:"|e3|"; offset:1; content:"|01|"; distance:4; within:5; content:"|02 01 00 01|"; distance:26; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003323; classtype:policy-violation; sid:2003323; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert tcp $HOME_NET 1024: -> $EXTERNAL_NET 2240 (msg:"ET P2P SoulSeek P2P Server Connection"; flow:established,to_server; content:"|01 00 00 00|"; offset:4; reference:url,www.slsknet.org; reference:url,doc.emergingthreats.net/2008595; classtype:policy-violation; sid:2008595; rev:8; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert tcp any any -> any 4660:4799 (msg:"ET P2P ed2k connection to server"; flow: to_server,established; content:"|e3|"; depth:1; content:"|00 00 00 01|"; distance:2; within:4; reference:url,www.giac.org/practical/GCIH/Ian_Gosling_GCIH.pdf; reference:url,doc.emergingthreats.net/bin/view/Main/2000330; classtype:policy-violation; sid:2000330; rev:13; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert tcp $EXTERNAL_NET 1024:65535 -> $HOME_NET 4660:4799 (msg:"ET P2P Edonkey Server Message"; flow:established; dsize:>10; content:"|e3|"; depth:1; content:"|38|"; distance:4; within:5; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003321; classtype:policy-violation; sid:2003321; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert tcp $EXTERNAL_NET 1024:65535 -> $HOME_NET 4660:4799 (msg:"ET P2P Edonkey Server List"; flow:established; dsize:>12; content:"|e3|"; depth:1; content:"|32|"; distance:4; within:5; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003322; classtype:policy-violation; sid:2003322; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert tcp $EXTERNAL_NET 443 -> $HOME_NET any (msg:"ET P2P MS Foldershare Login Detected"; flow:established,to_client; content:"|0b|FolderShare|30 81 9f 30|"; nocase; offset:392; depth:18; reference:url,www.foldershare.com; reference:url,doc.emergingthreats.net/bin/view/Main/2002673; classtype:policy-violation; sid:2002673; rev:9; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P BitTorrent DHT find_node request"; content:"d1|3a|ad2|3a|id20|3a|"; nocase; depth:24; content:"6|3a|target20|3a|"; nocase; distance:20; content:"e1|3a|q9|3a|find_node1|3a|"; nocase; distance:20; content:"e1|3a|q9|3a|find_node1|3a|"; distance:20; nocase; threshold: type both, count 1, seconds 300, track by_src; reference:url,wiki.theory.org/BitTorrentDraftDHTProtocol; reference:url,doc.emergingthreats.net/bin/view/Main/2008582; classtype:policy-violation; sid:2008582; rev:7; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET P2P Ocelot BitTorrent Server in Use"; flow:established,from_server; content:"HTTP/1.1 200 |0d 0a|Server|3a| Ocelot "; depth:30; classtype:policy-violation; sid:2012467; rev:2; metadata:created_at 2011_03_10, updated_at 2011_03_10;)
+
+#alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"GPL P2P Fastrack kazaa/morpheus traffic"; flow:to_server,established; content:"GET "; depth:4; content:"UserAgent|3A| KazaaClient"; reference:url,www.kazaa.com; classtype:policy-violation; sid:2101699; rev:11; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P JoltID Agent New Code Download"; flow: established; content:"PeerEnabler"; http_header; fast_pattern:only; reference:url,www.joltid.com; reference:url,forum.treweeke.com/lofiversion/index.php/t597.html; reference:url,doc.emergingthreats.net/2001652; classtype:trojan-activity; sid:2001652; rev:34; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET 6881:6889 (msg:"GPL P2P BitTorrent transfer"; flow:to_server,established; content:"|13|BitTorrent protocol"; depth:20; classtype:policy-violation; sid:2102181; rev:3; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $EXTERNAL_NET 6666:6669 -> $HOME_NET any (msg:"GPL P2P eMule buffer overflow attempt"; flow:to_client,established; content:"PRIVMSG"; nocase; content:"|01|SENDLINK|7c|"; distance:0; pcre:"/^PRIVMSG\s+[^\s]+\s+\x3a\s*\x01SENDLINK\x7c[^\x7c]{69}/smi"; reference:bugtraq,10039; reference:nessus,12233; classtype:attempted-user; sid:2102584; rev:5; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp any 4711 -> $HOME_NET any (msg:"GPL P2P eDonkey server response"; flow:established,from_server; content:"Server|3A| eMule"; reference:url,www.emule-project.net; classtype:policy-violation; sid:2102587; rev:4; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"GPL P2P GNUTella client request"; flow:to_server,established; content:"GNUTELLA OK"; depth:40; classtype:policy-violation; sid:2100557; rev:7; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"GPL P2P GNUTella client request"; flow:to_server,established; content:"GNUTELLA"; depth:8; classtype:policy-violation; sid:2101432; rev:7; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"GPL P2P Outbound GNUTella client request"; flow:to_server,established; content:"GNUTELLA CONNECT"; depth:40; classtype:policy-violation; sid:2100556; rev:6; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
+
+#alert udp $HOME_NET any -> any 53 (msg:"ET P2P Possible Bittorrent Activity - Multiple DNS Queries For tracker hosts"; content:"|01 00 00 01 00 00 00 00 00 00|"; depth:10; offset:2; content:"|07|tracker"; fast_pattern; distance:0; threshold: type both, count 3, seconds 10, track by_src; classtype:policy-violation; sid:2016662; rev:3; metadata:created_at 2013_03_25, updated_at 2013_03_25;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P eMule KAD Network Connection Request"; dsize:35; content:"|e4 21|"; depth:2; threshold: type limit, count 1, seconds 300, track by_src; reference:url,emule-project.net; reference:url,doc.emergingthreats.net/2009967; classtype:policy-violation; sid:2009967; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Torrent Client User-Agent (Solid Core/0.82)"; flow:to_server,established; content:"User-Agent|3a| Solid Core/"; http_header; reference:url,sunbeltsecurity.com/partnerresources/cwsandbox/md5.aspx?id=4a9f376e8d01cb5f7990576ed927869b; classtype:policy-violation; sid:2013869; rev:7; metadata:created_at 2011_11_08, updated_at 2011_11_08;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P BitTorrent Traffic"; flow: established; content:"|0000400907000000|"; depth:8; threshold: type limit, count 1, seconds 120, track by_src; reference:url,bitconjurer.org/BitTorrent/protocol.html; reference:url,doc.emergingthreats.net/bin/view/Main/2000357; classtype:policy-violation; sid:2000357; rev:9; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET any (msg:"ET P2P Vuze BT UDP Connection (5)"; dsize:<20; content:"|00 00 04 17 27 10 19 80 00 00 00 00|"; depth:12; threshold: type limit, count 1, seconds 120, track by_src; reference:url,vuze.com; reference:url,doc.emergingthreats.net/2010144; classtype:policy-violation; sid:2010144; rev:6; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Ares over UDP"; content:"Ares "; offset:36; depth:7; threshold: type limit, count 1, seconds 300, track by_src; reference:url,doc.emergingthreats.net/bin/view/Main/2003437; classtype:policy-violation; sid:2003437; rev:8; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P QVOD P2P Sharing Traffic detected (udp) beacon"; content:"|13|QVOD protocol|00 00 00 00 00 00 00 00 00 00 00 00 00 00|"; depth:42; reference:md5,816a02a1250d90734059ed322ace72c7; classtype:policy-violation; sid:2015966; rev:2; metadata:created_at 2012_11_29, updated_at 2012_11_29;)
+
+#alert udp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P QVOD P2P Sharing Traffic detected (udp) payload"; content:"QVOD"; depth:32; reference:md5,816a02a1250d90734059ed322ace72c7; classtype:policy-violation; sid:2015967; rev:2; metadata:created_at 2012_11_29, updated_at 2012_11_29;)
+
+#alert udp $EXTERNAL_NET 1024:65535 -> $HOME_NET 1024:65535 (msg:"ET P2P Edonkey Search Reply"; dsize:>200; content:"|e3 0f|"; depth:2; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003315; classtype:policy-violation; sid:2003315; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P Edonkey Publicize File"; dsize:>15; content:"|e3 0c|"; depth:2; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003310; classtype:policy-violation; sid:2003310; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+#alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024:65535 (msg:"ET P2P eMule Kademlia Hello Request"; dsize:<48; content:"|e4 11|"; depth:2; threshold: type limit, count 5, seconds 600, track by_src; reference:url,emule-project.net; reference:url,doc.emergingthreats.net/2009970; classtype:policy-violation; sid:2009970; rev:5; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET !7680 (msg:"ET P2P BitTorrent peer sync"; flow:established; content:"|00 00 00 0d 06 00|"; depth:6; threshold: type limit, track by_dst, seconds 300, count 1; reference:url,bitconjurer.org/BitTorrent/protocol.html; reference:url,doc.emergingthreats.net/bin/view/Main/2000334; classtype:policy-violation; sid:2000334; rev:13; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET 7680 (msg:"ET P2P MS WUDO Peer Sync"; flow:established; content:"|00 00 00 0d 06 00|"; depth:6; reference:url,bitconjurer.org/BitTorrent/protocol.html; reference:url,windows.microsoft.com/en-us/windows-10/windows-update-delivery-optimization-faq; classtype:policy-violation; sid:2022371; rev:1; metadata:created_at 2016_01_14, updated_at 2016_01_14;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET P2P BitTorrent - Torrent File Downloaded"; flow:established,to_client; file_data; content:"d8|3a|announce"; within:11; content:!"mapfactor.com"; classtype:policy-violation; sid:2014734; rev:5; metadata:created_at 2012_05_10, updated_at 2012_05_10;)
+
+alert udp $HOME_NET 1024:65535 -> $EXTERNAL_NET 1024: (msg:"ET P2P Vuze BT UDP Connection"; dsize:<80; content:!"|00 22 02 00|"; depth: 4; content:"|00 00 04|"; distance:8; within:3; content:"|00 00 00 00 00|"; distance:6; within:5; threshold: type limit, count 1, seconds 120, track by_src; reference:url,vuze.com; reference:url,doc.emergingthreats.net/2010140; classtype:policy-violation; sid:2010140; rev:7; metadata:created_at 2010_07_30, updated_at 2016_11_01;)
+
+alert udp $HOME_NET [!3389,1024:65535] -> $EXTERNAL_NET [!3389,1024:65535] (msg:"ET P2P Edonkey Search Request (search by name)"; dsize:>5; content:"|e3 98|"; depth:2; content:"|01|"; within:3; reference:url,www.giac.org/certified_professionals/practicals/gcih/0446.php; reference:url,doc.emergingthreats.net/bin/view/Main/2003319; classtype:policy-violation; sid:2003319; rev:4; metadata:created_at 2010_07_30, updated_at 2019_01_18;)
+
+alert udp $HOME_NET 1024:65535 -> [$EXTERNAL_NET,!224.0.0.0/4] 1024:65535 (msg:"ET P2P ThunderNetwork UDP Traffic"; dsize:<38; content:"|32 00 00 00|"; depth:4; content:"|00 00 00 00|"; distance:1; threshold:type limit, track by_src, count 1, seconds 300; reference:url,xunlei.com; reference:url,en.wikipedia.org/wiki/Xunlei; reference:url,doc.emergingthreats.net/2009099; classtype:policy-violation; sid:2009099; rev:4; metadata:created_at 2010_07_30, updated_at 2019_01_28;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET P2P Soulseek"; flow: established; content:"slsknet"; reference:url,www.slsknet.org; reference:url,doc.emergingthreats.net/bin/view/Main/2001188; classtype:policy-violation; sid:2001188; rev:9; metadata:created_at 2010_07_30, updated_at 2019_09_27;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"GPL P2P BitTorrent announce request"; flow:to_server,established; http.method; content:"GET"; http.uri; content:"/announce"; content:"info_hash="; content:"event=started"; classtype:policy-violation; sid:2102180; rev:7; metadata:created_at 2010_09_23, updated_at 2020_04_21;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P QVOD P2P Sharing Traffic detected (tcp)"; flow:established,from_client; urilen:8; content:"|13|QVOD protocol|00 00 00 00 00 00 00 00 00 00 00 00 00 00|"; http.method; content:"POST"; http.uri; content:"/service"; classtype:policy-violation; sid:2014459; rev:3; metadata:created_at 2012_04_03, updated_at 2020_04_21;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P BearShare P2P Gnutella Client HTTP Request "; flow:to_server,established; http.uri; content:"/gnutella/"; nocase; content:"?client=BEAR"; nocase; content:"&version="; reference:url,doc.emergingthreats.net/bin/view/Main/2006379; classtype:trojan-activity; sid:2006379; rev:7; metadata:created_at 2010_07_30, updated_at 2020_04_22;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (Enhanced CTorrent 3.x)"; flow:to_server,established; http.user_agent; content:"Enhanced-CTorrent"; reference:url,www.rahul.net/dholmes/ctorrent; reference:url,doc.emergingthreats.net/2011703; classtype:policy-violation; sid:2011703; rev:7; metadata:created_at 2010_07_30, updated_at 2020_04_23;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (Opera/10.x)"; flow:to_server,established; http.user_agent; content:"Opera BitTorrent, Opera/"; reference:url,www.opera.com; reference:url,doc.emergingthreats.net/2011701; classtype:policy-violation; sid:2011701; rev:7; metadata:created_at 2010_07_30, updated_at 2020_04_23;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Vagaa peer-to-peer (Transfer)"; flow:from_client,established; http.header; content:"VAGAA-OPERATION|3a| Transfer|0d 0a|"; reference:url,en.wikipedia.org/wiki/Vagaa; classtype:policy-violation; sid:2018012; rev:3; metadata:created_at 2014_01_27, updated_at 2020_04_27;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (uTorrent)"; flow:to_server,established; http.header; content:"User-Agent|3a 20|uTorrent"; reference:url,www.utorrent.com; reference:url,doc.emergingthreats.net/2011706; classtype:policy-violation; sid:2011706; rev:7; metadata:created_at 2010_07_30, updated_at 2020_04_30;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (Transmission/1.x)"; flow:established,to_server; http.user_agent; content:"Transmission/"; depth:13; reference:url,www.transmissionbt.com; reference:url,doc.emergingthreats.net/2011699; classtype:policy-violation; sid:2011699; rev:7; metadata:created_at 2010_07_30, former_category P2P, updated_at 2020_08_18;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (Deluge 1.x.x)"; flow:to_server,established; http.user_agent; content:"Deluge"; depth:6; reference:url,deluge-torrent.org; reference:url,doc.emergingthreats.net/2011704; classtype:policy-violation; sid:2011704; rev:7; metadata:created_at 2010_07_30, updated_at 2020_08_18;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Pando Client User-Agent Detected"; flow:established,to_server; http.user_agent; content:"Pando/"; reference:url,doc.emergingthreats.net/bin/view/Main/2008625; classtype:policy-violation; sid:2008625; rev:8; metadata:created_at 2010_07_30, former_category P2P, updated_at 2020_08_27;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Tor Get Server Request"; flow:established,to_server; http.uri; content:"/tor/server/"; nocase; reference:url,tor.eff.org; reference:url,doc.emergingthreats.net/2008113; classtype:policy-violation; sid:2008113; rev:5; metadata:created_at 2010_07_30, updated_at 2020_09_01;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Tor Get Status Request"; flow:established,to_server; http.uri; content:"/tor/status/"; nocase; reference:url,tor.eff.org; reference:url,doc.emergingthreats.net/2008115; classtype:policy-violation; sid:2008115; rev:5; metadata:created_at 2010_07_30, updated_at 2020_09_02;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (FDM 3.x)"; flow:to_server,established; http.user_agent; content:"FDM 3."; depth:6; reference:url,www.freedownloadmanager.org; reference:url,doc.emergingthreats.net/2011712; classtype:policy-violation; sid:2011712; rev:8; metadata:created_at 2010_07_30, updated_at 2020_09_13;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P BTWebClient UA uTorrent in use"; flow:established,to_server; http.user_agent; content:"BTWebClient"; classtype:policy-violation; sid:2012247; rev:6; metadata:created_at 2011_01_27, updated_at 2020_09_13;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (rTorrent)"; flow:to_server,established; http.user_agent; content:"rtorrent/"; depth:9; reference:url,libtorrent.rakshasa.no; reference:url,doc.emergingthreats.net/2011705; classtype:policy-violation; sid:2011705; rev:7; metadata:created_at 2010_07_30, updated_at 2020_09_13;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Libtorrent User-Agent"; flow:to_server,established; http.user_agent; content:"libtorrent"; nocase; classtype:policy-violation; sid:2012390; rev:6; metadata:created_at 2011_02_27, former_category P2P, updated_at 2020_09_13;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client HTTP Request "; flow:to_server,established; http.uri; content:"/trackerphp/announce.php?"; nocase; content:"?port="; nocase; content:"&peer_id="; reference:url,doc.emergingthreats.net/bin/view/Main/2006375; classtype:trojan-activity; sid:2006375; rev:8; metadata:created_at 2010_07_30, updated_at 2020_09_13;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Morpheus Install"; flow: to_server,established; http.uri; content:"/morpheus/morpheus.exe"; nocase; reference:url,www.morpheus.com; reference:url,doc.emergingthreats.net/bin/view/Main/2001035; classtype:policy-violation; sid:2001035; rev:11; metadata:created_at 2010_07_30, updated_at 2020_09_13;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Morpheus Install ini Download"; flow: to_server,established; http.uri; content:"/morpheus/morpheus_sm.ini"; nocase; reference:url,www.morpheus.com; reference:url,doc.emergingthreats.net/bin/view/Main/2001036; classtype:policy-violation; sid:2001036; rev:11; metadata:created_at 2010_07_30, updated_at 2020_09_13;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Morpheus Update Request"; flow: to_server,established; http.uri; content:"/gwebcache/gcache.asg?hostfile="; nocase; reference:url,www.morpheus.com; reference:url,doc.emergingthreats.net/bin/view/Main/2001037; classtype:policy-violation; sid:2001037; rev:11; metadata:created_at 2010_07_30, updated_at 2020_09_13;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P possible torrent download"; flow:established,to_server; http.uri; content:".torrent"; nocase; endswith; http.host; content:!"mapfactor.com"; reference:url,doc.emergingthreats.net/bin/view/Main/2007727; classtype:policy-violation; sid:2007727; rev:10; metadata:created_at 2010_07_30, former_category P2P, updated_at 2020_09_14;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P zzima_loader"; flow:established, to_server; http.method; content: "GET"; http.uri; content:"/zzima_loader/"; fast_pattern; http.user_agent; content:"zzima-nloader/ 1.0.3.1"; depth:22; http.header_names; content:!"Referer|0d 0a|"; reference:md5,810b4464785d8d007ca0c86c046ac0ef; classtype:trojan-activity; sid:2018532; rev:5; metadata:created_at 2014_06_05, updated_at 2020_09_24;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P p2p Related User-Agent (eChanblard)"; flow:to_server,established; http.user_agent; content:"eChanblard"; depth:10; endswith; reference:url,doc.emergingthreats.net/2011232; classtype:trojan-activity; sid:2011232; rev:9; metadata:created_at 2010_07_30, updated_at 2020_10_13;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Ares traffic"; flow:established,to_server; http.user_agent; content:"Ares"; startswith; reference:url,www.aresgalaxy.org; reference:url,doc.emergingthreats.net/bin/view/Main/2001059; classtype:policy-violation; sid:2001059; rev:11; metadata:created_at 2010_07_30, updated_at 2020_10_19;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Azureus P2P Client User-Agent"; flow:to_server,established; http.user_agent; content:"Azureus"; depth:7; reference:url,doc.emergingthreats.net/bin/view/Main/2007799; classtype:policy-violation; sid:2007799; rev:7; metadata:created_at 2010_07_30, updated_at 2020_10_19;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (BTSP)"; flow:to_server,established; http.user_agent; content:"BTSP/"; depth:5; reference:url,doc.emergingthreats.net/2011713; classtype:policy-violation; sid:2011713; rev:7; metadata:created_at 2010_07_30, updated_at 2020_10_19;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (BitComet)"; flow:to_server,established; http.user_agent; content:"BitComet/"; depth:9; reference:url,www.bitcomet.com; reference:url,doc.emergingthreats.net/2011710; classtype:policy-violation; sid:2011710; rev:7; metadata:created_at 2010_07_30, updated_at 2020_10_19;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (BitTornado)"; flow:to_server,established; http.user_agent; content:"BitTornado/"; depth:11; reference:url,www.bittornado.com; reference:url,doc.emergingthreats.net/2011702; classtype:policy-violation; sid:2011702; rev:7; metadata:created_at 2010_07_30, updated_at 2020_10_19;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (Bittorrent/5.x.x)"; flow:to_server,established; http.user_agent; content:"Bittorrent"; depth:10; reference:url,doc.emergingthreats.net/bin/view/Main/2006372; classtype:trojan-activity; sid:2006372; rev:10; metadata:created_at 2010_07_30, updated_at 2020_10_19;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (KTorrent/3.x.x)"; flow:to_server,established; http.user_agent; content:"KTorrent/3"; depth:10; reference:url,ktorrent.org; reference:url,doc.emergingthreats.net/2011700; classtype:policy-violation; sid:2011700; rev:7; metadata:created_at 2010_07_30, updated_at 2020_10_19;)
+
+#alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Bittorrent P2P Client User-Agent (KTorrent 2.x)"; flow:to_server,established; http.user_agent; content:"ktorrent/2"; depth:10; reference:url,ktorrent.org; reference:url,doc.emergingthreats.net/2011711; classtype:policy-violation; sid:2011711; rev:7; metadata:created_at 2010_07_30, updated_at 2020_10_19;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P Client User-Agent (Shareaza 2.x)"; flow:to_server,established; http.user_agent; content:"Shareaza 2."; depth:11; reference:url,shareaza.sourceforge.net; reference:url,doc.emergingthreats.net/2011707; classtype:policy-violation; sid:2011707; rev:7; metadata:created_at 2010_07_30, updated_at 2020_10_19;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P BearShare P2P Gnutella Client User-Agent (BearShare 6.x.x.x)"; flow:to_server,established; http.user_agent; content:"BearShare"; depth:9; reference:url,doc.emergingthreats.net/bin/view/Main/2006371; classtype:trojan-activity; sid:2006371; rev:10; metadata:created_at 2010_07_30, updated_at 2020_10_19;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET P2P FFTorrent P2P Client User-Agent (FFTorrent/x.x.x)"; flow:to_server,established; http.user_agent; content:"FFTorrent/"; depth:10; classtype:policy-violation; sid:2028942; rev:2; metadata:affected_product Windows_XP_Vista_7_8_10_Server_32_64_Bit, attack_target Client_Endpoint, created_at 2019_11_05, deployment Perimeter, signature_severity Major, updated_at 2020_10_21;)
+

@@ -1,0 +1,12 @@
+# Module: rabbitmq
+# Docs: https://www.elastic.co/guide/en/beats/metricbeat/7.x/metricbeat-module-rabbitmq.html
+
+- module: rabbitmq
+  metricsets:
+    - node
+    - queue
+    - connection
+  period: 10s
+  hosts: ["rabbitmq:15672"]
+  username: guest
+  password: guest

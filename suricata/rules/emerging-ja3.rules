@@ -1,0 +1,290 @@
+# Emerging Threats 
+#
+# This distribution may contain rules under two different licenses. 
+#
+#  Rules with sids 1 through 3464, and 100000000 through 100000908 are under the GPLv2.
+#  A copy of that license is available at http://www.gnu.org/licenses/gpl-2.0.html
+#
+#  Rules with sids 2000000 through 2799999 are from Emerging Threats and are covered under the BSD License 
+#  as follows:
+#
+#*************************************************************
+#  Copyright (c) 2003-2021, Emerging Threats
+#  All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
+#  following conditions are met:
+#  
+#  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following 
+#    disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
+#  * Neither the name of the nor the names of its contributors may be used to endorse or promote products derived 
+#    from this software without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+#  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+#
+#*************************************************************
+#
+#
+#
+#
+
+# This Ruleset is EmergingThreats Open optimized for suricata-5.0-enhanced.
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Suspected Cobalt Strike Malleable C2 M1 (set)"; flow:established,to_server; ja3.hash; content:"eb88d0b3e1961a0562f006e5ce2a0b87"; ja3.string; content:"771,49192-49191-49172-49171"; flowbits:set,ET.cobaltstrike.ja3; flowbits:noalert; classtype:command-and-control; sid:2028831; rev:1; metadata:affected_product Windows_XP_Vista_7_8_10_Server_32_64_Bit, attack_target Client_Endpoint, created_at 2019_10_15, deployment Perimeter, former_category JA3, malware_family Cobalt_Strike, signature_severity Major, updated_at 2019_10_15;)
+
+alert tls $EXTERNAL_NET any -> $HOME_NET any (msg:"ET JA3 Hash - Suspected Cobalt Strike Malleable C2 (ja3s) M1"; flow:established,from_server; ja3s.hash; content:"649d6810e8392f63dc311eecb6b7098b"; tls.cert_subject; content:!"servicebus.windows.net"; flowbits:isset,ET.cobaltstrike.ja3; classtype:command-and-control; sid:2028832; rev:1; metadata:affected_product Windows_XP_Vista_7_8_10_Server_32_64_Bit, attack_target Client_Endpoint, created_at 2019_10_15, deployment Perimeter, former_category JA3, malware_family Cobalt_Strike, signature_severity Major, updated_at 2019_10_15;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Suspected Meterpreter Reverse Shell M1 (set)"; flow:established,to_server; ja3.hash; content:"8916410db85077a5460817142dcbc8de"; flowbits:set,ET.meterpreter.ja3; flowbits:noalert; classtype:command-and-control; sid:2028828; rev:2; metadata:affected_product Windows_XP_Vista_7_8_10_Server_32_64_Bit, attack_target Client_Endpoint, created_at 2019_10_15, deployment Perimeter, former_category JA3, malware_family Meterpreter, signature_severity Major, updated_at 2019_10_15;)
+
+alert tls $EXTERNAL_NET any -> $HOME_NET any (msg:"ET JA3 Hash - Suspected Meterpreter Reverse Shell (ja3s) M1"; flow:established,from_server; ja3s.hash; content:"e35df3e00ca4ef31d42b34bebaa2f86e"; flowbits:isset,ET.meterpreter.ja3; classtype:command-and-control; sid:2028829; rev:2; metadata:affected_product Windows_XP_Vista_7_8_10_Server_32_64_Bit, attack_target Server, created_at 2019_10_15, deployment Perimeter, former_category JA3, malware_family Meterpreter, signature_severity Major, updated_at 2019_10_15;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Suspected Meterpreter Reverse Shell M2 (set)"; flow:established,to_server; ja3.hash; content:"72a589da586844d7f0818ce684948eea"; flowbits:set,ET.meterpreter.ja3; flowbits:noalert; classtype:command-and-control; sid:2028830; rev:2; metadata:attack_target Client_Endpoint, created_at 2019_10_15, deployment Perimeter, former_category JA3, malware_family Meterpreter, signature_severity Major, updated_at 2019_10_15;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Metaploit http scanner (tested: 4.11.5 Kali)"; ja3_hash; content:"16f17c896273d1d098314a02e87dd4cb"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028301; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Metasploit CCS Scanner"; ja3_hash; content:"950ccdd64d360a7b24c70678ac116a44"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028302; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Metasploit HeartBleed Scanner"; ja3_hash; content:"ee031b874122d97ab269e0d8740be31a"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028303; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Metasploit SSL Scanner"; ja3_hash; content:"6825b330bf9de50ccc8745553cb61b2f"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028304; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - mitmproxy"; ja3_hash; content:"4d01f8b1afc22e138127611b62f1e6ec"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028308; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - mitmproxy"; ja3_hash; content:"8ef6a005eae3d51b652ffe41984f8869"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028309; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Nikto (tested 2.1.6 - Kali)"; ja3_hash; content:"5eeeafdbc41e5ca7b81c92dbefa03ab7"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028327; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Nikto (tested 2.1.6 - Kali)"; ja3_hash; content:"f4262963691a8f123d4434c7308ad7fe"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028328; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Nikto (tested v2.1.6)"; ja3_hash; content:"a563bb123396e545f5704a9a2d16bcb0"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028329; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - AnglerEK"; ja3_hash; content:"96eba628dcb2b47607192ba74a3b55ba"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028360; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - AnglerEK"; ja3_hash; content:"d55e755245ac118f2b1847c1c57b5e03"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028361; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Boleto Malspam"; ja3_hash; content:"4f635262ad3fb6e634daee798082c788"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028363; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Boleto Malspam"; ja3_hash; content:"e9273590c7875d6367325f8714890790"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028364; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Dridex"; ja3_hash; content:"67f762b0ffe3aad00dfdb0e4b1acd8b5"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028365; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Dridex"; ja3_hash; content:"85bedfc1914da556aab4518390798003"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028366; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Eitest Chrome Popup"; ja3_hash; content:"098f55e27d8c4b0a590102cbdb3a5f3a"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028367; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Eitest/AnglerEK"; ja3_hash; content:"ff94b48f555edc2f0a4c8256eb0d81de"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028368; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Fake Firefox Font Update"; ja3_hash; content:"2efb07037a97b06201ab4fe7ec0c326e"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028369; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Fake Firefox Font Update"; ja3_hash; content:"df5c30e670dba99f9270ed36060cf054"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028370; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+#alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Fake Firefox Font Update"; ja3_hash; content:"a0e9f5d64349fb13191bc781f81f42e1"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028371; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - FiestaEK"; ja3_hash; content:"c1fbfd09bd0bab610be60dd6819688f4"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:exploit-kit; sid:2028372; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Gootkit"; ja3_hash; content:"a34e8a810b5f390fc7aa5ed711fa6993"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028373; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Gootkit"; ja3_hash; content:"c6e36d272db78ba559429e3d845606d1"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028374; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Java Based RAT"; ja3_hash; content:"187dfde7edc8ceddccd3deeccc21daeb"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,raw.githubusercontent.com/salesforce/ja3/master/lists/osx-nix-ja3.csv; classtype:unknown; sid:2028375; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Malspam"; ja3_hash; content:"243a279e5aaae8841edf46d00c05195e"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028376; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Malspam"; ja3_hash; content:"e7d705a3286e19ea42f587b344ee6865"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028377; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Neutrino"; ja3_hash; content:"51b5c918558a4bfb50ce1ab1d5fddff7"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028378; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Neutrino"; ja3_hash; content:"852e7534b3f722d893a7750afb5ecdcc"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028379; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Neutrino"; ja3_hash; content:"a7dfa1673bb090cab6b6658861f43473"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028380; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Neutrino"; ja3_hash; content:"aeae3901ecde8396b2f5648c02aeb37f"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028381; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Neutrino"; ja3_hash; content:"e107ef8ec0296e17c3f82de949b4066c"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028382; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Neutrino"; ja3_hash; content:"fd6bbdf835788b3c7d33372127470a06"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028383; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - NuclearEK"; ja3_hash; content:"fd2273056f386e0ba8004e897c337037"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028385; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - RigEK"; ja3_hash; content:"1848357994c2851c809cb01bae7d631c"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028386; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - RigEK"; ja3_hash; content:"2d44457ca7a1e0e754664c8469ce62a8"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028387; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - RigEK"; ja3_hash; content:"bafc6b01eae6f4350f5db6805ace208e"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028388; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - TBot / Skynet Tor Botnet"; ja3_hash; content:"b50f81ae37fb467713e167137cf14540"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028389; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Trickbot"; ja3_hash; content:"294b2f1dc22c6e6c3231d2fe311d504b"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028390; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+#alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Unknown traffic associated with Dridex"; ja3_hash; content:"b9103d9d134e0c59cafbe4ae0a8299a8"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028391; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - USPS Malspam"; ja3_hash; content:"3fab5d0fe3b2408c8b2251b46d3895de"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028392; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - USPS Malspam"; ja3_hash; content:"6f702efe6480d2a1c9f85b73b8a4794a"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028393; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - USPS Malspam"; ja3_hash; content:"92579701f145605e9edc0b01a901c6d5"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028394; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Various Eitest"; ja3_hash; content:"1074895078955b2db60423ed2bf8ac23"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028395; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Various EK"; ja3_hash; content:"51a7ad14509fd614c7bb3a50c4982b8c"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,raw.githubusercontent.com/salesforce/ja3/master/lists/osx-nix-ja3.csv; classtype:unknown; sid:2028396; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Various Malspam/RigEK"; ja3_hash; content:"3b483d0b34894548b602e8d18cdc24c5"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028397; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Various Malspam/RigEK/Dreambot"; ja3_hash; content:"c201b92f8b483fa388be174d6689f534"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028398; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Various RigEK/Cryptowall/Dridex"; ja3_hash; content:"2d8794cb7b52b777bee2695e79c15760"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028399; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Various RigEK/Dridex/Kovter"; ja3_hash; content:"df8bfc363eeba63ab938cb2190ccd7b7"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028400; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Malware - Various Trickbot/Kovter/Dridex"; ja3_hash; content:"6734f37431670b3ab4292b8f60f29984"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; reference:url,www.malware-traffic-analysis.net; classtype:unknown; sid:2028401; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Superfish"; ja3_hash; content:"1b5a75e6d0f679aa312edb060ea8d932"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028402; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Possible Superfish"; ja3_hash; content:"cfaa6f79904b33fdca83dbb5d4b537d4"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028403; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Rapid7 Nexpose"; ja3_hash; content:"c22dea495cef869edbeb3458adaf497f"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028413; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - sqlmap (tested: v1.0-dev kali)"; ja3_hash; content:"615788655a0e65b71e47c3ebe2302564"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028467; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - sqlmap (tested: v1.0.7.0 OS X)"; ja3_hash; content:"1ab5d0f756e0692a975fda9a6474969f"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028468; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - WPScan (tested: 2.9 Kali)"; ja3_hash; content:"4c8ff2ddb1890482e5989b80e48b54d4"; reference:url,github.com/trisulnsm/trisul-scripts/blob/master/lua/frontend_scripts/reassembly/ja3/prints/ja3fingerprint.json; classtype:unknown; sid:2028556; rev:2; metadata:created_at 2019_09_10, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Trickbot"; ja3_hash; content:"1aa7bf8b97e540ca5edd75f7b8384bfa"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028757; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Quakbot"; ja3_hash; content:"3cda52da4ade09f1f781ad2e82dcfa20"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028758; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Quakbot"; ja3_hash; content:"7dd50e112cd23734a310b90f6f44a7cd"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028759; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Troldesh Ransomware"; ja3_hash; content:"1be3ecebe5aa9d3654e6e703d81f6928"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028760; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Gootkit"; ja3_hash; content:"c5235d3a8b9934b7fbbd204d50bc058d"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028761; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Trickbot"; ja3_hash; content:"e62a5f4d538cbf169c2af71bec2399b4"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028762; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adwind"; ja3_hash; content:"d2935c58fe676744fecc8614ee5356c7"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028763; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adwind"; ja3_hash; content:"decfb48a53789ebe081b88aabb58ee34"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028764; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Dridex"; ja3_hash; content:"51c64c77e60f3980eea90869b68c58a8"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028765; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Dridex"; ja3_hash; content:"cb98a24ee4b9134448ffb5714fd870ac"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028766; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"f22bdd57e3a52de86cda40da2d84e83b"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028767; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"fb58831f892190644fe44e25bc830b45"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028768; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"0cc1e84568e471aa1d62ad4158ade6b5"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028769; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"2092e1fffb45d7e4a19a57f9bc5e203a"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028770; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"d18a4da84af59e1108862a39bae7c9d4"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028771; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Dridex"; ja3_hash; content:"b386946a5a44d1ddcc843bc75336dfce"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028772; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"8498fe4268764dbf926a38283e9d3d8f"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028773; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"20dd18bdd3209ea718989030a6f93364"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028774; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"8991a387e4cc841740f25d6f5139f92d"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028775; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"e330bca99c8a5256ae126a55c4c725c5"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028776; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"83e04bc58d402f9633983cbf22724b02"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028777; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"b8f81673c0e1d29908346f3bab892b9b"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028778; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"d551fafc4f40f1dec2bb45980bfa9492"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028779; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"29085f03f8e8a03f0b399c5c7cf0b0b8"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028780; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"bc6c386f480ee97b9d9e52d472b772d8"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028781; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"b13d01846ad7a14a70bf030a16775c78"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028782; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"698e36219f3979420fa2581b21dac7ec"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028783; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Torrentlocker"; ja3_hash; content:"1712287800ac91b34cadd5884ce85568"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028784; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"550dce18de1bb143e69d6dd9413b8355"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028785; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"d7150af4514b868defb854db0f62a441"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028786; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"df5c30e670dba99f9270ed36060cf054"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028787; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"7dcce5b76c8b17472d024758970a406b"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028788; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"911479ac8a0813ed1241b3686ccdade9"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028789; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"03e186a7f83285e93341de478334006e"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028790; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"17fd49722f8d11f3d76dce84f8e099a7"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028791; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Trickbot"; ja3_hash; content:"fb00055a1196aeea8d1bc609885ba953"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028792; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"098f55e27d8c4b0a590102cbdb3a5f3a"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028793; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"e3b2ab1f9a56f2fb4c9248f2f41631fa"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028794; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"46efd49abcca8ea9baa932da68fdb529"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028795; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"b2b61db7b9490a60d270ccb20b462826"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028796; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"92579701f145605e9edc0b01a901c6d5"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028797; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"7691297bcb20a41233fd0a0baa0a3628"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028798; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"1543a7c46633acf71e8401baccbd0568"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028799; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Dridex"; ja3_hash; content:"d6f04b5a910115f4b50ecec09d40a1df"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028800; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"93d056782d649deb51cda44ecb714bb0"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028801; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"5e573c9c9f8ba720ef9b18e9fce2e2f7"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028802; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"590a232d04d56409fab72e752a8a2634"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028803; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"849b04bdbd1d2b983f6e8a457e0632a8"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028804; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"9c2589e1c0e9f533a022c6205f9719e1"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028805; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"96eba628dcb2b47607192ba74a3b55ba"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028806; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"7c410ce832e848a3321432c9a82e972b"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028807; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Adware"; ja3_hash; content:"f6fd83a21f9f3c5f9ff7b5c63bbc179d"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028808; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Ransomware"; ja3_hash; content:"2d8794cb7b52b777bee2695e79c15760"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028809; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"fd80fa9c6120cdeea8520510f3c644ac"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028810; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Gozi"; ja3_hash; content:"57f3642b4e37e28f5cbe3020c9331b4c"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028811; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"906004246f3ba5e755b043c057254a29"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028812; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Trickbot"; ja3_hash; content:"c50f6a8b9173676b47ba6085bd0c6cee"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028813; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Gozi"; ja3_hash; content:"c201b92f8b483fa388be174d6689f534"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028814; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"b90bdbe961a648f0427db21aaa6ccb59"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028815; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - [Abuse.ch] Possible Tofsee"; ja3_hash; content:"9f62c4f26b90d3d757bea609e82f2eaf"; reference:url,sslbl.abuse.ch/ja3-fingerprints/; classtype:unknown; sid:2028816; rev:2; metadata:created_at 2019_10_14, former_category JA3, updated_at 2019_10_29;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 Hash - Trojan.AndroidOS.Jocker.snt 1"; ja3_hash; content:"2f514a024266e9e8d11f10e779168579"; reference:md5,68841dcaf26d83fc1c2f955e9e363a65; classtype:trojan-activity; sid:2029150; rev:2; metadata:affected_product Android, attack_target Mobile_Client, created_at 2019_12_16, deployment Perimeter, former_category JA3, signature_severity Critical, tag Android, updated_at 2019_12_16;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 HASH - Possible BAZAR Backdoor CnC"; ja3.hash; content:"f5e62b5a2ed9467df09fae7a8a54dda6"; reference:url,www.vkremez.com/2020/04/lets-learn-trickbot-bazarbackdoor.html; classtype:unknown; sid:2030040; rev:1; metadata:created_at 2020_04_28, former_category JA3, updated_at 2020_04_28;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 HASH - Possible POSHC2 Client CnC"; flowbits:set,ET.poshc2.powershellclient; flowbits: noalert; ja3.hash; content:"c12f54a3f91dc7bafd92cb59fe009a35"; reference:url,https://labs.nettitude.com/blog/detecting-poshc2-indicators-of-compromise/; classtype:unknown; sid:2030366; rev:1; metadata:attack_target Client_Endpoint, created_at 2020_06_19, deployment Perimeter, former_category JA3, performance_impact Low, signature_severity Major, updated_at 2020_06_19;)
+
+alert tls $EXTERNAL_NET any -> $HOME_NET any (msg:"ET JA3 HASH - Possible POSHC2 Server Response"; flowbits:isset,ET.poshc2.powershellclient; ja3s.hash; content:"ec74a5c51106f0419184d0dd08fb05bc"; reference:url,https://labs.nettitude.com/blog/detecting-poshc2-indicators-of-compromise/; classtype:unknown; sid:2030367; rev:1; metadata:attack_target Client_Endpoint, created_at 2020_06_19, deployment Perimeter, former_category JA3, performance_impact Low, signature_severity Major, updated_at 2020_06_19;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET JA3 HASH - Possible InnocenceBot CnC"; ja3.hash; content:"9551e38f83daab8bcbc283ec0806cf65"; reference:md5,6a2749a5ab44dda4ed6459c8ca36ca64; classtype:unknown; sid:2030645; rev:1; metadata:attack_target Client_Endpoint, created_at 2020_08_04, deployment Perimeter, former_category JA3, performance_impact Low, signature_severity Major, updated_at 2020_08_04;)
+

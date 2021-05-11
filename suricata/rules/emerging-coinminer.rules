@@ -1,0 +1,84 @@
+# Emerging Threats 
+#
+# This distribution may contain rules under two different licenses. 
+#
+#  Rules with sids 1 through 3464, and 100000000 through 100000908 are under the GPLv2.
+#  A copy of that license is available at http://www.gnu.org/licenses/gpl-2.0.html
+#
+#  Rules with sids 2000000 through 2799999 are from Emerging Threats and are covered under the BSD License 
+#  as follows:
+#
+#*************************************************************
+#  Copyright (c) 2003-2021, Emerging Threats
+#  All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
+#  following conditions are met:
+#  
+#  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following 
+#    disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
+#  * Neither the name of the nor the names of its contributors may be used to endorse or promote products derived 
+#    from this software without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+#  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+#
+#*************************************************************
+#
+#
+#
+#
+
+# This Ruleset is EmergingThreats Open optimized for suricata-5.0-enhanced.
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET COINMINER W32/BitCoinMiner.MultiThreat Stratum Protocol Mining.Notify Initial Connection Server Response"; flow:established,to_client; content:"|22|result|22 3A| [[|22|mining.notify|22|"; depth:120; reference:url,research.zscaler.com/2013/12/bitcoin-mining-operation-seen-across.html; reference:url,www.btcguild.com/new_protocol.php; reference:url,mining.bitcoin.cz/stratum-mining; classtype:coin-mining; sid:2017872; rev:2; metadata:created_at 2013_12_16, former_category COINMINER, updated_at 2013_12_16;)
+
+#alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET COINMINER W32/BitCoinMiner Fake Flash Player Distribution Campaign - December 2013"; flow:established,to_server; content:"/blam/flashplayerv"; nocase; http_uri; reference:url,blog.malwarebytes.org/fraud-scam/2013/12/fake-flash-player-wants-to-go-mining/; reference:url,esearch.zscaler.com/2013/12/bitcoin-mining-operation-seen-across.html; classtype:coin-mining; sid:2017874; rev:2; metadata:created_at 2013_12_16, former_category COINMINER, updated_at 2013_12_16;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET COINMINER W32/BitCoinMiner.MultiThreat Stratum Protocol Mining.Notify Work Server Response"; flow:established,to_client; content:"|22|params|22 3A| [|22|"; depth:120; content:"|22|method|22 3A| |22|mining.notify|22|"; distance:0; reference:url,research.zscaler.com/2013/12/bitcoin-mining-operation-seen-across.html; reference:url,www.btcguild.com/new_protocol.php; reference:url,mining.bitcoin.cz/stratum-mining; classtype:coin-mining; sid:2017873; rev:3; metadata:created_at 2013_12_16, former_category COINMINER, updated_at 2013_12_16;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET COINMINER W32/BitCoinMiner.MultiThreat Getblocktemplate Protocol Server Connection"; flow:established,to_server; content:"{|22|id|22 3A|"; depth:6; content:"|22|method|22 3A| |22|getblocktemplate|22|"; within:40; reference:url,en.bitcoin.it/wiki/Getblocktemplate; classtype:coin-mining; sid:2017878; rev:3; metadata:created_at 2013_12_17, former_category COINMINER, updated_at 2013_12_17;)
+
+alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET COINMINER W32/BitCoinMiner.MultiThreat Getblocktemplate Protocol Server Coinbasetxn Begin Mining Response"; flow:established,to_client; content:"|22|result|22 3A| {"; depth:50; content:"|22|coinbasetxn|22 3A| {"; within:30; content:"|22|data|22 3A| |22|"; within:30; reference:url,en.bitcoin.it/wiki/Getblocktemplate; classtype:coin-mining; sid:2017879; rev:3; metadata:created_at 2013_12_17, former_category COINMINER, updated_at 2013_12_17;)
+
+#alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET COINMINER CoinMiner Malicious Authline Seen in JAR Backdoor"; flow:established,to_server; content:"{|22|id|22 3A|"; depth:6; content:"|22|method|22 3a 20 22|mining.authorize|22 2c|"; within:100; content:"|22|params|22|"; within:50; content:"|5b 22|CGX2U2oeocN3DTJhyPG2cPg7xpRRTzNZkz|22 2c 20 22|"; distance:0; reference:url,research.zscaler.com/2013/12/bitcoin-mining-operation-seen-across.html; reference:url,blog.malwaremustdie.org/2016/01/mmd-0049-2016-case-of-java-trojan.html; classtype:coin-mining; sid:2022349; rev:1; metadata:created_at 2016_01_11, former_category COINMINER, updated_at 2016_01_11;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET COINMINER W32/BitCoinMiner.MultiThreat Subscribe/Authorize Stratum Protocol Message"; flow:established,to_server; content:"|22|id|22 3A|"; content:"|22|method|22 3A|"; content:"|22|mining."; within:9; content:"|22|params|22|"; within:50; pcre:"/\x22mining\x2E(subscribe|authorize)\x22/"; reference:url,research.zscaler.com/2013/12/bitcoin-mining-operation-seen-across.html; reference:url,www.btcguild.com/new_protocol.php; reference:url,mining.bitcoin.cz/stratum-mining; classtype:coin-mining; sid:2017871; rev:7; metadata:created_at 2013_12_16, former_category COINMINER, updated_at 2013_12_16;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET COINMINER CoinMiner Malicious Authline Seen After CVE-2017-10271 Exploit"; flow:established,to_server; content:"{|22|id|22 3A|"; depth:6; content:"|22|method|22 3a 20 22|mining.authorize|22 2c|"; within:100; content:"|22|params|22|"; within:50; content:"|5b 22|4AQe5sAFWZKECiaeNTt59LG7kVtqRoSRJMjrmQ6GiMFAeUvoL3MFeTE6zwwHkFPrAyNw2JHDxUSWL82RiZThPpk4SEg7Vqe|22 2c 20 22|"; distance:0; reference:url,otx.alienvault.com/pulse/5a4e1c4993199b299f90a212; classtype:coin-mining; sid:2025186; rev:1; metadata:attack_target Web_Server, created_at 2018_01_04, deployment Datacenter, former_category COINMINER, malware_family CoinMiner, performance_impact Low, signature_severity Major, updated_at 2018_01_04;)
+
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET COINMINER CoinHive In-Browser Miner Detected"; flow:established,from_server; file_data; content:"coinhive.min.js"; nocase; fast_pattern; content:"start"; nocase; distance:0; content:"script"; content:"var"; distance:0; pcre:"/^\s*(?P<var>[a-zA-Z0-9]{3,20})\s*=\s*new\s*CoinHive\s*\.\s*[^\(]+\(\s*[\x22\x27][A-Za-z0-9]+\s*[\x22\x27]\s*(?:\x2c\s*\x7b\s*\w+\x3a\s*\d\.\d\x7d)?\)\s*\x3b\s+(?P=var)\s*\.\s*start/Ri"; classtype:coin-mining; sid:2024721; rev:2; metadata:affected_product Any, attack_target Client_Endpoint, created_at 2017_09_18, deployment Perimeter, former_category COINMINER, performance_impact Moderate, signature_severity Minor, updated_at 2018_05_08;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET 1024: (msg:"ET COINMINER Random Hash Pascalcoin Miner Checkin"; flow:established,to_server; content:"{|22|params|22|:[|22|rhminer/"; depth:20; classtype:coin-mining; sid:2026750; rev:2; metadata:affected_product Windows_XP_Vista_7_8_10_Server_32_64_Bit, attack_target Client_Endpoint, created_at 2019_01_02, deployment Perimeter, former_category COINMINER, signature_severity Major, tag Coinminer, updated_at 2019_01_02;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET COINMINER Bitcoin Mining Extensions Header"; flow:to_server,established; http.method; content:"POST"; http.header; content:"X-Mining-Extensions|3a|"; classtype:coin-mining; sid:2016758; rev:5; metadata:created_at 2013_04_16, former_category POLICY, updated_at 2020_04_23;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET COINMINER Cryptexplorer API Check - Potential CoinMiner Traffic"; flow:established,to_server; http.uri; content:"/api/"; startswith; content:"coin/balance/"; distance:0; fast_pattern; pcre:"/^\/api\/(?:bit|lite)coin\/balance\//"; reference:md5,8e29a15caef546aab0f19a9a81732163; classtype:coin-mining; sid:2019825; rev:4; metadata:created_at 2014_12_01, former_category COINMINER, updated_at 2020_05_14;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET COINMINER Possible BitCoin Miner User-Agent (miner)"; flow:established,to_server; http.user_agent; content:"miner"; nocase; pcre:"/miner[^a-z]/i"; reference:url,abcpool.co/mining-software-comparison.php; classtype:coin-mining; sid:2016067; rev:5; metadata:affected_product Any, attack_target Client_Endpoint, created_at 2012_12_20, deployment Perimeter, deployment Datacenter, former_category COINMINER, signature_severity Informational, tag Bitcoin_Miner, updated_at 2020_06_09;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET 8080: (msg:"ET COINMINER PrimeCoinMiner.Protominer"; flow:established,to_server; content:"|01 27 00 00 05 00 00 00 09|"; depth:9; content:"node"; nocase; within:4; content:"Protominer"; distance:14; within:10; reference:md5,4cab48eec2b882ec33db2e2a13ecffe6; classtype:coin-mining; sid:2018014; rev:2; metadata:created_at 2014_01_27, former_category COINMINER, updated_at 2020_08_19;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"ET COINMINER Crypto Coin Miner Login"; flow:to_server,established; content:"|7b 22|method|22 3a|"; depth:10; fast_pattern; content:"|22|login|22 2c|"; within:9; content:"|22|params|22 3a|"; within:10; content:"|7b 22|login"; nocase; within:8; content:"agent|22 3a|"; nocase; distance:0; reference:md5,d1082e445f932938366a449631b82946; reference:md5,33d7a82fe13c9737a103bcc4a21f9425; reference:md5,ebe1aeb5dd692b222f8cf964e7785a55; classtype:coin-mining; sid:2022886; rev:4; metadata:affected_product Any, attack_target Client_Endpoint, created_at 2016_06_09, deployment Perimeter, former_category COINMINER, malware_family CoinMiner, performance_impact Low, signature_severity Informational, tag Bitcoin_Miner, updated_at 2020_08_19;)
+
+alert tls $EXTERNAL_NET any -> $HOME_NET any (msg:"ET COINMINER Observed Suspicious SSL Cert (Minerpool - CoinMining)"; flow:from_server,established; tls.cert_subject; content:"CN=eu.minerpool.pw"; nocase; fast_pattern; endswith; tls.cert_issuer; content:"C=US, O=Let's Encrypt, CN=Let's Encrypt Authority X3"; classtype:coin-mining; sid:2028623; rev:3; metadata:attack_target Client_and_Server, created_at 2019_09_25, deployment Perimeter, former_category COINMINER, performance_impact Low, signature_severity Major, tag Coinminer, updated_at 2020_09_02;)
+
+alert dns $HOME_NET any -> any any (msg:"ET COINMINER Observed DNS Query to Browser Coinminer (crypto-loot[.]com)"; dns.query; content:"crypto-loot.com"; endswith; classtype:coin-mining; sid:2024828; rev:5; metadata:affected_product Any, attack_target Client_Endpoint, created_at 2017_10_09, deployment Perimeter, former_category COINMINER, malware_family CoinMiner, performance_impact Moderate, signature_severity Minor, updated_at 2020_09_15;)
+
+alert tls $HOME_NET any -> $EXTERNAL_NET any (msg:"ET COINMINER Observed Coin-Hive In Browser Mining Domain (coin-hive .com in TLS SNI)"; flow:established,to_server; tls.sni; content:"coin-hive.com"; endswith; classtype:trojan-activity; sid:2025535; rev:3; metadata:affected_product Windows_XP_Vista_7_8_10_Server_32_64_Bit, attack_target Client_Endpoint, created_at 2018_04_26, deployment Perimeter, former_category CURRENT_EVENTS, malware_family CoinMiner, performance_impact Moderate, signature_severity Minor, updated_at 2020_09_16;)
+
+alert tls $EXTERNAL_NET any -> $HOME_NET any (msg:"ET COINMINER Observed Malicious SSL Cert (Coin-Hive In Browser Mining)"; flow:established,to_client; tls.cert_subject; content:"CN=*.coin-hive.com"; nocase; endswith; classtype:coin-mining; sid:2025536; rev:3; metadata:affected_product Any, attack_target Client_Endpoint, created_at 2018_04_26, deployment Perimeter, former_category COINMINER, malware_family CoinMiner, performance_impact Moderate, signature_severity Minor, updated_at 2020_09_16;)
+
+alert tls $EXTERNAL_NET any -> $HOME_NET any (msg:"ET COINMINER Observed Malicious SSL Cert (Coinhive URL Shortener)"; flow:established,to_client; tls.cert_subject; content:"CN=cnhv.co"; nocase; endswith; reference:url,blog.sucuri.net/2018/05/cryptomining-through-disguised-url-shorteners.html; classtype:coin-mining; sid:2025582; rev:3; metadata:affected_product Windows_XP_Vista_7_8_10_Server_32_64_Bit, attack_target Client_Endpoint, created_at 2018_05_22, deployment Perimeter, former_category COINMINER, malware_family CoinMiner, performance_impact Moderate, signature_severity Minor, updated_at 2020_09_16;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET 8000 (msg:"ET COINMINER Win32/Ymacco.AA2F Checking (Multiple OS)"; flow:established,to_server; http.start; content:"GET /update HTTP"; fast_pattern; http.header_names; content:"|0d 0a|Host|0d 0a|Connection|0d 0a 0d 0a|"; depth:22; isdataat:!1,relative; reference:url,twitter.com/luc4m/status/1340737667961679881; classtype:coin-mining; sid:2031464; rev:2; metadata:attack_target Client_Endpoint, created_at 2020_12_29, deployment Perimeter, former_category COINMINER, performance_impact Low, signature_severity Minor, updated_at 2020_12_30;)
+
+alert http $HOME_NET any -> $EXTERNAL_NET 8000 (msg:"ET COINMINER Win32/Ymacco.AA2F Checking (Multiple OS)"; flow:established,to_server; http.start; content:"GET /banner HTTP"; fast_pattern; http.header_names; content:"|0d 0a|Host|0d 0a|Connection|0d 0a 0d 0a|"; depth:22; isdataat:!1,relative; reference:url,twitter.com/luc4m/status/1340737667961679881; classtype:coin-mining; sid:2031465; rev:2; metadata:attack_target Client_Endpoint, created_at 2020_12_29, deployment Perimeter, former_category COINMINER, performance_impact Low, signature_severity Minor, updated_at 2020_12_30;)
+

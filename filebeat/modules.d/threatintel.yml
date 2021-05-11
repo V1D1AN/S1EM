@@ -1,0 +1,40 @@
+# Module: threatintel
+# Docs: https://www.elastic.co/guide/en/beats/filebeat/7.x/filebeat-module-threatintel.html
+
+- module: threatintel
+  misp:
+    enabled: true
+    var.input: httpjson
+    var.url: http://misp/misp/events/restSearch
+    var.api_token: "changeme_misp_api_key"
+    var.first_interval: 300h
+    var.interval: 5m
+
+  abuseurl:
+    enabled: false
+    var.input: httpjson
+    var.url: https://urlhaus-api.abuse.ch/v1/urls/recent/
+    var.interval: 60m
+
+  abusemalware:
+    enabled: false
+    var.input: httpjson
+    var.url: https://urlhaus-api.abuse.ch/v1/payloads/recent/
+    var.interval: 60m
+
+  otx:
+    enabled: false
+    var.input: httpjson
+    var.url: https://otx.alienvault.com/api/v1/indicators/export
+    var.api_token: changeme
+    var.first_interval: 24h
+    var.lookback_range: 2h
+    var.interval: 60m
+
+  anomali:
+    enabled: false
+    var.input: httpjson
+    var.url: https://limo.anomali.com/api/v1/taxii2/feeds/collections/41/objects?match[type]=indicator
+    var.username: guest
+    var.password: guest
+    var.interval: 60m

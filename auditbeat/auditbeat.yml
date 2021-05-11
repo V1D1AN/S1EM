@@ -1,0 +1,46 @@
+auditbeat.modules:
+
+- module: auditd
+  audit_rules: |
+    -w /etc/passwd -p wa -k identity
+    -a always,exit -F arch=b32 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EPERM -k access
+    -a always,exit -S execve,execveat
+
+- module: file_integrity
+  paths:
+    - /bin
+    - /usr/bin
+    - /sbin
+    - /usr/sbin
+    - /etc
+
+- module: system
+  datasets:
+    - host
+    - login
+    - package
+    - process
+    - socket
+    - user
+  period: 10s
+  state.period: 12h
+  socket.include_localhost: false
+  user.detect_password_changes: true
+
+processors:
+  - add_docker_metadata: ~
+
+
+setup.kibana.host: "http://kibana:5601/kibana"
+setup.dashboards.enabled: true
+
+
+setup.template.overwrite: true
+setup.template.settings:
+  index.number_of_shards: 1
+  index.number_of_replicas: 0
+
+output.elasticsearch:
+  hosts: "elasticsearch:9200"
+  username: "elastic"
+  password: "changeme"
