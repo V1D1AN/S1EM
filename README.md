@@ -92,6 +92,14 @@ Finally, enter the password of "elastic" previously enter.
 
 # Access
 
+The Url for Dashboard Traefik:
+```
+https://@IP/dashboard
+```
+User:admin
+Password:admin
+
+
 The Url for Kibana:
 ```
 https://@IP/kibana
