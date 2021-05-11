@@ -96,8 +96,8 @@ The Url for Dashboard Traefik:
 ```
 https://@IP/dashboard
 ```
-* User:admin
-* Password:admin
+* User: admin
+* Password: admin
 
 
 The Url for Kibana:
