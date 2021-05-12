@@ -27,4 +27,9 @@ read -r -p "Enter the IP address of Kibana:" kibana_ip
 kibana_ip=$kibana_ip
 sed -i "s/KIBANA_IP/$kibana_ip/g" elastalert/rules/*.yml
 echo
+echo "##########################################"
+echo "######### GENERATE CERTIFICATE ###########"
+echo "##########################################"
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/server.key -out server/server.crt
+echo
 docker-compose up -d
