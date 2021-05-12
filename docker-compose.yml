@@ -20,7 +20,7 @@ services:
       - "traefik.http.routers.dashboard.tls=true"
     networks:
       - reverse_proxy
-      - sirp
+      - s1em
 
   elasticsearch:
     image: 'docker.elastic.co/elasticsearch/elasticsearch:7.12.0'
@@ -47,7 +47,7 @@ services:
       - esdata:/usr/share/elasticsearch/data
       - eslogs:/usr/share/elasticsearch/logs
     networks:
-      - sirp
+      - s1em
       
   logstash:
     image: 'docker.elastic.co/logstash/logstash:7.12.0'
@@ -61,7 +61,7 @@ services:
       - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline
     networks:
-      - sirp
+      - s1em
     ports:
       - "5044:5044"
       
@@ -80,7 +80,7 @@ services:
       - "traefik.http.routers.kibana.entryPoints=secure"
       - "traefik.http.routers.kibana.tls=true"
     networks:
-      - sirp
+      - s1em
 
   auditbeat:
     image: 'docker.elastic.co/beats/auditbeat:7.12.0'
@@ -98,7 +98,7 @@ services:
     volumes:
       - ./auditbeat/auditbeat.yml:/usr/share/auditbeat/auditbeat.yml:ro
     networks:
-      - sirp
+      - s1em
 
   metricbeat:
     image: 'docker.elastic.co/beats/metricbeat:7.12.0'
@@ -110,7 +110,7 @@ services:
     command: ["-system.hostfs=/hostfs", "-e"]
     user: root
     networks:
-      - sirp
+      - s1em
     volumes:
       - ./metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
       - ./metricbeat/modules.d/docker.yml:/usr/share/metricbeat/modules.d/docker.yml:ro
@@ -132,17 +132,19 @@ services:
       - elasticsearch
     volumes:
       - /var/log:/var/log
+      - fleet:/var/log/osquery
       - suricatadata:/var/log/suricata:ro
       - traefikdata:/var/log/traefik:ro
       - zeekdata:/var/log/bro/current:ro
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./filebeat/modules.d/osquery.yml:/usr/share/filebeat/modules.d/osquery.yml:ro
       - ./filebeat/modules.d/system.yml:/usr/share/filebeat/modules.d/system.yml:ro
       - ./filebeat/modules.d/suricata.yml:/usr/share/filebeat/modules.d/suricata.yml:ro
       - ./filebeat/modules.d/threatintel.yml:/usr/share/filebeat/modules.d/threatintel.yml:ro
       - ./filebeat/modules.d/traefik.yml:/usr/share/filebeat/modules.d/traefik.yml:ro
       - ./filebeat/modules.d/zeek.yml:/usr/share/filebeat/modules.d/zeek.yml:ro
     networks:
-      - sirp
+      - s1em
 
   suricata:
     image: jasonish/suricata:5.0
@@ -206,7 +208,7 @@ services:
       - "traefik.http.routers.cortex.entryPoints=secure"
       - "traefik.http.routers.cortex.tls=true"
     networks:
-      - sirp
+      - s1em
 
   cassandra:
     image: cassandra:3.11
@@ -221,7 +223,7 @@ services:
     volumes:
       - cassandra:/var/lib/cassandra/data
     networks:
-      - sirp
+      - s1em
 
   thehive:
     image: 'thehiveproject/thehive4:latest'
@@ -242,7 +244,7 @@ services:
       - thehivedata:/opt/index
     command: '--no-config --no-config-secret'
     networks:
-      - sirp
+      - s1em
 
   elastalert:
     image: 'jertel/elastalert-docker:latest'
@@ -255,7 +257,7 @@ services:
       - ./elastalert/elastalert.yaml:/opt/config/elastalert_config.yaml:ro
       - ./elastalert/rules:/opt/elastalert/rules:ro
     networks:
-      - sirp
+      - s1em
 
   redis:
     image: redis:latest
@@ -265,7 +267,55 @@ services:
     volumes:
       - redis:/data
     networks:
-      - sirp
+      - s1em
+
+  db-fleet:
+    image: mysql:latest
+    container_name: db-fleet
+    volumes:
+      - db-fleet:/var/lib/mysql
+    command: mysqld --datadir=/var/lib/mysql --event-scheduler=ON
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: fleet
+      MYSQL_USER: fleet
+      MYSQL_PASSWORD: fleet
+    networks:
+      - s1em
+
+  fleet:
+    image: fleetdm/fleet:latest
+    container_name: fleet
+    command: sh -c "/usr/bin/fleet prepare db --no-prompt && /usr/bin/fleet serve"
+    restart: always
+    user: root
+    hostname: ${HOSTNAME}
+    environment:
+      FLEET_MYSQL_ADDRESS: db-fleet:3306
+      FLEET_MYSQL_DATABASE: fleet
+      FLEET_MYSQL_USERNAME: fleet
+      FLEET_MYSQL_PASSWORD: fleet
+      FLEET_REDIS_ADDRESS: redis:6379
+      FLEET_SERVER_ADDRESS: 0.0.0.0:8412
+      FLEET_AUTH_JWT_KEY: insecure
+      FLEET_SERVER_CERT: /fleet/fleet.crt
+      FLEET_SERVER_KEY: /fleet/fleet.key
+      FLEET_LOGGING_JSON: 'true'
+      FLEET_OSQUERY_STATUS_LOG_PLUGIN: filesystem
+      FLEET_FILESYSTEM_STATUS_LOG_FILE: /logs/osqueryd.status.log
+      FLEET_OSQUERY_RESULT_LOG_PLUGIN: filesystem
+      FLEET_FILESYSTEM_RESULT_LOG_FILE: /logs/osqueryd.results.log
+    volumes:
+      - ./fleet:/fleet/:ro
+      - fleet:/logs/
+    depends_on:
+      - db-fleet
+      - redis
+    networks:
+      - s1em
+    ports:
+      - "8412:8412"
 
   db:
     image: mysql:latest
@@ -284,7 +334,7 @@ services:
     volumes:
       - mysql:/var/lib/mysql
     networks:
-      - sirp
+      - s1em
 
   misp:
     image: coolacid/misp-docker:core-latest
@@ -304,7 +354,6 @@ services:
       - "traefik.http.routers.misp.tls=true"
       - "traefik.http.middlewares.misp-stripprefix.stripprefix.prefixes=/misp"
       - "traefik.http.routers.misp.middlewares=misp-stripprefix"
-
     environment:
       - "HOSTNAME=https://misp.cyber/misp"
       - "REDIS_FQDN=redis"
@@ -319,14 +368,13 @@ services:
       - "SECURESSL=true" # Enable higher security SSL in nginx
       - "MISP_MODULES_FQDN=http://misp-modules" # Set the MISP Modules FQDN, used for Enrichment_services_url/Import_services_url/Export_services_url
       - "WORKERS=4"
-
     volumes:
       - "./misp/config.php:/var/www/MISP/app/Config/config.php"
       - "misp:/var/www/MISP/app/tmp/logs/"
       - "misp:/var/www/MISP/app/files"
       - "misp:/etc/nginx/certs"
     networks:
-      - sirp
+      - s1em
 
   misp-modules:
     image: coolacid/misp-docker:modules-latest
@@ -338,7 +386,7 @@ services:
       - redis
       - db
     networks:
-      - sirp
+      - s1em
 
   minio:
     image: minio/minio:latest
@@ -358,7 +406,7 @@ services:
       retries: 3
     restart: always
     networks:
-      - sirp
+      - s1em
 
   rabbitmq:
     image: rabbitmq:3.8-management
@@ -370,7 +418,7 @@ services:
       - amqpdata:/var/lib/rabbitmq
     restart: always
     networks:
-      - sirp
+      - s1em
 
   opencti:
     image: opencti/platform:latest
@@ -414,7 +462,7 @@ services:
       - rabbitmq
     restart: always
     networks:
-      - sirp
+      - s1em
 
   worker:
     image: opencti/worker:latest
@@ -426,7 +474,7 @@ services:
       - opencti
     restart: always
     networks:
-      - sirp
+      - s1em
 
   connector-history:
     image: opencti/connector-history:latest
@@ -441,7 +489,7 @@ services:
       - CONNECTOR_LOG_LEVEL=info
     restart: always
     networks:
-      - sirp
+      - s1em
 
   connector-export-file-stix:
     image: opencti/connector-export-file-stix:latest
@@ -456,7 +504,7 @@ services:
       - CONNECTOR_LOG_LEVEL=info
     restart: always
     networks:
-      - sirp
+      - s1em
 
   connector-export-file-csv:
     image: opencti/connector-export-file-csv:latest
@@ -471,7 +519,7 @@ services:
       - CONNECTOR_LOG_LEVEL=info
     restart: always
     networks:
-      - sirp
+      - s1em
 
   connector-import-file-stix:
     image: opencti/connector-import-file-stix:latest
@@ -486,7 +534,7 @@ services:
       - CONNECTOR_LOG_LEVEL=info
     restart: always
     networks:
-      - sirp
+      - s1em
 
   connector-import-file-pdf-observables:
     image: opencti/connector-import-file-pdf-observables:latest
@@ -502,7 +550,7 @@ services:
       - PDF_OBSERVABLES_CREATE_INDICATOR=False
     restart: always
     networks:
-      - sirp
+      - s1em
 
   connector-misp:
     image: opencti/connector-misp:latest
@@ -531,7 +579,7 @@ services:
       - MISP_IMPORT_ONLY_PUBLISHED=True
     restart: always
     networks:
-      - sirp
+      - s1em
 
   connector-mitre:
     image: opencti/connector-mitre:latest
@@ -551,13 +599,13 @@ services:
       - MITRE_INTERVAL=7 # In days, must be strictly greater than 1
     restart: always
     networks:
-      - sirp
+      - s1em
 
 
 networks:
    reverse_proxy:
     driver: bridge
-   sirp:
+   s1em:
     driver: bridge
 volumes:
    esdata:
@@ -585,4 +633,8 @@ volumes:
    misp:
     external: false
    stoq:
+    external: false
+   db-fleet:
+    external: false
+   fleet:
     external: false
