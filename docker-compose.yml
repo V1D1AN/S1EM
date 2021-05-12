@@ -146,7 +146,7 @@ services:
 
   suricata:
     image: jasonish/suricata:5.0
-    command: -c /etc/suricata/suricata.yaml -i ens32
+    command: -c /etc/suricata/suricata.yaml -i network_monitoring
     container_name: suricata
     hostname: suricata
     network_mode: "host"
@@ -187,7 +187,7 @@ services:
       - NET_ADMIN
       - SYS_NICE
     restart: always
-    command: -C -i af_packet::ens32 local
+    command: -C -i af_packet::network_monitoring local
     volumes:
       - zeekdata:/pcap
 
