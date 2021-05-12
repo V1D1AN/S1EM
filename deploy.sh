@@ -16,6 +16,6 @@ echo "#### CONFIGURING MONITORING INTERFACE ####"
 echo "##########################################"
 read -s -p "Enter the monitoring interface (ex:ens32):" monitoring_interface
 monitoring_interface=$monitoring_interface
-sed -i "s/monitoring_interface/$monitoring_interface/g" docker-compose.yml
+sed -i "s/network_monitoring/$monitoring_interface/g" docker-compose.yml
 echo
 docker-compose up -d
