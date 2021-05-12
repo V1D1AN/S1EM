@@ -6,5 +6,5 @@ elasticsearch.hosts: "http://elasticsearch:9200"
 elasticsearch.username: elastic
 elasticsearch.password: changeme
 xpack.security.enabled: true
-pack.fleet.agents.tlsCheckDisabled: true
+xpack.fleet.agents.tlsCheckDisabled: true
 xpack.encryptedSavedObjects.encryptionKey: 'azertyuiopqsdfghjklmwxcvbn1234567890'
