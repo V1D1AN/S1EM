@@ -30,6 +30,8 @@ echo
 echo "##########################################"
 echo "######### GENERATE CERTIFICATE ###########"
 echo "##########################################"
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/server.key -out server/server.crt
+mkdir ssl
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/server.key -out ssl/server.crt
+chmod 600 ssl/server.key ssl/server.crt
 echo
 docker-compose up -d
