@@ -341,7 +341,7 @@ services:
       - sirp
 
   minio:
-    image: minio/minio:RELEASE.2021-03-26T00-00-41Z
+    image: minio/minio:latest
     container_name: minio
     volumes:
       - minio:/data
