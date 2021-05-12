@@ -11,6 +11,7 @@ password=$password
 sed -i "s/changeme/$password/g" cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/pipeline/03_output.conf
 sed -i "s/elastic_opencti/$password/g" docker-compose.yml
 echo
+echo
 echo "##########################################"
 echo "#### CONFIGURING MONITORING INTERFACE ####"
 echo "##########################################"
