@@ -1,6 +1,6 @@
 # S1EM
 
-This project is a SIEM with SIRP and Threat Intel, all in one.
+This project is a SIEM with SIRP and Threat Intel,all in one.
 
 Solution work with CentOS 7 and kernel 5 ( For Auditbeat ), and docker.
 
@@ -16,6 +16,7 @@ Inside the solution:
 * OpenCTI
 * Suricata
 * Zeek
+* FleetDm
 * StoQ
 * Traefik
 
@@ -113,6 +114,11 @@ https://@IP/thehive
 The Url for Cortex:
 ```
 https://@IP/cortex
+```
+
+The Url for FleetDm:
+```
+https://@IP:8412
 ```
 
 The Url for OpenCTI:
