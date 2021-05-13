@@ -11,6 +11,9 @@
     watch = true
     exposedByDefault = false
     swarmMode = false
+  [providers.file]
+    filename = "/etc/traefik/dyn.toml"
+
 	
 [accessLog]
   filePath = "/tmp/access.log"
