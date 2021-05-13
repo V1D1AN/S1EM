@@ -222,3 +222,7 @@ Security >> Detections >> Manage Detection Rules >> Load Elastic prebuilt rules
 The architecture of the project S1EM:
 
 <p align="center"><img align="center" src="https://i.postimg.cc/vZP6hsw8/S1EM.png"></p>
+
+# Todo
+
+The complete documentation
