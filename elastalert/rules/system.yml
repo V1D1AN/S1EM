@@ -23,7 +23,7 @@ hive_alert_config:
  title: '{match[signal][rule][name]}'
  type: '{match[event][module]}'
  source: '{match[host][name]}'
- description: "`Rule description :` \n\n {match[signal][rule][description]} \n\n `Rule Query :` \n\n {match[signal][rule][query]} \n\n `Event Original :` \n\n '{match[message]} \n\n `Lien Kibana :` \n\n http://KIBANA_IP/kibana/app/kibana#/discover?_g=(filters:!())&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'88a2ee30-9e7a-11eb-9a55-ff4842811a9a',key:_id,negate:!f,params:(query:'{match[_id]}'),type:phrase,value:'{match[_id]}'),query:(match:(_id:(query:'{match[_id]}',type:phrase))))),index:'88a2ee30-9e7a-11eb-9a55-ff4842811a9a',interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))"
+ description: "`Rule description :` \n\n {match[signal][rule][description]} \n\n `Rule Query :` \n\n {match[signal][rule][query]} \n\n `Event Original :` \n\n '{match[message]} \n\n `Kibana link:` \n\n http://KIBANA_IP/kibana/app/kibana#/discover?_g=(filters:!())&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'88a2ee30-9e7a-11eb-9a55-ff4842811a9a',key:_id,negate:!f,params:(query:'{match[_id]}'),type:phrase,value:'{match[_id]}'),query:(match:(_id:(query:'{match[_id]}',type:phrase))))),index:'88a2ee30-9e7a-11eb-9a55-ff4842811a9a',interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))"
  severity: 3
  tags: ['Signal', 'Detection']
  tlp: 2
