@@ -32,7 +32,7 @@ services:
     environment:
       - http.host=0.0.0.0
       - discovery.type=single-node
-      - cluster.name=sirp
+      - cluster.name=s1em
       - script.allowed_types= inline
       - thread_pool.search.queue_size=100000
       - thread_pool.write.queue_size=10000
@@ -41,6 +41,7 @@ services:
       - xpack.security.authc.api_key.enabled=true
       - bootstrap.memory_lock=true
       - 'ES_JAVA_OPTS=-Xms1g -Xmx1g'
+      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
     ulimits:
       nofile:
         soft: 65536
