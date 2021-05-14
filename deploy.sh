@@ -1,15 +1,13 @@
 #!/bin/bash
 mv env.sample .env
-docker-compose up -d elasticsearch
-sleep 45
-docker exec -ti elasticsearch elasticsearch-setup-passwords interactive
 echo "##########################################"
 echo "###### CONFIGURING ACCOUNT ELASTIC #######"
 echo "##########################################"
 read -s -p "Enter the password of account elastic:" password
 password=$password
-sed -i "s/changeme/$password/g" cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/pipeline/03_output.conf
+sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/pipeline/03_output.conf
 sed -i "s/elastic_opencti/$password/g" docker-compose.yml
+echo
 echo
 echo
 echo "##########################################"
@@ -34,4 +32,5 @@ mkdir ssl
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/server.key -out ssl/server.crt
 chmod 600 ssl/server.key ssl/server.crt
 echo
+docker-compose pull
 docker-compose up -d
