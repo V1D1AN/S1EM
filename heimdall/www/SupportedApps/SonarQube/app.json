@@ -1,0 +1,10 @@
+{
+    "appid": "68b3ab5f7810a9984bd8f46d53de0abf35f613f9",
+    "name": "SonarQube",
+    "website": "https://www.sonarqube.org",
+    "license": "GNU Lesser General Public License v3.0 only",
+    "description": "Catch bugs and vulnerabilities in your app, with thousands of automated Static Code Analysis rules.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "sonarqube.png"
+}

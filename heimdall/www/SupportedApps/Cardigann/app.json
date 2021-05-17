@@ -1,0 +1,10 @@
+{
+    "appid": "9f2e2dd8217d1186f9ad484d91e009227efa5897",
+    "name": "Cardigann",
+    "website": "https://github.com/cardigann/cardigann",
+    "license": "MIT License",
+    "description": "A proxy server for adding new indexers to Sonarr, SickRage and other media managers",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "cardigann.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "62484a2ddd0930286322c0a4364dd404951a1070",
+    "name": "Virtualmin",
+    "website": "https://www.virtualmin.com/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Virtualmin is a domain hosting and website control panel, which gives the ability to create and manage many domains. As well as simplify both automation and tasks.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "virtualmin.svg"
+}

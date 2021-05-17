@@ -1,0 +1,29 @@
+{
+    "appid": "7aa898759f1d210aaa5edc8a184bfe5e1668b5bd",
+    "name": "SABnzbd",
+    "website": "https://sabnzbd.org/",
+    "license": "GNU General Public License v2.0 or later",
+    "description": "SABnzbd is a multi-platform binary newsgroup downloader. The program works in the background and simplifies the downloading verifying and extracting of files from Usenet.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "sabnzbd.png",
+    "config": {
+        "type": "apikey",
+        "stat1": {
+            "name": "Queue",
+            "url": ":url:api?output=json&apikey=:apikey:&mode=queue",
+            "key": "queue.sizeleft",
+            "filter": "none",
+            "updateOnChange": "Yes",
+            "suffix": ""
+        },
+        "stat2": {
+            "name": "Speed",
+            "url": ":url:api?output=json&apikey=:apikey:&mode=queue",
+            "key": "queue.speed",
+            "filter": "speed",
+            "updateOnChange": "Yes",
+            "suffix": ""
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "67f7ed18fb98b30dc7ee328877f789de10be4227",
+    "name": "Traccar",
+    "website": "https://www.traccar.org/",
+    "license": "Apache License 2.0",
+    "description": "Server software for GPS tracking including device communication back-end and web interface",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "traccar.png"
+}

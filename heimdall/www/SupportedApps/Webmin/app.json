@@ -1,0 +1,10 @@
+{
+    "appid": "b9726e44ef09db12f6e010af8977d55dc971b841",
+    "name": "Webmin",
+    "website": "http://www.webmin.com/",
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "description": "Webmin is a web-based system configuration tool for Unix-like systems, although recent versions can also be installed and run on Windows.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "webmin.svg"
+}

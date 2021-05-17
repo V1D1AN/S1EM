@@ -1,0 +1,10 @@
+{
+    "appid": "af7b37e2841d9150f6abd5a936b32a1f681d6bda",
+    "name": "JDownloader",
+    "website": "http://jdownloader.org/",
+    "license": "Creative Commons Attribution Non Commercial Share Alike 2.0 Generic",
+    "description": "JDownloader is a free, open-source download management tool with a huge community of developers that makes downloading as easy and fast as it should be.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "jdownloader.png"
+}

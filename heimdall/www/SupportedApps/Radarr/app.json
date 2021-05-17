@@ -1,0 +1,31 @@
+{
+    "appid": "8a5cd39a1a5dff323d63bbe45fffe0c9c03bd2e7",
+    "name": "Radarr",
+    "website": "https://radarr.video/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Radarr is an independent fork of Sonarr reworked for automatically downloading movies via Usenet and BitTorrent.\r\n\r\nThe project was inspired by other Usenet/BitTorrent movie downloaders such as CouchPotato.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "radarr.png",
+    "config": {
+        "type": "apikey",
+        "stat1": {
+            "name": "Missing",
+            "url": ":url:api/v3/movie?apikey=:apikey:",
+            "key": "",
+            "filter": "filter",
+            "filterBy": "hasFile",
+            "filterByValue": "false",
+            "updateOnChange": "no",
+            "suffix": ""
+        },
+        "stat2": {
+            "name": "Queue",
+            "url": ":url:api/v3/queue?apikey=:apikey:",
+            "key": "totalRecords",
+            "filter": "none",
+            "updateOnChange": "no",
+            "suffix": ""
+        }
+    }
+}

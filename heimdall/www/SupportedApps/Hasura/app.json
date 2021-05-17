@@ -1,0 +1,10 @@
+{
+    "appid": "241e4d951466ee4a38bde6aa73f7c8f0fab3a3f2",
+    "name": "Hasura",
+    "website": "https://hasura.io/",
+    "license": "Apache License 2.0",
+    "description": "Instantly make your data accessible over GraphQL.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "hasura.png"
+}

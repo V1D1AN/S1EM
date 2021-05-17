@@ -1,0 +1,10 @@
+{
+    "appid": "0efc652ff6792fef6190e3f066133e37a050e52a",
+    "name": "Mastodon",
+    "website": "https://joinmastodon.org",
+    "license": "GNU Affero General Public License v3.0",
+    "description": "Mastodon is a free, open-source social network server based on ActivityPub where users can follow friends and discover new ones. On Mastodon, users can publish anything they want: links, pictures, text, video. All Mastodon servers are interoperable as a federated network (users on one server can seamlessly communicate with users from another one, including non-Mastodon software that implements ActivityPub)!",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "mastodon.svg"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "c47466c999c3113a3291ab09cab20b0df630d8e8",
+    "name": "Nessus",
+    "website": "https://www.tenable.com/products/nessus",
+    "license": "Commercial",
+    "description": "Nessus is trusted by more than 27,000 organizations worldwide as one of the most widely deployed security technologies on the planet - and the gold standard for vulnerability assessment.",
+    "enhanced": true,
+    "tile_background": "light",
+    "icon": "nessus.png"
+}

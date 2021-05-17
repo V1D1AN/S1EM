@@ -1,0 +1,10 @@
+{
+    "appid": "46ede88d6d440af5d3c7cc70cabbab6722245acd",
+    "name": "Oscarr",
+    "website": "https://github.com/morpheus65535/oscarr",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Oscarr is a dashboard application for users of Plex, Emby, Sonarr, Radarr and Bazarr. It gives you and overview of your media management software.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "oscarr.svg"
+}

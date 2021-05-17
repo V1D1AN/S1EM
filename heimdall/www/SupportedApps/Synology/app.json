@@ -1,0 +1,10 @@
+{
+    "appid": "8521f6e426ad621f27a6b48be57a3c6056c9cfd3",
+    "name": "Synology",
+    "website": "http://synology.com",
+    "license": "commercial",
+    "description": "Synology is a popular NAS appliance",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "synology.png"
+}

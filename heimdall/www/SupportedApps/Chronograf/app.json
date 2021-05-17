@@ -1,0 +1,10 @@
+{
+    "appid": "7799a0f63bdae67145c85519239860c8882f9a64",
+    "name": "Chronograf",
+    "website": "https://www.influxdata.com/time-series-platform/chronograf/",
+    "license": "GNU Affero General Public License v3.0 or later",
+    "description": "Chronograf is an open-source web application designed to visualize\r\nmonitoring data and create alerting and automation rules.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "chronograf.png"
+}

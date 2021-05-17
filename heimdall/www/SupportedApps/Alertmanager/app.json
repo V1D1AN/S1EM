@@ -1,0 +1,10 @@
+{
+    "appid": "9fe84adc4eb8248be3322c8754a0cf6219d122d6",
+    "name": "Alertmanager",
+    "website": "https://prometheus.io/docs/alerting/alertmanager/",
+    "license": "Apache License 2.0",
+    "description": "The Alertmanager handles alerts sent by client applications such as the Prometheus server. It takes care of deduplicating, grouping, and routing them to the correct receiver integrations such as email, PagerDuty, or OpsGenie. It also takes care of silencing and inhibition of alerts.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "alertmanager.png"
+}

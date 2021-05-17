@@ -1,0 +1,10 @@
+{
+    "appid": "4095a83996a808dfa4ef0e283b08fa3684596bb4",
+    "name": "QNAP",
+    "website": "https://www.qnap.com/",
+    "license": "commercial",
+    "description": "QNAP Systems, Inc. is a Taiwanese corporation that specializes in Network-attached storage (NAS) appliances used for file sharing, virtualization, storage management and surveillance applications.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "qnap.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "6e4a451c7c654ae2bc5c75689e690966a5fd29ee",
+    "name": "youtube-dl",
+    "website": "https://youtube-dl.org/",
+    "license": "The Unlicense",
+    "description": "youtube-dl is a command-line program to download videos from YouTube.com and a few more sites",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "youtubedl.png"
+}

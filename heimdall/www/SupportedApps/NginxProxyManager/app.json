@@ -1,0 +1,10 @@
+{
+    "appid": "cbfad988a16a9fbcc1812bc206afcc1f73dd36de",
+    "name": "Nginx Proxy Manager",
+    "website": "https://nginxproxymanager.jc21.com/",
+    "license": "MIT License",
+    "description": "This project comes as a pre-built docker image that enables you to easily forward to your websites running at home or otherwise, including free SSL, without having to know too much about Nginx or Letsencrypt.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "nginxproxymanager.png"
+}

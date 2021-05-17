@@ -1,0 +1,10 @@
+{
+    "appid": "211e5bfaaa8f220a748e1e9ef8a2513cb391f651",
+    "name": "Kubernetes Dashboard",
+    "website": "https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/",
+    "license": "Apache License 2.0",
+    "description": "Kubernetes Dashboard is a general purpose, web-based UI for Kubernetes clusters. It allows users to manage applications running in the cluster and troubleshoot them, as well as manage the cluster itself.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "kubernetesdashboard.svg"
+}

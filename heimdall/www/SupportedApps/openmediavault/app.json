@@ -1,0 +1,10 @@
+{
+    "appid": "68a90a2f21aad7a09a3533a2c6ab9a03dc94af49",
+    "name": "openmediavault",
+    "website": "https://www.openmediavault.org/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "openmediavault is the next generation network attached storage (NAS) solution based on Debian Linux.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "openmediavault.png"
+}

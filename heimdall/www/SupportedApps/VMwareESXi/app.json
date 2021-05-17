@@ -1,0 +1,10 @@
+{
+    "appid": "39d2762d5690a6ebeb6ac1615d3ee5d58b07ab7e",
+    "name": "VMware ESXi",
+    "website": "https://www.vmware.com/products/esxi-and-esx.html",
+    "license": "Commercial",
+    "description": "VMware ESXi is an enterprise-class, type-1 hypervisor developed by VMware for deploying and serving virtual computers. As a type-1 hypervisor, ESXi is not a software application that is installed on an operating system; instead, it includes and integrates vital OS components, such as a kernel.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "vmwareesxi.png"
+}

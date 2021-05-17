@@ -1,0 +1,10 @@
+{
+    "appid": "c07ac2e365e175d304c1cd409bcfc288ff18594f",
+    "name": "Bastillion",
+    "website": "https://www.bastillion.io",
+    "license": "GNU Affero General Public License v3.0 or later",
+    "description": "Bastillion is an open-source web-based SSH console that centrally manages administrative access to systems. A bastion host for administrators with features that promote infrastructure security, including key management and auditing.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "bastillion.png"
+}

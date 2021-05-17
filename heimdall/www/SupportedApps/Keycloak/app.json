@@ -1,0 +1,10 @@
+{
+    "appid": "d1081e351fbebe0deb0c2867d5f731c8f9cc3fd8",
+    "name": "Keycloak",
+    "website": "https://www.keycloak.org",
+    "license": "Apache License 2.0",
+    "description": "Open Source Identity and Access Management.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "keycloak.svg"
+}

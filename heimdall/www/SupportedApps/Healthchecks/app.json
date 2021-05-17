@@ -1,0 +1,10 @@
+{
+    "appid": "2d97a1f26a2c0647566d6e0a1779a024607f9f1d",
+    "name": "Healthchecks",
+    "website": "https://healthchecks.io",
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "description": "Instant alerts when your cron jobs fail silently.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "healthchecks.png"
+}

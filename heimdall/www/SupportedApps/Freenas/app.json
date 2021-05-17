@@ -1,0 +1,10 @@
+{
+    "appid": "3d258071fa9cd41a85627f6bf7fc6998c3a8f5cf",
+    "name": "Freenas",
+    "website": "https://www.freenas.org/",
+    "license": "BSD-2-Clause",
+    "description": "FreeNAS is an embedded open source network-attached storage (NAS) operating system based on FreeBSD.",
+    "enhanced": true,
+    "tile_background": "light",
+    "icon": "freenas.png"
+}

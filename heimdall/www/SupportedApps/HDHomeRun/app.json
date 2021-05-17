@@ -1,0 +1,10 @@
+{
+    "appid": "8fe021dbb159e76695ab080421f68fac90579b0c",
+    "name": "HDHomeRun",
+    "website": "https://www.silicondust.com/",
+    "license": "Proprietary",
+    "description": "The DVR reimagined. Watch and Record all of your favorite live TV. Your way.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "hdhomerun.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "d95b56ce41a2e1ac4cecdd398defd7414407cc08",
+    "name": "Jenkins",
+    "website": "https://jenkins.io/",
+    "license": "MIT License",
+    "description": "Jenkins is an open source automation server with an unparalleled plugin ecosystem to support practically every tool as part of your delivery pipelines.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "jenkins.png"
+}

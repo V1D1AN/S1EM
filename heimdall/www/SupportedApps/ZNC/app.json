@@ -1,0 +1,10 @@
+{
+    "appid": "563c45bed29a24c1a1a2981af1a93bdeb692713b",
+    "name": "ZNC",
+    "website": "https://wiki.znc.in/ZNC",
+    "license": "Apache License",
+    "description": "IRC bouncer",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "znc.png"
+}

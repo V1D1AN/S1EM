@@ -1,0 +1,10 @@
+{
+    "appid": "1c772e7ff575c76274b2ab9f90d82b428029b50b",
+    "name": "Guacamole",
+    "website": "https://guacamole.apache.org/",
+    "license": "Apache License 2.0",
+    "description": "Apache Guacamole is a clientless remote desktop gateway. It supports standard protocols like VNC, RDP, and SSH.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "guacamole.png"
+}

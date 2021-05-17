@@ -1,0 +1,10 @@
+{
+    "appid": "0ea6cd5e52e84ef9afd444f5693d09d216b10ba2",
+    "name": "PRTG",
+    "website": "https://www.paessler.com/prtg",
+    "license": "100 sensors free",
+    "description": "Monitor all systems, devices, traffic and applications of your IT infrastructure.",
+    "enhanced": true,
+    "tile_background": "light",
+    "icon": "prtg.png"
+}

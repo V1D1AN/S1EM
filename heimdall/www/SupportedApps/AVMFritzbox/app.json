@@ -1,0 +1,10 @@
+{
+    "appid": "e8354374b262e6f1055e7412d11f24a164a50f79",
+    "name": "AVM Fritzbox",
+    "website": "www.avm.de",
+    "license": "GNU General Public License v2.0 only",
+    "description": "\"The\" Fritzbox, stylised as FRITZ!Box, is a series of residential gateway devices produced by the German company AVM GmbH. \r\nFRITZ!OS is the FRITZ!Box operating system and can be easily controlled via your browser. User-friendly menus, easy-to-understand wizards, and the optional advanced mode come in handy in all scenarios.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "avmfritzbox.png"
+}

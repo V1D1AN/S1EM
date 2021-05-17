@@ -1,0 +1,10 @@
+{
+    "appid": "8830438516d806a81d3d2650afa14af4f61bec1f",
+    "name": "Serviio",
+    "website": "http://serviio.org/",
+    "license": "Free",
+    "description": "Serviio is a free media server. It allows you to stream your media files (music, video or images) to renderer devices (e.g. a TV set, Bluray player, games console or mobile phone) on your connected home network.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "serviio.png"
+}

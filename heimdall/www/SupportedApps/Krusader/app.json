@@ -1,0 +1,10 @@
+{
+    "appid": "556651b611ac6cb9876f54eb950084090e060846",
+    "name": "Krusader",
+    "website": "https://krusader.org/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Krusader is an advanced twin panel (commander style) file manager for KDE Plasma and other desktops in the *nix world, similar to Midnight or Total Commander.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "krusader.png"
+}

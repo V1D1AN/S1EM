@@ -1,0 +1,10 @@
+{
+    "appid": "dcf2874559e0304e2811c796cb873ae9aac07fa2",
+    "name": "Shinobi",
+    "website": "https://shinobi.video",
+    "license": "GNU Public License 3.0",
+    "description": "An open-source CCTV NVR for recording, monitoring, and streaming modern IP cameras.  Lightweight, extremely compatible and simple to use.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "shinobi.png"
+}

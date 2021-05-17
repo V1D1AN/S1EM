@@ -1,0 +1,10 @@
+{
+    "appid": "675dd93307bd5235a9b5da4268f9fee3d95d6235",
+    "name": "SickGear",
+    "website": "https://github.com/SickGear/SickGear/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "SickGear provides management of TV shows and/or Anime, it detects new episodes, links downloader apps, and more.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "sickgear.png"
+}

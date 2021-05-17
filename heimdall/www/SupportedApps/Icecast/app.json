@@ -1,0 +1,10 @@
+{
+    "appid": "13a2a3d6e668c91b77ccc436162118ce7568ee4e",
+    "name": "Icecast",
+    "website": "https://icecast.org/",
+    "license": "GNU General Public License v2.0 only",
+    "description": "Icecast is a streaming media (audio/video) server which currently supports Ogg (Vorbis and Theora), Opus, WebM and MP3 streams.\r\nIt can be used to create an Internet radio station or a privately running jukebox and many things in between. It is very versatile in that new formats can be added relatively easily and supports open standards for communication and interaction.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "icecast.png"
+}

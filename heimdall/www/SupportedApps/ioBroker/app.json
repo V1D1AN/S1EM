@@ -1,0 +1,10 @@
+{
+    "appid": "e3e34703718888700cefb3c28a0e52cb6a903ff0",
+    "name": "ioBroker",
+    "website": "www.iobroker.net",
+    "license": "MIT License",
+    "description": "ioBroker is an integration platform for the Internet of Things, focused on Building Automation, Smart Metering, Ambient Assisted Living, Process Automation, Visualization and Data Logging",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "iobroker.png"
+}

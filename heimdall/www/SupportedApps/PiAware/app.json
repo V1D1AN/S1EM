@@ -1,0 +1,10 @@
+{
+    "appid": "b897f0f558bc83256a49d5c7e8f1658d87cfe820",
+    "name": "PiAware",
+    "website": "https://github.com/flightaware/piaware",
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "description": "Client-side package and programs for forwarding ADS-B data to FlightAware",
+    "enhanced": true,
+    "tile_background": "light",
+    "icon": "piaware.png"
+}

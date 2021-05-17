@@ -1,0 +1,10 @@
+{
+    "appid": "4a1349c03398a3e66f6efdf6395fb689d80f83fa",
+    "name": "AlarmPI",
+    "website": "https://github.com/bkbilly/AlarmPI",
+    "license": "MIT License",
+    "description": "AlarmPI is a home security system based on Raspberry PI. It supports wired sensors (PIR, Magnetic etc.) and wireless through MQTT or Hikvision.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "alarmpi.png"
+}

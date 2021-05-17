@@ -1,0 +1,10 @@
+{
+    "appid": "99be0df8034cbcd7b5dfb3290839f7db21c1acbb",
+    "name": "Octoprint",
+    "website": "https://octoprint.org/",
+    "license": "GNU Affero General Public License v3.0",
+    "description": "OctoPrint is the snappy web interface for your 3D printer that allows you to control and monitor all aspects of your printer and print jobs, right from your browser.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "octoprint.png"
+}

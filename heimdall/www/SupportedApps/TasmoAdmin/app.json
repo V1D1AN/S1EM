@@ -1,0 +1,10 @@
+{
+    "appid": "ecf26dc5795ae2ccb3afbfa44570237590d65145",
+    "name": "TasmoAdmin",
+    "website": "https://github.com/reloxx13/TasmoAdmin",
+    "license": "GNU General Public License v3.0 only",
+    "description": "TasmoAdmin (previously SonWEB) is an administrative Website for Devices flashed with Tasmota.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "tasmoadmin.png"
+}

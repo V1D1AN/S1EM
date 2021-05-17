@@ -1,0 +1,10 @@
+{
+    "appid": "917883dc82d936304725edacb6bf11e5cf537be6",
+    "name": "Jaeger",
+    "website": "https://www.jaegertracing.io/",
+    "license": "Apache License 2.0",
+    "description": "Jaeger is a distributed tracing platform, which can be used for monitoring microservices-based distributed systems.",
+    "enhanced": true,
+    "tile_background": "light",
+    "icon": "jaeger.png"
+}

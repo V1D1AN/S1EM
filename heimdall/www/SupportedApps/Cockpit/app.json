@@ -1,0 +1,10 @@
+{
+    "appid": "e4475bc2121ed1ffd1e742c7c2521ca0f16cef93",
+    "name": "Cockpit",
+    "website": "https://cockpit-project.org/",
+    "license": "GNU Lesser General Public License v2.1 only",
+    "description": "Cockpit is an interactive server admin interface. It is easy to use and very lightweight. Cockpit interacts directly with the operating system from a real Linux session in a browser.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "cockpit.png"
+}

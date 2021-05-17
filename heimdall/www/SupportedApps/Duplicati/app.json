@@ -1,0 +1,10 @@
+{
+    "appid": "bc99430645db7c79e2901d65598bb8cf91f77b4e",
+    "name": "Duplicati",
+    "website": "https://www.duplicati.com/",
+    "license": "GNU Lesser General Public License v2.1 only",
+    "description": "Free backup software to store backups online with strong encryption. Works with FTP, SSH, WebDAV, OneDrive, Amazon S3, Google Drive and many others.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "duplicati.png"
+}

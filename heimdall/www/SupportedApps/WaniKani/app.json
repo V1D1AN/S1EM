@@ -1,0 +1,10 @@
+{
+    "appid": "dc115cfaac280c4b97289484356c21428af565be",
+    "name": "WaniKani",
+    "website": "https://www.wanikani.com/",
+    "license": "Proprietary",
+    "description": "WaniKani is a Japanese radicals, kanji, and vocabulary learning web app that uses mnemonics and SRS to make kanji learning simple.",
+    "enhanced": true,
+    "tile_background": "light",
+    "icon": "wanikani.png"
+}

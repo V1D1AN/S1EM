@@ -1,0 +1,10 @@
+{
+    "appid": "eea19d4cce28c77d2a0c1449a508d6290d00f9dd",
+    "name": "Rundeck",
+    "website": "https://www.rundeck.com/open-source",
+    "license": "Apache License 2.0",
+    "description": "Rundeck is an open source automation service with a web console, command line tools and a WebAPI. It lets you easily run automation tasks across a set of nodes.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "rundeck.png"
+}

@@ -27,13 +27,6 @@ sed -i "s/network_monitoring/$monitoring_interface/g" docker-compose.yml
 echo
 echo
 echo "##########################################"
-echo "######## CONFIGURING KIBANA IP ###########"
-echo "##########################################"
-read -r -p "Enter the IP address of Kibana:" kibana_ip
-kibana_ip=$kibana_ip
-sed -i "s/KIBANA_IP/$kibana_ip/g" elastalert/rules/*.yml
-echo
-echo "##########################################"
 echo "######### GENERATE CERTIFICATE ###########"
 echo "##########################################"
 mkdir ssl

@@ -1,0 +1,10 @@
+{
+    "appid": "ce88c5ed9d12b302762ca57ee01d494b96466946",
+    "name": "OpenMapTiler",
+    "website": "https://openmaptiles.org/",
+    "license": "BSD 3-Clause Clear License",
+    "description": "Open-source maps made for self-hosting",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "openmaptiler.png"
+}

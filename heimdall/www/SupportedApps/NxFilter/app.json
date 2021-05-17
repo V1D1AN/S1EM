@@ -1,0 +1,10 @@
+{
+    "appid": "533dc2434d2aee76aac442ece4bcc94b53fd7246",
+    "name": "NxFilter",
+    "website": "https://nxfilter.org",
+    "license": "Commercial",
+    "description": "NxFilter is a free DNS filter for commercial and non-commercial purposes. It's light, fast and easy.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "nxfilter.png"
+}

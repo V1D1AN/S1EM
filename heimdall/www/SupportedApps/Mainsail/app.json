@@ -1,0 +1,10 @@
+{
+    "appid": "042c8e5dba563bf592d67d024ff2d66c011a9a69",
+    "name": "Mainsail",
+    "website": "https://github.com/meteyou/mainsail",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Mainsail is a lightweight & responsive web interface for the Klipper 3D printer firmware. It communicates with the Moonraker (Klipper-API) from Arksine.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "mainsail.png"
+}

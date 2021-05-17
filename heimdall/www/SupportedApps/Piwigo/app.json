@@ -1,0 +1,10 @@
+{
+    "appid": "73821d23ad8bb436e7478fec8305ad0636c17d7a",
+    "name": "Piwigo",
+    "website": "piwigo.org",
+    "license": "GNU General Public License v2.0 only",
+    "description": "Piwigo is an open source photo galley software. Designed as an alternative to Picasa or Flickr it can be self-hosted or used as a service. It offers many plugins, and offers full photo management capabilities",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "piwigo.png"
+}

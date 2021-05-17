@@ -1,0 +1,10 @@
+{
+    "appid": "57b25ceb94bd4c9ba9038ce17656f5ede9007e4c",
+    "name": "Ombi",
+    "website": "https://ombi.io/",
+    "license": "GNU General Public License v2.0 only",
+    "description": "Ombi is a self-hosted web application that automatically gives your shared Plex or Emby users the ability to request content by themselves! Ombi can be linked to multiple TV Show and Movie DVR tools to create a seamless end-to-end experience for your users.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "ombi.png"
+}

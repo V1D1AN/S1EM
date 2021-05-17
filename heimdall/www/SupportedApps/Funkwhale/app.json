@@ -1,0 +1,10 @@
+{
+    "appid": "7853f58e7245aa624ddec1f97d7b4c18ac0047c7",
+    "name": "Funkwhale",
+    "website": "https://funkwhale.audio",
+    "license": "GNU Affero General Public License v3.0 only",
+    "description": "Funkwhale is a community-driven project that lets you listen and share music and audio within a decentralized, open network.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "funkwhale.svg"
+}

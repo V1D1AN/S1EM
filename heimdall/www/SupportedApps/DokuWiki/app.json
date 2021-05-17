@@ -1,0 +1,10 @@
+{
+    "appid": "a17f1a47dbc391814d321ae33ad51c0c7695a08d",
+    "name": "DokuWiki",
+    "website": "https://www.dokuwiki.org/",
+    "license": "GNU General Public License v2.0 only",
+    "description": "DokuWiki is a simple to use and highly versatile Open Source wiki software that doesn't require a database.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "dokuwiki.png"
+}

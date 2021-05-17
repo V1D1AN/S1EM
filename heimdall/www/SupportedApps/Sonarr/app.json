@@ -1,0 +1,27 @@
+{
+    "appid": "6e2a525ceb737f9ed8badcef5eb20d1502e39656",
+    "name": "Sonarr",
+    "website": "https://sonarr.tv/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Sonarr is a PVR for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "sonarr.png",
+    "config": {
+        "type": "apikey",
+        "stat1": {
+            "name": "Missing",
+            "url": ":url:api/wanted/missing?apikey=:apikey:",
+            "key": "totalRecords",
+            "filter": "none",
+            "updateOnChange": "No"
+        },
+        "stat2": {
+            "name": "Queue",
+            "url": ":url:api/queue?apikey=:apikey:",
+            "key": null,
+            "filter": "count",
+            "updateOnChange": "No"
+        }
+    }
+}

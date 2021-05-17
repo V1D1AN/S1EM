@@ -1,0 +1,10 @@
+{
+    "appid": "404b6861a94932750a70d2779fd785f018d90e36",
+    "name": "RocketChat",
+    "website": "https://rocket.chat/",
+    "license": "MIT License",
+    "description": "Open Source Slack like chat server",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "rocketchat.png"
+}

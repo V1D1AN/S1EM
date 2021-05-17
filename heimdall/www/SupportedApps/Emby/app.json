@@ -1,0 +1,29 @@
+{
+    "appid": "3021fea57e9b932f14822d47e47d163f47812ef1",
+    "name": "Emby",
+    "website": "https://emby.media/",
+    "license": "Proprietary",
+    "description": "Emby (formerly Media Browser) is a media server designed to organize, play, and stream audio and video to a variety of devices.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "emby.png",
+    "config": {
+        "type": "apikey",
+        "stat1": {
+            "name": "Movies",
+            "url": ":url:emby/Items/Counts?api_key=:apikey:",
+            "key": "MovieCount",
+            "filter": "none",
+            "updateOnChange": "No",
+            "suffix": ""
+        },
+        "stat2": {
+            "name": "Series",
+            "url": ":url:emby/Items/Counts?api_key=:apikey:",
+            "key": "SeriesCount",
+            "filter": "none",
+            "updateOnChange": "No",
+            "suffix": ""
+        }
+    }
+}

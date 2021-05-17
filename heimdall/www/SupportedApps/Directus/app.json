@@ -1,0 +1,10 @@
+{
+    "appid": "12764b8bb7cd332f7d4937851a2af2815df706ac",
+    "name": "Directus",
+    "website": "https://directus.io/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Directus is a future-proof, open source, headless CMS to manage all your content in one place. It's elegant and easy user interface will enable you to craft powerfull content backend APIs in minutes.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "directus.png"
+}

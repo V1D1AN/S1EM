@@ -1,0 +1,10 @@
+{
+    "appid": "8304785b9937bf6d4e04c2d7aaa786b3577fb10c",
+    "name": "Xigmanas",
+    "website": "https://www.xigmanas.com/",
+    "license": "BSD 2-Clause \"Simplified\" License",
+    "description": "XigmaNAS is an Open Source Storage NAS (Network-Attached Storage) distribution based on FreeBSD.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "xigmanas.png"
+}

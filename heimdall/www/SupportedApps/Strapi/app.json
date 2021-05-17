@@ -1,0 +1,10 @@
+{
+    "appid": "f2c4ab39ad8485316cf9f0ed6c5951629e324feb",
+    "name": "Strapi",
+    "website": "https://strapi.io/",
+    "license": "MIT License",
+    "description": "Strapi is an open source headless content management system (CMS). Keep control and deliver faster. Building self-hosted, customizable and performant Content API has never been easier.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "strapi.png"
+}

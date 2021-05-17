@@ -1,0 +1,10 @@
+{
+    "appid": "f8ac7f280fe53cea71efe29c42f0d3bca430c02d",
+    "name": "pfSense",
+    "website": "https://www.pfsense.org/",
+    "license": "Apache License 2.0",
+    "description": "pfSense is an open source firewall/router computer software distribution based on FreeBSD.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "pfsense.svg"
+}

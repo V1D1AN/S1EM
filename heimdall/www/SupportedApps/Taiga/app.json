@@ -1,0 +1,10 @@
+{
+    "appid": "4c0f3ebde3d0c13fce8b4b02d1d80fea4123e07a",
+    "name": "Taiga",
+    "website": "https://taiga.io/",
+    "license": "GNU Affero General Public License v3.0",
+    "description": "Taiga is a project management platform for agile developers & designers and project managers who want a beautiful tool that makes work truly enjoyable. It's free, open source and simple to use.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "taiga.png"
+}

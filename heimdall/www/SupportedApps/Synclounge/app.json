@@ -1,0 +1,10 @@
+{
+    "appid": "361732e3fd1161330a49bebcccb955241621e1b1",
+    "name": "Synclounge",
+    "website": "https://github.com/samcm/SyncLounge",
+    "license": "MIT License",
+    "description": "SyncLounge (Previously PlexTogether) is a tool to sync Plex content across multiple players in multiple locations.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "synclounge.png"
+}

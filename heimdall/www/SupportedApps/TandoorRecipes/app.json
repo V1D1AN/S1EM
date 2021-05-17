@@ -1,0 +1,10 @@
+{
+    "appid": "343eebd3e9330c34952dcb3bc5c94ba12bf07a67",
+    "name": "Tandoor Recipes",
+    "website": "https://docs.tandoor.dev/",
+    "license": "GNU Affero General Public License v3.0",
+    "description": "The recipe manager that allows you to manage your ever growing collection of digital recipes.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "tandoorrecipes.png"
+}

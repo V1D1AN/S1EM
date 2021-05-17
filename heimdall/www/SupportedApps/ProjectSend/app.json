@@ -1,0 +1,10 @@
+{
+    "appid": "91adc8832dfee8dea234877dad680682ab947980",
+    "name": "ProjectSend",
+    "website": "https://www.projectsend.org/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "ProjectSend is a self-hosted, free and open source, secure and user friendly file sharing software focusing on exchanging files between you and your clients.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "projectsend.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "391f2b7f3fe853e1ea09723eeafc354fa291ab48",
+    "name": "Proxmox",
+    "website": "https://www.proxmox.com/en/",
+    "license": "GNU Affero General Public License v3.0 only",
+    "description": "Proxmox Virtual Environment is an open-source server virtualization environment. It allows deployment and management of virtual machines and containers",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "proxmox.png"
+}

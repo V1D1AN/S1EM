@@ -1,0 +1,10 @@
+{
+    "appid": "b1909932aac1c5510c044de0cb8c0f3ef049a250",
+    "name": "Wordpress",
+    "website": "https://wordpress.org/",
+    "license": "GNU General Public License v2.0 only",
+    "description": "WordPress is open source software you can use to create a beautiful website, blog, or app.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "wordpress.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "bbe5a51792acf2e90900e10d33bb02a86a50b6ff",
+    "name": "FlexGet",
+    "website": "https://www.flexget.com/",
+    "license": "MIT License",
+    "description": "like sonarr and radarr etc. combined, but with integrations to trakt.tv etc. Actually very capable",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "flexget.png"
+}

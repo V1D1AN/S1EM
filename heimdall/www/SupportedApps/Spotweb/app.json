@@ -1,0 +1,10 @@
+{
+    "appid": "8d40ec161e2793d4ad3526e66d1723b2043780b6",
+    "name": "Spotweb",
+    "website": "https://github.com/spotweb/spotweb",
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "description": "Spotweb is a decentralized usenet community based on the Spotnet protocol.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "spotweb.png"
+}

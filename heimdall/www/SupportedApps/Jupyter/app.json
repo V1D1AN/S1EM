@@ -1,0 +1,10 @@
+{
+    "appid": "7d93500c86ae587b3d9f4bf1b8cec36f221c8183",
+    "name": "Jupyter",
+    "website": "https://jupyter.org/",
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "description": "Open source web application that allows you to create and share documents that contain live code, equations, visualizations and narrative text.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "jupyter.svg"
+}

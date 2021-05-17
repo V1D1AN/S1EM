@@ -1,0 +1,10 @@
+{
+    "appid": "785ad2ec16dcf34b4fc83b025b930818c6372567",
+    "name": "Watcher",
+    "website": "https://github.com/nosmokingbandit/Watcher3",
+    "license": "Apache License 2.0",
+    "description": "Watcher is an automated movie NZB & Torrent searcher and snatcher. You can add a list of wanted movies and Watcher will automatically send the NZB or Torrent to your download client.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "watcher.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "b3d874a5d85233d394ed569fc8f67f4864993308",
+    "name": "NowShowing",
+    "website": "https://github.com/ninthwalker/NowShowing",
+    "license": "MIT License",
+    "description": "Generates an email and web page of Plex recently added content. NowShowing is the successor of the popular plexReport docker.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "nowshowing.png"
+}

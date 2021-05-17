@@ -1,0 +1,10 @@
+{
+    "appid": "585815f2ee7291f96ea30333fd94d20b5722693f",
+    "name": "Stash",
+    "website": "https://github.com/stashapp/stash",
+    "license": "MIT License",
+    "description": "Stash is a Go app which organizes and serves your porn.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "stash.png"
+}

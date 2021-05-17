@@ -1,0 +1,10 @@
+{
+    "appid": "6dec25c0d43491eadaf519800e0dbf6adfe86f1a",
+    "name": "PlexRequests",
+    "website": "http://plexrequests.8bits.ca/",
+    "license": "MIT License",
+    "description": "Simple automated way for users to request new content for Plex.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "plexrequests.png"
+}

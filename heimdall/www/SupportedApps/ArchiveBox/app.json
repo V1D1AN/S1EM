@@ -1,0 +1,10 @@
+{
+    "appid": "b74f349cf434a529c0fe8589315b5956a4562097",
+    "name": "ArchiveBox",
+    "website": "https://github.com/pirate/ArchiveBox",
+    "license": "MIT License",
+    "description": "The open-source self-hosted web archive. ArchiveBox takes a list of website URLs you want to archive, and creates a local, static, browsable HTML clone of the content from those websites (it saves HTML, JS, media files, PDFs, images and more).",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "archivebox.png"
+}

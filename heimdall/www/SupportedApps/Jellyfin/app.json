@@ -1,0 +1,10 @@
+{
+    "appid": "3e0a7f109bd760b9474c78cb652e8c3e82669226",
+    "name": "Jellyfin",
+    "website": "https://jellyfin.github.io/",
+    "license": "GNU General Public License v2.0 only",
+    "description": "Jellyfin is the Free Software Media System that puts you in control of managing and streaming your media. There are no strings attached, no premium licenses or features, and no hidden agendas.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "jellyfin.png"
+}

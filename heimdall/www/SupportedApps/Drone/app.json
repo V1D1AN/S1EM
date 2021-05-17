@@ -1,0 +1,10 @@
+{
+    "appid": "1430fd26ed07651f08ab03098c8e6745701abf6a",
+    "name": "Drone",
+    "website": "https://github.com/drone/drone",
+    "license": "Apache License 2.0",
+    "description": "Drone is a Continuous Delivery system built on container technology. Drone uses a simple YAML configuration file, a superset of docker-compose, to define and execute Pipelines inside Docker containers.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "drone.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "b8fa84fbe86d39557144410d201d466c53cb0c4e",
+    "name": "FileRun",
+    "website": "https://www.filerun.com/",
+    "license": "Commercial",
+    "description": "Access your files anywhere through self-hosted secure cloud storage, file backup and sharing for your photos, videos, files and more.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "filerun.png"
+}

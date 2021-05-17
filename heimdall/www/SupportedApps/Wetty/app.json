@@ -1,0 +1,10 @@
+{
+    "appid": "9b4e87ab376cf2327facda32fa98617676dfccd9",
+    "name": "Wetty",
+    "website": "https://github.com/krishnasrinivas/wetty",
+    "license": "MIT License",
+    "description": "WeTTy = Web + TTy. Terminal web app in browser over http/https. (Ajaxterm/Anyterm alternative, but much better). WeTTy is an alternative to ajaxterm and anyterm but much better than them because WeTTy uses xterm.js which is a full fledged implementation of terminal emulation written entirely in JavaScript. WeTTy uses websockets rather then Ajax and hence better response time.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "wetty.png"
+}

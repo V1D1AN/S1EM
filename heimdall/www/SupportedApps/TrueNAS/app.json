@@ -1,0 +1,10 @@
+{
+    "appid": "07f6df4f81edd2e3dadf7e5fb56c37d6fb8acef4",
+    "name": "TrueNAS",
+    "website": "https://www.truenas.com/",
+    "license": "BSD-2-Clause",
+    "description": "TrueNAS is an embedded open source network-attached storage (NAS) operating system based on FreeBSD.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "truenas.png"
+}

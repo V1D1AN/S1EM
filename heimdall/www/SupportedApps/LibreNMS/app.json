@@ -1,0 +1,10 @@
+{
+    "appid": "3efb63c16a70f296c1cdb7992bd621c26423da99",
+    "name": "LibreNMS",
+    "website": "https://www.librenms.org",
+    "license": "GNU General Public License v3.0 or later",
+    "description": "LibreNMS, a fully featured network monitoring system that provides a wealth of features and device support",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "librenms.png"
+}

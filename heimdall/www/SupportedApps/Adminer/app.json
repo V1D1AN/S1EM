@@ -1,0 +1,10 @@
+{
+    "appid": "653caf8bdf55d6a99d77ceacd79f622353cd821a",
+    "name": "Adminer",
+    "website": "https://www.adminer.org/",
+    "license": "Apache License 2.0",
+    "description": "Adminer (formerly phpMinAdmin) is a full-featured database management tool written in PHP. Conversely to phpMyAdmin, it consists of a single file ready to deploy to the target server. Adminer is available for MySQL, MariaDB, PostgreSQL, SQLite, MS SQL, Oracle, Firebird, SimpleDB, Elasticsearch and MongoDB.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "adminer.png"
+}

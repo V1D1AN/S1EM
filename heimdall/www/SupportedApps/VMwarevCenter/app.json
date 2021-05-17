@@ -1,0 +1,10 @@
+{
+    "appid": "a0a47ab17060b3437e3f16fed9cae275c7e8d43a",
+    "name": "VMware vCenter",
+    "website": "https://www.vmware.com/products/vcenter-server.html",
+    "license": "Proprietary",
+    "description": "VMware vCenter Server provides a centralized platform for managing your VMware vSphere environments, allowing you to automate and deliver a virtual infrastructure across the hybrid cloud with confidence.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "vmwarevcenter.png"
+}

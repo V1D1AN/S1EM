@@ -1,0 +1,10 @@
+{
+    "appid": "30747605e1f6faad5d1cedb2c7953d31ffad3fd4",
+    "name": "Minio",
+    "website": "https://www.minio.io/",
+    "license": "Apache License 2.0",
+    "description": "Minio is an object storage server released under Apache License v2.0. It is compatible with Amazon S3 cloud storage service. It is best suited for storing unstructured data such as photos, videos, log files, backups and container / VM images.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "minio.png"
+}

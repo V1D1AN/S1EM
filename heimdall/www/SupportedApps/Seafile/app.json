@@ -1,0 +1,10 @@
+{
+    "appid": "055bbb599e68faa20cba22098b4802152b33b763",
+    "name": "Seafile",
+    "website": "https://www.seafile.com/",
+    "license": "GNU General Public License v2.0 only",
+    "description": "Seafile is an open source enterprise file hosting platform with high reliability and performance. Put files on your own server. Sync and share files across different devices, or access all the files as a virtual disk.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "seafile.png"
+}

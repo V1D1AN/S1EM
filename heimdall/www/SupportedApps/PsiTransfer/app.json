@@ -1,0 +1,10 @@
+{
+    "appid": "1beb54ac8e91638c7a181fd04ca5a4a5ec5343c1",
+    "name": "PsiTransfer",
+    "website": "https://hub.docker.com/r/psitrax/psitransfer/",
+    "license": "BSD with attribution",
+    "description": "A simple open source self-hosted file sharing app. Upload a file instantly anywhere around the world.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "psitransfer.png"
+}

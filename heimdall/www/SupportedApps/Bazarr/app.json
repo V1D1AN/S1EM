@@ -1,0 +1,27 @@
+{
+    "appid": "085f0b437f9bf9c98bb68b745c8dcf323a7e0499",
+    "name": "Bazarr",
+    "website": "https://github.com/morpheus65535/bazarr",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Bazarr is a companion application to Sonarr and Radarr. It manage and download subtitles based on your requirements. You defined your preferences by TV show or movies and Bazarr take care of everything for you.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "bazarr.png",
+    "config": {
+        "type": "apikey",
+        "stat1": {
+            "name": "missing series",
+            "url": ":url:/api/episodes/wanted?apikey=:apikey:",
+            "key": "total",
+            "filter": "none",
+            "updateOnChange": "No"
+        },
+        "stat2": {
+            "name": "missing movies",
+            "url": ":url:/api/movies/wanted?apikey=:apikey:",
+            "key": "total",
+            "filter": "none",
+            "updateOnChange": "No"
+        }
+    }
+}

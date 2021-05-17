@@ -1,0 +1,49 @@
+{
+    "appid": "bc28bfa49a73fd2384cbecd6572ea72d0166aa28",
+    "name": "Deluge",
+    "website": "https://deluge-torrent.org/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Deluge is a BitTorrent client written in Python. Deluge is cross-platform, using a front and back end architecture where libtorrent, a software library written in C++ which provides the application's networking logic, is connected to one of various front ends through the project's own Python bindings",
+    "enhanced": true,
+    "config": {
+        "auth_payload": {
+            "method": "auth.login",
+            "id": 1,
+            "params": [":password:"]
+         },
+        "type": "apikey",
+        "stats": [{
+            "name": "Queue",
+            "url": ":url:api?output=json&apikey=:apikey:&mode=queue",
+            "key": "queue.sizeleft",
+            "filter": "size",
+            "updateOnChange": "Yes",
+            "suffix": ""
+        }, {
+            "name": "Speed",
+            "url": ":url:api?output=json&apikey=:apikey:&mode=queue",
+            "key": "queue.speed",
+            "filter": "speed",
+            "updateOnChange": "Yes",
+            "suffix": ""
+        }],
+        "stat1": {
+            "name": "Queue",
+            "url": ":url:api?output=json&apikey=:apikey:&mode=queue",
+            "key": "queue.sizeleft",
+            "filter": "size",
+            "updateOnChange": "Yes",
+            "suffix": ""
+        },
+        "stat2": {
+            "name": "Speed",
+            "url": ":url:api?output=json&apikey=:apikey:&mode=queue",
+            "key": "queue.speed",
+            "filter": "speed",
+            "updateOnChange": "Yes",
+            "suffix": ""
+        }
+    },
+    "tile_background": "dark",
+    "icon": "deluge.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "570ecf8de333013382f0dc93aa7faacbccdee575",
+    "name": "Nitter",
+    "website": "https://github.com/zedeus/nitter",
+    "license": "GNU Affero General Public License v3.0",
+    "description": "A free and open source alternative Twitter front-end focused on privacy.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "nitter.svg"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "5023ad25cdb679ee3bf1e659434da75ec0177924",
+    "name": "The Lounge",
+    "website": "https://thelounge.chat/",
+    "license": "MIT License",
+    "description": "Modern multi-user web IRC client designed for self-hosting",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "thelounge.png"
+}

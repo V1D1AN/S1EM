@@ -1,0 +1,10 @@
+{
+    "appid": "3d3221b2db3115d65e938a1c497f209256c6185f",
+    "name": "Printer",
+    "website": "https://en.wikipedia.org/wiki/Printer_(computing)",
+    "license": "Commercial",
+    "description": "A printer is a peripheral device which makes a persistent representation of graphics or text, usually on paper.  Printers that have a network connection often include a built-in web server that lets you manage the printer from any browser on the network.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "printer.png"
+}

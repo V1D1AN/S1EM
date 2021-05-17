@@ -1,0 +1,10 @@
+{
+    "appid": "b89920409bdce40e08ba1023480b0546061cd577",
+    "name": "Pi-hole",
+    "website": "https://pi-hole.net/",
+    "license": "European Union Public License 1.2",
+    "description": "Pi-hole is a Linux network-level advertisement and internet tracker blocking application which acts as a DNS sinkhole, intended for use on a private network.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "pihole.png"
+}

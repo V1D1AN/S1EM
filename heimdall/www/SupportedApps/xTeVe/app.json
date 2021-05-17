@@ -1,0 +1,10 @@
+{
+    "appid": "cb6a8a853393228efd2b7b1963f50d56b7f0d818",
+    "name": "xTeVe",
+    "website": "https://xteve.de",
+    "license": "MIT License",
+    "description": "M3U Proxy for Plex DVR and Emby Live TV",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "xteve.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "67dcc2f0c9930fb08b0eaa39ad076264965b2bd6",
+    "name": "MediaWiki",
+    "website": "https://www.mediawiki.org/wiki/MediaWiki",
+    "license": "GNU General Public License v2.0 or later",
+    "description": "MediaWiki is a collaboration and documentation platform brought to you by a vibrant community.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "mediawiki.png"
+}

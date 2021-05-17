@@ -1,0 +1,10 @@
+{
+    "appid": "b3fdc0b49deb0e7db32311b64867b000409193e5",
+    "name": "Gotify",
+    "website": "https://gotify.net",
+    "license": "MIT License",
+    "description": "A self-hosted push notification service.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "gotify.png"
+}

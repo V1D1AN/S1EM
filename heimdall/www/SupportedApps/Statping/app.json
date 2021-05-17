@@ -1,0 +1,10 @@
+{
+    "appid": "2a7e2a851e5597e23c2be647eeda17d9105933ba",
+    "name": "Statping",
+    "website": "https://github.com/hunterlong/statping",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Status Page for monitoring your websites and applications with beautiful graphs, analytics, and plugins. Run on any type of environment.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "statping.png"
+}

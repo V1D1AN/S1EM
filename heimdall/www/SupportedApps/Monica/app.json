@@ -1,0 +1,10 @@
+{
+    "appid": "96d53734fc1bd54d848cd30f98069b90333b1bb3",
+    "name": "Monica",
+    "website": "https://www.monicahq.com/",
+    "license": "GNU Affero General Public License v3.0 only",
+    "description": "Monica is an open-source web application to organize the interactions with your loved ones. We call it a PRM, or Personal Relationship Management. Think of it as a CRM for your friends or family.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "monica.png"
+}

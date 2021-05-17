@@ -1,0 +1,10 @@
+{
+    "appid": "80d4015f1f71198cb285a89daf9796ebde0b5c29",
+    "name": "Kibana",
+    "website": "https://www.elastic.co/products/kibana",
+    "license": "Apache License 2.0",
+    "description": "Kibana lets you visualise your Elasticsearch data and navigate the Elastic Stack.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "kibana.png"
+}

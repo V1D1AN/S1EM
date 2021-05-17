@@ -1,0 +1,10 @@
+{
+    "appid": "fbf13ee99afeadddc4f73e1183fd1b52774b3474",
+    "name": "ruTorrent",
+    "website": "https://github.com/Novik/ruTorrent",
+    "license": "GNU General Public License v3.0 or later",
+    "description": "ruTorrent is a front-end for the popular Bittorrent client rtorrent.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "rutorrent.png"
+}

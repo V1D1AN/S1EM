@@ -1,0 +1,10 @@
+{
+    "appid": "6bf857ca7de026fbed4ae790a809a0ea640901f4",
+    "name": "TYPO3",
+    "website": "https://typo3.org/",
+    "license": "GNU General Public License v2.0 or later",
+    "description": "The Professional, Flexible Content Management System.\nTYPO3 CMS is an Open Source Enterprise Content Management System with a large global community, backed by the approximately 900 members of the TYPO3 Association.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "typo3.svg"
+}

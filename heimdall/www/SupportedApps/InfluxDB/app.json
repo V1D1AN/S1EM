@@ -1,0 +1,10 @@
+{
+    "appid": "5e1e914cba38acaa83d4e39139dadbec478fbb6e",
+    "name": "InfluxDB",
+    "website": "https://www.influxdata.com/products/influxdb/",
+    "license": "MIT License",
+    "description": "InfluxDB is an open source time series platform. This includes APIs for storing and querying data, processing it in the background for ETL or monitoring and alerting purposes, user dashboards, and visualizing and exploring the data and more.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "influxdb.svg"
+}

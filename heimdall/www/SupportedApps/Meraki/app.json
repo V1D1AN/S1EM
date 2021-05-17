@@ -1,0 +1,10 @@
+{
+    "appid": "ad35ad6e82ecf7b9f4e279795d3ef30a496d2a21",
+    "name": "Meraki",
+    "website": "https://meraki.com",
+    "license": "Commercial",
+    "description": "Cloud web portal for Meraki device management.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "meraki.png"
+}

@@ -1,0 +1,10 @@
+{
+  "appid": "3f903351ae2408404930a6af98e669510149abbd",
+  "name": "Netboot",
+  "website": "https://netboot.xyz/",
+  "license": "Apache License 2.0",
+  "description": "netboot.xyz is a way to PXE boot various operating system installers or utilities from one place within the BIOS without the need of having to go retrieve the media to run the tool.",
+  "enhanced": false,
+  "tile_background": "dark",
+  "icon": "netboot.png"
+}

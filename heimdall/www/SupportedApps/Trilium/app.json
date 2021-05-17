@@ -1,0 +1,10 @@
+{
+    "appid": "3add4f3aea6cc6eb1ec164d73b6935ce454b8f16",
+    "name": "Trilium",
+    "website": "https://github.com/zadam/trilium",
+    "license": "GNU Affero General Public License v3.0",
+    "description": "Build your personal knowledge base with Trilium Notes.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "trilium.png"
+}

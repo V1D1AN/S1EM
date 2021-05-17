@@ -1,0 +1,10 @@
+{
+    "appid": "44aae3efe784b1886f020103d8344287be143c58",
+    "name": "Invidious",
+    "website": "https://github.com/omarroth/invidious",
+    "license": "Apache License 2.0",
+    "description": "Self-hosted, Open Source YouTube Alternative",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "invidious.png"
+}

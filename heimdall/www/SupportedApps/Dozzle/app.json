@@ -1,0 +1,10 @@
+{
+    "appid": "176d99d897dbd7c02b1a1db4142054f74a76aa47",
+    "name": "Dozzle",
+    "website": "https://dozzle.dev/",
+    "license": "MIT License",
+    "description": "Dozzle is a real-time log viewer for docker containers.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "dozzle.png"
+}

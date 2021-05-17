@@ -1,0 +1,10 @@
+{
+    "appid": "2ab436efba9e25585ac0ed6232c92fa57173a4aa",
+    "name": "CodiMD",
+    "website": "https://codimd.org/",
+    "license": "GNU Affero General Public License v3.0",
+    "description": "CodiMD is a realtime, multi-platform collaborative markdown note editor. This means that you can write notes with other people on your desktop, tablet or even on the phone. You can sign-in via multiple auth providers like Facebook, Twitter, GitHub and many more on the homepage.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "codimd.png"
+}

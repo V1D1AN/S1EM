@@ -1,0 +1,10 @@
+{
+    "appid": "34899a33e3d7e33e1966b921ea250350fc71591a",
+    "name": "Transmission",
+    "website": "https://transmissionbt.com/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Transmission is a BitTorrent client which features a variety of user interfaces on top of a cross-platform back-end.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "transmission.png"
+}

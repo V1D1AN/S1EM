@@ -1,0 +1,10 @@
+{
+    "appid": "6b1df10bbb1575fb941f402500ccb516ac34b542",
+    "name": "ESPHome",
+    "website": "https://esphome.io",
+    "license": "MIT License",
+    "description": "ESPHome is a system to control your ESP8266/ESP32 by simple yet powerful configuration files and control them remotely through Home Automation systems.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "esphome.png"
+}

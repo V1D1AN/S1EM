@@ -1,0 +1,10 @@
+{
+    "appid": "f491c749924e2532e3b6c4496b94e03fd2b54f27",
+    "name": "Sourcegraph",
+    "website": "https://sourcegraph.com/",
+    "license": "Apache License 2.0",
+    "description": "Sourcegraph is a free, open-source, self-hosted code search and navigation tool for developers. Use it with any Git code host for teams of any size.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "sourcegraph.png"
+}

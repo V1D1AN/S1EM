@@ -1,0 +1,10 @@
+{
+    "appid": "c934574c40a11992b08ce4e659ca23310916436c",
+    "name": "Virtual Radar Server",
+    "website": "https://www.virtualradarserver.co.uk/",
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "description": "Virtual Radar Server is an open-source .NET application that runs a local web server. You can connect to the web server with any modern browser and see the aircraft plotted on a map. You will need a radio that is capable of receiving Mode-S transmissions. Virtual Radar Server was written and tested using Kinetic Avionic's SBS-1er and SBS-3 radios but it will work with any receiver or SDR that can produce the Kinetic text message format, Kinetic's SBS-3 binary format, the AVR \"*\", \"@\" or \":\" formats or the Mode-S Beast binary format.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "virtualradarserver.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "c8714150b8061714a04b8cc146c8bf0210c05b62",
+    "name": "Splunk",
+    "website": "https://splunk.com",
+    "license": "Commercial",
+    "description": "Splunk (the product) captures, indexes and correlates real-time data in a searchable repository from which it can generate graphs, reports, alerts, dashboards and visualizations.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "splunk.png"
+}

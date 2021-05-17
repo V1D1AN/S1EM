@@ -1,0 +1,10 @@
+{
+    "appid": "aebda823a279b219476c565be863d83739999502",
+    "name": "Plex",
+    "website": "https://www.plex.tv/",
+    "license": "Freemium",
+    "description": "Plex media server allows you to aggregate all your personal media and access it anywhere you go. Enjoy your own content on all your devices with Plex.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "plex.png"
+}

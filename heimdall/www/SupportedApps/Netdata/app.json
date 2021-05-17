@@ -1,0 +1,10 @@
+{
+    "appid": "810d3926feac8c1bd3957fdac48b6c9475b932d0",
+    "name": "Netdata",
+    "website": "https://my-netdata.io/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Unparalleled insights, in real-time, of everything happening on your systems and applications, with stunning, interactive web dashboards and powerful performance and health alarms.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "netdata.png"
+}

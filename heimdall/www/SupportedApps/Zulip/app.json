@@ -1,0 +1,10 @@
+{
+    "appid": "d17139efd0d8e0cba9bf8380c9818838911dfe0f",
+    "name": "Zulip",
+    "website": "https://zulipchat.com/",
+    "license": "Apache License 2.0",
+    "description": "Powerful open source team chat. Zulip combines the immediacy of real-time chat with an email threading model. With Zulip, you can catch up on important conversations while ignoring irrelevant ones.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "zulip.png"
+}

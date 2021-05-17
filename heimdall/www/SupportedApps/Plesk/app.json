@@ -1,0 +1,10 @@
+{
+    "appid": "96bace2f6616fad61930a4ca021809c00a7e9e2a",
+    "name": "Plesk",
+    "website": "https://www.plesk.com/",
+    "license": "Proprietary",
+    "description": "Plesk is a commercial web hosting platform with a control panel that allows a server administrator to set up new websites, reseller accounts, e-mail accounts and DNS entries through a web-based interface.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "plesk.png"
+}

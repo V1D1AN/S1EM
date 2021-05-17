@@ -1,0 +1,10 @@
+{
+    "appid": "0faa0037bf071040588c082c0c5c8dee3e11f2cd",
+    "name": "Roundcube",
+    "website": "Roundcube",
+    "license": "GNU General Public License v3.0 or later",
+    "description": "Roundcube webmail is a browser-based multilingual IMAP client with an application-like user interface. It provides full functionality you expect from an email client, including MIME support, address book, folder manipulation, message searching and spell checking.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "roundcube.png"
+}

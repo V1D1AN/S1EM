@@ -1,0 +1,10 @@
+{
+    "appid": "533ab349d29dba8f2ecc5a552ba8846a9453f82a",
+    "name": "Readarr",
+    "website": "https://readarr.com/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Readarr is a ebook (and maybe eventually magazine/audiobook) collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new books from your favorite authors and will grab, sort and rename them.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "readarr.png"
+}

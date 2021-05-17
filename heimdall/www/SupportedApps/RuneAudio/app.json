@@ -1,0 +1,10 @@
+{
+    "appid": "11f6ce44eb513a288ca4ef26cbbdb3fece2d6ec4",
+    "name": "RuneAudio",
+    "website": "http://www.runeaudio.com/",
+    "license": "GNU General Public License v3.0 or later",
+    "description": "RuneAudio is a free and open source software that turns inexpensive, silent and low-consumption mini-PC into Hi-Fi music players.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "runeaudio.png"
+}

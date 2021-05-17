@@ -1,0 +1,10 @@
+{
+    "appid": "348c49dd03dddd418929316668d2e67bf2d9ae88",
+    "name": "Bookstack",
+    "website": "https://www.bookstackapp.com/",
+    "license": "MIT License",
+    "description": "BookStack is a simple, self-hosted, easy-to-use platform for organising and storing information.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "bookstack.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "727706dbdf86b593f7be63c2fcca20718fd8caca",
+    "name": "osTicket",
+    "website": "osticket.com",
+    "license": "GNU General Public License v2.0 only",
+    "description": "osTicket is a widely-used open source support ticket system.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "osticket.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "710f91b65aed9bbc884898b19b6b4bb17ec5b32c",
+    "name": "Palo Alto Networks",
+    "website": "https://www.paloaltonetworks.com/",
+    "license": "Commercial",
+    "description": "Palo Alto ore products are a platform that includes advanced firewalls and cloud-based offerings that extend those firewalls to cover other aspects of security.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "paloaltonetworks.png"
+}

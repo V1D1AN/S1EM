@@ -1,0 +1,10 @@
+{
+    "appid": "f60f5b25d59c397989e3cd374f81cdd7710a4fca",
+    "name": "PhotoPrism",
+    "website": "https://photoprism.org/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "PhotoPrism is a server-based application for browsing, organizing and sharing your personal photo collection. It makes use of the latest technologies to automatically tag and find pictures without getting in your way. Say goodbye to solutions that force you to upload your visual memories to the cloud.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "photoprism.png"
+}

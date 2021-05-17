@@ -1,0 +1,10 @@
+{
+    "appid": "3568f62a517667d3dae77d47746d8382dd3b9f3b",
+    "name": "Monit",
+    "website": "https://mmonit.com/monit/",
+    "license": "GNU Affero General Public License v3.0 or later",
+    "description": "Monit is a small Open Source utility for managing and monitoring Unix systems. Monit conducts automatic maintenance and repair and can execute meaningful causal actions in error situations.",
+    "enhanced": true,
+    "tile_background": "dark",
+    "icon": "monit.png"
+}

@@ -358,7 +358,7 @@ services:
       - "traefik.http.middlewares.misp-stripprefix.stripprefix.prefixes=/misp"
       - "traefik.http.routers.misp.middlewares=misp-stripprefix"
     environment:
-      - "HOSTNAME=https://misp.cyber/misp"
+      - "HOSTNAME=https://s1em.cyber.local/misp"
       - "REDIS_FQDN=redis"
       - "INIT=true"             # Initialze MISP, things includes, attempting to import SQL and the Files DIR
       - "CRON_USER_ID=1"        # The MISP user ID to run cron jobs as
@@ -603,6 +603,44 @@ services:
     restart: always
     networks:
       - s1em
+
+  cyberchef:
+    image: mpepping/cyberchef:latest
+    container_name: cyberchef
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cyberchef.rule=PathPrefix(`/cyberchef`)"
+      - "traefik.http.routers.cyberchef.entryPoints=secure"
+      - "traefik.http.routers.cyberchef.tls=true"
+      - "traefik.http.middlewares.cyberchef-stripprefix.stripprefix.prefixes=/cyberchef"
+      - "traefik.http.routers.cyberchef.middlewares=cyberchef-stripprefix"
+    networks:
+      - s1em
+    expose:
+      - "8000"
+
+  heimdall:
+    image: ghcr.io/linuxserver/heimdall
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+      - HEIMDALL_PERSIST=NO
+    volumes:
+      - ./heimdall/www:/config/www
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.heimdall.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.heimdall.entryPoints=secure"
+      - "traefik.http.routers.heimdall.tls=true"
+    networks:
+      - s1em
+    expose:
+      - "80"
+      - "443"
+    restart: always
 
 
 networks:

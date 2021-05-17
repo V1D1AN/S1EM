@@ -1,0 +1,10 @@
+{
+    "appid": "11915e3ab4fbb44453d956eb4d5163cad8050d6b",
+    "name": "WebTools",
+    "website": "https://github.com/ukdtom/WebTools.bundle",
+    "license": "Mozilla Public License 2.0",
+    "description": "WebTools is a collection of tools for Plex Media Server. Like the Unsupported AppStore (UAS)",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "webtools.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "03959669b24360f78cd9d5f092ac57a80074b3ac",
+    "name": "Concourse",
+    "website": "https://concourse-ci.org",
+    "license": "Apache License 2.0",
+    "description": "Concourse is an open-source continuous thing-doer.\r\n\r\nBuilt on the simple mechanics of resources, tasks, and jobs, Concourse presents a general approach to automation that makes it great for CI/CD.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "concourse.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "fc4e407d69510b855b678aa4fba6083fbbfc5383",
+    "name": "OnlyOffice",
+    "website": "https://www.onlyoffice.com/",
+    "license": "GNU Affero General Public License v3.0 or later",
+    "description": "ONLYOFFICE online editors for text documents, spreadsheets, and presentations with access to pro features and connect them to the platform of your choice with ready-to-use connectors: https://www.onlyoffice.com/download.aspx#connectors",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "onlyoffice.png"
+}

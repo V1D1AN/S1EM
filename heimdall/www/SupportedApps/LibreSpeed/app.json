@@ -1,0 +1,10 @@
+{
+    "appid": "3771bfd8b92b695b317391d4e685d13fc9a14433",
+    "name": "LibreSpeed",
+    "website": "https://github.com/librespeed/speedtest",
+    "license": "GNU Lesser General Public License v3.0 or later",
+    "description": "A Free and Open Source Speedtest for HTML5 and more.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "librespeed.png"
+}

@@ -1,0 +1,10 @@
+{
+    "appid": "77eb1db6cb81b3cb088d36ab7aae8f230dcfaa28",
+    "name": "Router",
+    "website": "https://en.wikipedia.org/wiki/Router_(computing)",
+    "license": "Commercial",
+    "description": "A router is a networking device that forwards data packets between computer networks.",
+    "enhanced": false,
+    "tile_background": "light",
+    "icon": "router.png"
+}

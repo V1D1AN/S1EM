@@ -1,0 +1,10 @@
+{
+    "appid": "c112604b5b33659f85dda854ac8bc271cb744b8a",
+    "name": "Infoblox",
+    "website": "https://infoblox.com",
+    "license": "Commercial",
+    "description": "The company focuses on managing and identifying devices connected to networks—specifically for the Domain Name System, Dynamic Host Configuration Protocol, and IP address management",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "infoblox.png"
+}

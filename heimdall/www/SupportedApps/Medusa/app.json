@@ -1,0 +1,10 @@
+{
+    "appid": "7209e12ecf01afc45db4ff41be3602a898cf77f8",
+    "name": "Medusa",
+    "website": "https://pymedusa.com/",
+    "license": "GNU General Public License v3.0 only",
+    "description": "Medusa is an automatic Video Library Manager for TV Shows. It watches for new episodes of your favorite shows, and when they are posted it does its magic: automatic torrent/nzb searching, downloading, and processing at the qualities you want.",
+    "enhanced": false,
+    "tile_background": "dark",
+    "icon": "medusa.png"
+}
