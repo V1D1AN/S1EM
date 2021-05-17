@@ -233,4 +233,6 @@ The architecture of the project S1EM:
 - [ ] Upload SigmaHQ rules automatically into kibana
 - [ ] Update Suricata rules automatically
 - [ ] Update Yara rules automatically
+- [ ] An html homepage for services
+- [ ] Elasticsearch multi-nodes with ssl
 - [ ] FPC
