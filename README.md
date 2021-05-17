@@ -75,21 +75,13 @@ Filebeat can read the logs in the "/var/log" with the user rights
 ```
 git clone https://github.com/V1D1AN/S1EM.git
 cd S1EM
+```
+
+Edit the file "env.sample" and change the password for "elastic", after you can start the deploy.
+
+```
 bash deploy.sh
 ```
-
-For the Question:
-```
-Initiating the setup of passwords for reserved users elastic,apm_system,kibana,kibana_system,logstash_system,beats_system,remote_monitoring_user.
-You will be prompted to enter passwords as the process progresses.
-Please confirm that you would like to continue [y/N]
-```
-
-Choose "Yes"
-
-Enter password for "elastic,apm_system,kibana_system,logstash_system,beats_system,remote_monitoring_user"
-
-Finally, enter the password of "elastic" previously enter.
 
 # Access
 
@@ -105,31 +97,43 @@ The Url for Kibana:
 ```
 https://@IP/kibana
 ```
+* User: elastic
+* Password: your password
 
 The Url for TheHive:
 ```
 https://@IP/thehive
 ```
+* User: admin@thehive.local
+* Password: secret
 
 The Url for Cortex:
 ```
 https://@IP/cortex
 ```
+* User: your username
+* Password: your password
 
 The Url for FleetDm:
 ```
 https://@IP:8412
 ```
+* User: your username
+* Password: your password
 
 The Url for OpenCTI:
 ```
 https://@IP/opencti
 ```
+* User: the user in env.sample
+* Password: the password in env.sample
 
 The Url for MISP:
 ```
 https://misp.cyber/misp
 ```
+* User: admin@admin.test
+* Password: admin
 
 Note: You must add in your host file the name and the @IP of the solution.
 
