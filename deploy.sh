@@ -18,7 +18,7 @@ echo "##########################################"
 echo "#### CONFIGURING MONITORING INTERFACE ####"
 echo "##########################################"
 echo
-nmcli | head -n 10
+nmcli
 echo
 echo
 read -r -p "Enter the monitoring interface (ex:ens32):" monitoring_interface
