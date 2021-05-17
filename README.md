@@ -229,6 +229,7 @@ The architecture of the project S1EM:
 
 # Todo
 
+- [ ] Integrate heimdall
 - [ ] The complete documentation
 - [ ] Add Cyberchef
 - [ ] Upload SigmaHQ rules automatically into kibana
