@@ -91,9 +91,9 @@ outputs:
       #facility: local5
       #level: Info ## possible levels: Emergency, Alert, Critical,
                    ## Error, Warning, Notice, Info, Debug
-      redis:
-        server: redis
-        port: 6379
+      #redis:
+      #  server: redis
+      #  port: 6379
       #  async: true ## if redis replies are read asynchronously
       #  mode: list ## possible values: list|lpush (default), rpush, channel|publish
       #             ## lpush and rpush are using a Redis list. "list" is an alias for lpush
@@ -206,10 +206,10 @@ outputs:
 
             # As of Suricata 5.0, version 2 of the eve dns output
             # format is the default.
-            #version: 2
+            version: 2
 
             # Enable/disable this logger. Default: enabled.
-            #enabled: yes
+            enabled: yes
 
             # Control logging of requests and responses:
             # - requests: enable logging of DNS queries
@@ -259,14 +259,14 @@ outputs:
 
         #- dnp3
         - ftp
-        #- rdp
+        - rdp
         - nfs
         - smb
         - tftp
         - ikev2
         - krb5
         - snmp
-        #- sip
+        - sip
         - dhcp:
             enabled: yes
             # When extended mode is on, all DHCP messages are logged
@@ -403,7 +403,7 @@ outputs:
 
   # Stats.log contains data from various counters of the Suricata engine.
   - stats:
-      enabled: yes
+      enabled: no
       filename: stats.log
       append: yes       # append to file (yes) or overwrite it (no)
       totals: yes       # stats for all threads merged together
@@ -751,7 +751,7 @@ app-layer:
       # memcap: 64mb
     # RDP, disabled by default.
     rdp:
-      #enabled: no
+      enabled: yes
     ssh:
       enabled: yes
     smtp:
