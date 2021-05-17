@@ -18,6 +18,7 @@ Inside the solution:
 * Zeek
 * FleetDm
 * StoQ
+* Heimdall
 * Traefik
 
 Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
@@ -85,58 +86,24 @@ bash deploy.sh
 
 # Access
 
-The Url for Dashboard Traefik:
+The Url of S1EM:
 ```
-https://@IP/dashboard
+https://s1em.cyber.local
 ```
-* User: admin
-* Password: admin
-
-
-The Url for Kibana:
-```
-https://@IP/kibana
-```
-* User: elastic
-* Password: your password
-
-The Url for TheHive:
-```
-https://@IP/thehive
-```
-* User: admin@thehive.local
-* Password: secret
-
-The Url for Cortex:
-```
-https://@IP/cortex
-```
-* User: your username
-* Password: your password
-
-The Url for FleetDm:
-```
-https://@IP:8412
-```
-* User: your username
-* Password: your password
-
-The Url for OpenCTI:
-```
-https://@IP/opencti
-```
-* User: the user in env.sample
-* Password: the password in env.sample
-
-The Url for MISP:
-```
-https://misp.cyber/misp
-```
-* User: admin@admin.test
-* Password: admin
 
 Note: You must add in your host file the name and the @IP of the solution.
 
+Accounts:
+
+Application | user | password
+------------| ---- | --------
+Traefik | admin | admin
+Kibana | elastic | your password
+TheHive | admin@thehive.local | secret
+Cortex | your username | your password
+FleetDm | your username | your password
+Misp | admin@admin.test | admin
+OpenCTI | User in env.sample | your password
 
 # Configuration
 
@@ -229,9 +196,9 @@ The architecture of the project S1EM:
 
 # Todo
 
-- [ ] Integrate heimdall
+- [x] Integrate heimdall
 - [ ] The complete documentation
-- [ ] Add Cyberchef
+- [x] Add Cyberchef
 - [ ] Upload SigmaHQ rules automatically into kibana
 - [ ] Update Suricata rules automatically
 - [ ] Update Yara rules automatically
