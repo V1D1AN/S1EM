@@ -342,7 +342,7 @@ services:
   misp:
     image: coolacid/misp-docker:core-latest
     container_name: misp
-    hostname: misp.cyber
+    hostname: s1em.cyber.local
     restart: always
     depends_on:
       - redis
