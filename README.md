@@ -230,4 +230,7 @@ The architecture of the project S1EM:
 # Todo
 
 - [ ] The complete documentation
+- [ ] Upload SigmaHQ rules automatically into kibana
+- [ ] Update Suricata rules automatically
+- [ ] Update Yara rules automatically
 - [ ] FPC
