@@ -225,4 +225,5 @@ The architecture of the project S1EM:
 
 # Todo
 
-The complete documentation
+- [ ] The complete documentation
+- [ ] FPC
