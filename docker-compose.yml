@@ -623,6 +623,7 @@ services:
   heimdall:
     image: ghcr.io/linuxserver/heimdall
     container_name: heimdall
+    restart: always
     environment:
       - PUID=1000
       - PGID=1000
@@ -640,7 +641,7 @@ services:
     expose:
       - "80"
       - "443"
-    restart: always
+
 
 
 networks:
