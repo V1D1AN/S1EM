@@ -15,8 +15,8 @@ Inside the solution:
 * Cortex
 * MISP
 * OpenCTI
-* Suricata
-* Zeek
+* Suricata 5
+* Zeek 3
 * FleetDm
 * StoQ
 * Heimdall
@@ -200,6 +200,7 @@ The architecture of the project S1EM:
 - [x] Integrate heimdall
 - [ ] The complete documentation
 - [x] Add Cyberchef
+- [ ] Upgrade to elastalert2
 - [ ] Upload SigmaHQ rules automatically into kibana
 - [ ] Update Suricata rules automatically
 - [ ] Update Yara rules automatically
