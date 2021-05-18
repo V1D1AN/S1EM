@@ -10,6 +10,7 @@ Inside the solution:
 * Kibana
 * Filebeat
 * Logstash
+* Elastalert
 * TheHive
 * Cortex
 * MISP
