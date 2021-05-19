@@ -218,4 +218,6 @@ Filebeat can read the logs in the "/var/log" with the user rights
 - [x] Update Suricata rules automatically
 - [ ] Update Yara rules automatically
 - [ ] Elasticsearch multi-nodes with ssl
+- [ ] Change Stoq to File-monitor ( Clamav,CAPA,Yara )
+- [ ] Extract file with Zeek
 - [ ] FPC
