@@ -5,7 +5,7 @@ echo "###### CONFIGURING ACCOUNT ELASTIC #######"
 echo "##########################################"
 echo  
 password=$(cat .env | head -n 1 | awk -F= '{print $2}')
-echo "elastic password set in .env" $password
+echo "Confirm the elastic password set in .env:" $password
 echo 
 read -p "Press enter to set this password"
 echo
@@ -18,7 +18,7 @@ echo "##########################################"
 echo "#### CONFIGURING MONITORING INTERFACE ####"
 echo "##########################################"
 echo
-ip a
+ip a | egrep "ens[[::digit:]]{1,3}:|eth[[:digit:]]{1,3}:"
 echo
 echo
 read -r -p "Enter the monitoring interface (ex:ens32):" monitoring_interface
