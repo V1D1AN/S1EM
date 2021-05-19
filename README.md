@@ -53,8 +53,10 @@ git clone https://github.com/V1D1AN/S1EM.git
 cd S1EM
 ```
 
-Edit the file "env.sample" and change the password for "elastic", after you can start the deploy.
+Edit the file "env.sample" and change the password for "elastic". <br />
+Change the account and the password of "OpenCTI".
 
+After, run the command:
 ```
 bash deploy.sh
 ```
@@ -86,9 +88,9 @@ OpenCTI | User in env.sample | your password
 
 ### MISP
 
-Go to the interface MISP
-Enter the login: "admin@admin.test"
-Enter the password: "admin"
+Go to the interface MISP <br />
+Enter the login: "admin@admin.test" <br />
+Enter the password: "admin" <br />
 
 Enter a new password for MISP
 
@@ -96,18 +98,14 @@ After go to "Automation" and get the API Key.
 
 ### TheHive
 
-Follow the official documentation for create an organization and a API key for TheHive
-
-https://github.com/TheHive-Project/TheHiveDocs/blob/master/TheHive4/User/Quick-start.md
-
+Follow the official documentation for create an organization and a API key for TheHive: <br />
+https://github.com/TheHive-Project/TheHiveDocs/blob/master/TheHive4/User/Quick-start.md <br />
 get the API Key.
 
 ### Cortex
 
-Follow the official documentation for create an organization and a API key for Cortex
-
-https://github.com/TheHive-Project/CortexDocs/blob/master/admin/quick-start.md
-
+Follow the official documentation for create an organization and a API key for Cortex: <br />
+https://github.com/TheHive-Project/CortexDocs/blob/master/admin/quick-start.md <br />
 get the API Key.
 
 ### Use Deploy_api_key.sh
