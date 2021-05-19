@@ -42,7 +42,7 @@ For production:
 
 You must have: 
 * 32 Go Ram
-* 75 Go DD
+* More than 75 Go DD
 * 8 cpu
 * 1 network for monitoring
 
