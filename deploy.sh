@@ -5,20 +5,28 @@ echo "###### CONFIGURING ACCOUNT ELASTIC #######"
 echo "##########################################"
 echo  
 password=$(cat .env | head -n 1 | awk -F= '{print $2}')
-echo "Confirm the elastic password set in .env:" $password
-echo 
-read -p "Press enter to set this password"
+echo "The elastic password set in .env:" $password
 echo
-sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/pipeline/03_output.conf
-sed -i "s/elastic_opencti/$password/g" docker-compose.yml
-echo
+read -p "Confirm (y/n) ?" confirm
+
+case $confirm in
+        [yY][eE][sS]|[yY])
+        sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/pipeline/03_output.conf
+        sed -i "s/elastic_opencti/$password/g" docker-compose.yml
+        ;;
+        [nN][oO]|[nN])
+        ;; *)
+        echo "Invalid input ..."
+     exit 1
+     ;;
+esac
 echo
 echo
 echo "##########################################"
 echo "#### CONFIGURING MONITORING INTERFACE ####"
 echo "##########################################"
 echo
-ip a | egrep "ens[[::digit:]]{1,3}:|eth[[:digit:]]{1,3}:"
+ip a | egrep "ens[[:digit:]]{1,3}:|eth[[:digit:]]{1,3}:"
 echo
 echo
 read -r -p "Enter the monitoring interface (ex:ens32):" monitoring_interface
