@@ -11,6 +11,7 @@ Inside the solution:
 * Filebeat
 * Logstash
 * Metricbeat
+* Auditbeat
 * Elastalert
 * TheHive
 * Cortex
@@ -29,49 +30,21 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
 ## Physical
 
+For testing:
+
 You must have: 
 * 12 Go Ram
 * 75 Go DD
 * 8 cpu
 * 1 network for monitoring
 
+For production:
 
-## Docker
-
-Docker-compose must be installed on the system
-
-The user must be on the group "docker" or you do that:
-
-```
-sudo groupadd docker
-sudo usermod -aG docker $USER
-```
-
-Run the following command or Logout and login again and run (that doesn't work you may need to reboot your machine first)
-
-```
-newgrp docker
-```
-
-Check if docker can be run without root
-
-```
-docker ps
-```
-
-## Rsyslog (On Linux)
-
-```
-vi /etc/rsyslog.conf
-```
-
-Add the following line:
-
-```
-$FileCreateMode 0644 
-```
-
-Filebeat can read the logs in the "/var/log" with the user rights
+You must have: 
+* 32 Go Ram
+* 75 Go DD
+* 8 cpu
+* 1 network for monitoring
 
 # Installation
 
@@ -195,6 +168,45 @@ Security >> Detections >> Manage Detection Rules >> Load Elastic prebuilt rules
 The architecture of the project S1EM:
 
 <p align="center"><img align="center" src="https://i.postimg.cc/vZP6hsw8/S1EM.png"></p>
+
+# Troubleshooting
+
+## Docker
+
+Docker-compose must be installed on the system
+
+The user must be on the group "docker" or you do that:
+
+```
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
+
+Run the following command or Logout and login again and run (that doesn't work you may need to reboot your machine first)
+
+```
+newgrp docker
+```
+
+Check if docker can be run without root
+
+```
+docker ps
+```
+
+## Rsyslog (On Linux)
+
+```
+vi /etc/rsyslog.conf
+```
+
+Add the following line:
+
+```
+$FileCreateMode 0644 
+```
+
+Filebeat can read the logs in the "/var/log" with the user rights
 
 # Todo
 
