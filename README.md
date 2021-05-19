@@ -215,7 +215,7 @@ Filebeat can read the logs in the "/var/log" with the user rights
 - [ ] Upgrade to suricata 6
 - [ ] Upgrade to zeek 4
 - [ ] Upload SigmaHQ rules automatically into kibana
-- [ ] Update Suricata rules automatically
+- [x] Update Suricata rules automatically
 - [ ] Update Yara rules automatically
 - [ ] Elasticsearch multi-nodes with ssl
 - [ ] FPC
