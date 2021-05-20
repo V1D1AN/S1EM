@@ -43,4 +43,12 @@ chmod 600 ssl/server.key ssl/server.crt
 echo
 docker-compose pull
 docker-compose up -d
+sleep 45
+echo
+echo "##########################################"
+echo "######## UPDATE SURICATA RULES ###########"
+echo "##########################################"
+echo
+docker exec -ti suricata suricata-update update-sources
+docker exec -ti suricata suricata-update --no-test
 
