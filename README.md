@@ -96,6 +96,8 @@ The Url of S1EM:
 ```
 https://s1em.cyber.local
 ```
+![Capture](https://user-images.githubusercontent.com/18678787/119028096-5e6fe300-b9a7-11eb-912b-4443cfd91f56.PNG)
+
 
 Note: You must add in your host file the name and the @IP of the solution.
 
