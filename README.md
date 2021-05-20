@@ -1,4 +1,7 @@
-# S1EM
+
+![20210518_v1d1an_bg1--white](https://user-images.githubusercontent.com/18678787/119020235-49428680-b99e-11eb-8621-935a62b966e1.png)
+
+
 
 This project is a SIEM with SIRP and Threat Intel,all in one.
 
@@ -247,3 +250,7 @@ Filebeat can read the logs in the "/var/log" with the user rights
 - [ ] Change Stoq to File-monitor ( Clamav,CAPA,Yara )
 - [ ] Extract file with Zeek
 - [ ] FPC
+
+# Special thanks
+En francais cette fois, merci à Kidrek, StevenDias33, Frak113 qui m'ont inspiré, aidé, corrigé des bugs.
+Merci à vous :)
