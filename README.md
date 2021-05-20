@@ -257,7 +257,7 @@ Filebeat can read the logs in the "/var/log" with the user rights
 En français cette fois, merci à Kidrek, StevenDias33, Wagga40, Frak113 qui m'ont inspiré, aidé, corrigé des bugs. <br />
 Merci à vous :)
 
-Liens github:
+Liens github: <br />
 https://github.com/kidrek <br />
 https://github.com/frack113 <br />
 https://github.com/StevenDias33 <br />
