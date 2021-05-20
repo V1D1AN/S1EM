@@ -252,5 +252,5 @@ Filebeat can read the logs in the "/var/log" with the user rights
 - [ ] FPC
 
 # Special thanks
-En francais cette fois, merci à Kidrek, StevenDias33, Frak113 qui m'ont inspiré, aidé, corrigé des bugs.
+En francais cette fois, merci à Kidrek, StevenDias33, Frak113 qui m'ont inspiré, aidé, corrigé des bugs. <br />
 Merci à vous :)
