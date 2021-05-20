@@ -258,7 +258,7 @@ En français cette fois, merci à Kidrek, StevenDias33, Wagga40, Frak113 qui m'o
 Merci à vous :)
 
 Liens github:
-https://github.com/kidrek
-https://github.com/frack113
-https://github.com/StevenDias33
-https://github.com/wagga40
+https://github.com/kidrek <br />
+https://github.com/frack113 <br />
+https://github.com/StevenDias33 <br />
+https://github.com/wagga40 <br />
