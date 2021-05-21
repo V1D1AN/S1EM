@@ -237,6 +237,7 @@ Filebeat can read the logs in the "/var/log" with the user rights
 - [ ] Change Stoq to File-monitor ( Clamav,CAPA,Yara )
 - [ ] Extract file with Zeek
 - [ ] FPC
+- [ ] SSO
 
 # Special thanks
 En français cette fois, merci à Kidrek, StevenDias33, Wagga40, Frak113 qui m'ont inspiré, aidé, corrigé des bugs. <br />
