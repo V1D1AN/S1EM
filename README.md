@@ -66,29 +66,13 @@ bash deploy.sh
 
 # Upgrade
 
-stash changes to docker-compose.yml and other files
-```
-git stash save "pre-upgrade S1EM configuration changes"
-```
-pull changes from GitHub repository
+Use the upgrade script for upgrading your S1EM infrastructure
 
 ```
-git pull --rebase
+bash upgrade.sh
 ```
-pull new Docker images (this will take a while)
 
-```
-docker-compose pull
-```
-apply saved configuration change stashed earlier
-
-```
-git stash pop
-```
 if you see Merge conflict messages, resolve the conflicts with your favorite text editor
-```
-docker-compose up -d
-```
 
 # Access
 
