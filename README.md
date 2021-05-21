@@ -158,7 +158,7 @@ curl -X POST "https://localhost/kibana/api/detection_engine/rules/_import?overwr
 Several rules (Windows example):
 
 ```
-for rule in $(find /root/sigma/rules/windows/* -type f -not -path "*deprecated*"); do /root/sigma/tools/sigmac -t es-rule -c /root/sigma/tools/config/generic/sysmon.yml -c /root/sigma/tools/config/winlogbeat-modules-enabled.yml --backend-config /root/sigma/backend.yml $rule >> /root/rules-windows.ndjson; done
+./sigmac -t es-rule -c config/generic/sysmon.yml -c config/winlogbeat-modules-enabled.yml -I --backend-config backend.yml -r ../rules/windows -o /tmp/rules-windows.ndjson
 curl -X POST "https://localhost/kibana/api/detection_engine/rules/_import?overwrite=true" -u 'elastic:changeme' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form "file=@/root/rules-windows.ndjson"
 ```
 
@@ -180,7 +180,8 @@ Security >> Detections >> Manage Detection Rules >> Load Elastic prebuilt rules
 
 The architecture of the project S1EM:
 
-<p align="center"><img align="center" src="https://i.postimg.cc/vZP6hsw8/S1EM.png"></p>
+![S1EM](https://user-images.githubusercontent.com/18678787/119194912-14106400-ba84-11eb-94bf-cde43da565b4.png)
+
 
 # Troubleshooting
 
