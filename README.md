@@ -248,7 +248,7 @@ Merci à vous :)
 
 Liens github: <br />
 https://github.com/kidrek <br />
-https://githib.com/mlp1515 <br />
+https://github.com/mlp1515 <br />
 https://github.com/frack113 <br />
 https://github.com/StevenDias33 <br />
 https://github.com/wagga40 <br />
