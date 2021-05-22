@@ -236,15 +236,20 @@ Filebeat can read the logs in the "/var/log" with the user rights
 - [ ] Elasticsearch multi-nodes with ssl
 - [ ] Change Stoq to File-monitor ( Clamav,CAPA,Yara )
 - [ ] Extract file with Zeek
-- [ ] FPC
+- [ ] Integrate Arkime
 - [ ] SSO
+- [ ] Integrate Att@ck Navigator
 
 # Special thanks
-En français cette fois, merci à Kidrek, StevenDias33, Wagga40, Frak113 qui m'ont inspiré, aidé, corrigé des bugs. <br />
+En français cette fois. <br />
+Merci à mes amis et collègues qui m´ont inspiré toutes ces années, qui m´ont aidé, et corrigé des bugs.
+Je pense à Kidrek, mlp1515, Wagga40, Xophidia, StevenDias33, Frak113, et tous ceux qui n´ont pas forcement de compte github. <br />
 Merci à vous :)
 
 Liens github: <br />
 https://github.com/kidrek <br />
+https://githib.com/mlp1515 <br />
 https://github.com/frack113 <br />
 https://github.com/StevenDias33 <br />
 https://github.com/wagga40 <br />
+https://github.com/xophidia <br />
