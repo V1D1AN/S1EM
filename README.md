@@ -239,6 +239,7 @@ Filebeat can read the logs in the "/var/log" with the user rights
 - [ ] Integrate Arkime
 - [ ] SSO
 - [ ] Integrate Att@ck Navigator
+- [ ] Integration of OpenCVE
 
 # Special thanks
 En français cette fois. <br />
