@@ -240,6 +240,7 @@ Filebeat can read the logs in the "/var/log" with the user rights
 - [ ] SSO
 - [ ] Integrate Att@ck Navigator
 - [ ] Integration of OpenCVE
+- [ ] Upgrade to ELK 7.12.1
 
 # Special thanks
 En français cette fois. <br />
