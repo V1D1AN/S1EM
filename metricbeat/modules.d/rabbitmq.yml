@@ -6,7 +6,7 @@
     - node
     - queue
     - connection
-  period: 10s
+  period: 60s
   hosts: ["rabbitmq:15672"]
   username: guest
   password: guest

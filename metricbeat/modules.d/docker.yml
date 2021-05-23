@@ -9,6 +9,6 @@
     - info
     - memory
     - network
-  period: 20s
+  period: 60s
   hosts: ["unix:///var/run/docker.sock"]
 

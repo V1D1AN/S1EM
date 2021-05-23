@@ -3,7 +3,7 @@
 
 - module: kibana
   xpack.enabled: true
-  period: 10s
+  period: 60s
   hosts: ["kibana:5601"]
   basepath: "/kibana"
   username: "elastic"

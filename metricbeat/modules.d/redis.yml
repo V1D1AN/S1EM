@@ -5,7 +5,7 @@
   metricsets:
     - info
     - keyspace
-  period: 10s
+  period: 60s
 
   # Redis hosts
   hosts: ["redis:6379"]

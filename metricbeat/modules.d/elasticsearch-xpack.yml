@@ -3,7 +3,7 @@
 
 - module: elasticsearch
   xpack.enabled: true
-  period: 10s
+  period: 60s
   hosts: ["http://elasticsearch:9200"]
   username: "elastic"
   password: "elastic"
