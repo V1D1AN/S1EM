@@ -53,13 +53,13 @@ You must have:
 * 1 network for monitoring
 
 # Guides
-- [Installation Guide](https://github.com/V1D1AN/S1EM/wiki/Configuration-Guide)
-- [Upgrade guide](Upgrade-guide)
-- [Configuration Guide](Configuration-guide)
-- [Access Guide](Access-guide)
-- [Detection Guide](Detection-guide)
-- [Architecture Guide](Architecture-guide)
-- [Troubleshooting Guide](Troubleshooting-guide)
+- [Installation Guide](https://github.com/V1D1AN/S1EM/wiki/Installation-Guide)
+- [Upgrade guide](https://github.com/V1D1AN/S1EM/wiki/Upgrade-guide)
+- [Configuration Guide](https://github.com/V1D1AN/S1EM/wiki/Configuration-guide)
+- [Access Guide](https://github.com/V1D1AN/S1EM/wiki/Access-guide)
+- [Detection Guide](https://github.com/V1D1AN/S1EM/wiki/Detection-guide)
+- [Architecture Guide](https://github.com/V1D1AN/S1EM/wiki/Architecture-guide)
+- [Troubleshooting Guide](https://github.com/V1D1AN/S1EM/wiki/Troubleshooting-guide)
 
 
 # Todo
