@@ -53,7 +53,7 @@ You must have:
 * 1 network for monitoring
 
 # Guides
-- [Installation Guide](Installation-guide)
+- [Installation Guide](https://github.com/V1D1AN/S1EM/wiki/Configuration-Guide)
 - [Upgrade guide](Upgrade-guide)
 - [Configuration Guide](Configuration-guide)
 - [Access Guide](Access-guide)
