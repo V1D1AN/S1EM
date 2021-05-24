@@ -61,7 +61,7 @@ Change the account and the password of "OpenCTI".
 
 After, run the command:
 ```
-bash deploy.sh
+bash 01_deploy.sh
 ```
 
 # Upgrade
@@ -69,7 +69,7 @@ bash deploy.sh
 Use the upgrade script for upgrading your S1EM infrastructure
 
 ```
-bash upgrade.sh
+bash 04_upgrade.sh
 ```
 
 if you see Merge conflict messages, resolve the conflicts with your favorite text editor
@@ -129,7 +129,7 @@ once you have the API Key, to simplify the deployment. Use the script and enter 
 
 ```
 cd S1EM
-bash deploy_api_key.sh
+bash 02_deploy_api_key.sh
 ```
 
 

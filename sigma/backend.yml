@@ -1,0 +1,5 @@
+keyword_base_fields: '*'
+put_filename_in_ref: True
+convert_to_url: True
+path_to_replace: '..\'
+dest_base_url: 'https://github.com/SigmaHQ/sigma/tree/master/'

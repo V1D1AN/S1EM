@@ -1,0 +1,13 @@
+FROM python:slim
+
+MAINTAINER "V1D1AN"
+
+RUN apt-get update && apt-get -y install git curl
+#RUN git clone https://github.com/SigmaHQ/sigma.git
+RUN git clone -b V1D1AN https://github.com/frack113/sigma.git
+ADD sigma/backend.yml sigma/tools/backend.yml
+ADD sigma/rules/* sigma/tools/
+WORKDIR sigma/tools
+RUN python3 setup.py install
+RUN ./sigmac -t es-rule -I -c config/generic/sysmon.yml -c config/winlogbeat-modules-enabled.yml --backend-config backend.yml --backend-option custom_tag="Windows" -r ../rules/windows -o windows-rules.ndjson
+CMD for rule in $(find *.ndjson -type f); do curl -X POST "http://kibana:5601/kibana/api/detection_engine/rules/_import?overwrite=true" -u "elastic:changeme" -H "kbn-xsrf: true" -H "Content-Type: multipart/form-data" --form file=@$rule ; done

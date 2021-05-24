@@ -1,0 +1,15 @@
+version: '3.5'
+services:
+  sigma:
+    build:
+      context: .
+      dockerfile: sigma/dockerfile
+    image: sigma:1.0
+    container_name: sigma
+    user: root
+    networks:
+      - s1em
+
+networks:
+   s1em:
+    driver: bridge

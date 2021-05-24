@@ -11,7 +11,7 @@ read -p "Confirm (y/n) ?" confirm
 
 case $confirm in
         [yY][eE][sS]|[yY])
-        sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/pipeline/03_output.conf
+        sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/pipeline/03_output.conf sigma/dockerfile
         sed -i "s/elastic_opencti/$password/g" docker-compose.yml
         ;;
         [nN][oO]|[nN])
@@ -64,4 +64,14 @@ mv tmp/* stoq/rules/yara/
 rm -fr tmp
 cd stoq/rules/yara
 bash index_gen.sh
+cd -
 docker restart stoq
+echo
+echo "##########################################"
+echo "########## UPDATE SIGMA RULES ############"
+echo "##########################################"
+echo
+docker-compose -f sigma.yml build
+docker image prune -f
+docker-compose -f sigma.yml up -d
+
