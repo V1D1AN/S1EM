@@ -230,9 +230,9 @@ Filebeat can read the logs in the "/var/log" with the user rights
 - [ ] Upgrade to elastalert2
 - [ ] Upgrade to suricata 6
 - [ ] Upgrade to zeek 4
-- [ ] Upload SigmaHQ rules automatically into kibana
+- [x] Upload SigmaHQ rules automatically into kibana
 - [x] Update Suricata rules automatically
-- [ ] Update Yara rules automatically
+- [x] Update Yara rules automatically
 - [ ] Elasticsearch multi-nodes with ssl
 - [ ] Change Stoq to File-monitor ( Clamav,CAPA,Yara )
 - [ ] Extract file with Zeek
@@ -240,7 +240,7 @@ Filebeat can read the logs in the "/var/log" with the user rights
 - [ ] SSO
 - [ ] Integrate Att@ck Navigator
 - [ ] Integration of OpenCVE
-- [ ] Upgrade to ELK 7.12.1
+- [x] Upgrade to ELK 7.12.1
 
 # Special thanks
 En français cette fois. <br />
