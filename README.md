@@ -8,7 +8,7 @@ Welcome to the S1EM wiki!
 
 This project is a SIEM with SIRP and Threat Intel,all in one.
 
-Solution work with CentOS 7 and kernel 5 ( For Auditbeat ), and docker.
+Solution works with CentOS 7 and kernel 5 ( For Auditbeat ), and docker.
 
 Inside the solution:
 
@@ -32,25 +32,6 @@ Inside the solution:
 
 Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
-# Prerequisites
-
-## Physical
-
-### For testing:
-
-You must have: 
-* 12 Go Ram
-* 75 Go DD
-* 8 cpu
-* 1 network for monitoring
-
-### For production:
-
-You must have: 
-* 32 Go Ram
-* More than 75 Go DD
-* 8 cpu
-* 1 network for monitoring
 
 # Guides
 - [Installation Guide](https://github.com/V1D1AN/S1EM/wiki/Installation-Guide)
@@ -62,7 +43,7 @@ You must have:
 - [Troubleshooting Guide](https://github.com/V1D1AN/S1EM/wiki/Troubleshooting-guide)
 
 
-# Todo
+# Roadmap
 
 - [x] Integrate heimdall
 - [ ] The complete documentation
