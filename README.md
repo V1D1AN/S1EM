@@ -4,11 +4,10 @@ Welcome to the S1EM wiki!
 
 ![20210518_v1d1an_bg1--white](https://user-images.githubusercontent.com/18678787/119020235-49428680-b99e-11eb-8621-935a62b966e1.png)
 
+# Objectives
+Today, cyber attacks are more numerous and cause damage in companies. Nevertheless, many software products exist to detect cyber threats. The S1EM solution is based on the principle of bringing together the best products in their field, free of charge, and making them quickly interoperable.
 
-
-This project is a SIEM with SIRP and Threat Intel,all in one.
-
-Solution works with CentOS 7 and kernel 5 ( For Auditbeat ), and docker.
+S1EM is a SIEM with SIRP and Threat Intel,all in one.
 
 Inside the solution:
 
@@ -22,7 +21,7 @@ Inside the solution:
 * TheHive
 * Cortex
 * MISP
-* OpenCTI
+* OpenCTI 
 * Suricata 5
 * Zeek 3
 * FleetDm
