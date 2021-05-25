@@ -150,7 +150,7 @@ services:
       - s1em
 
   suricata:
-    image: jasonish/suricata:5.0
+    image: jasonish/suricata:6.0
     command: -c /etc/suricata/suricata.yaml -i network_monitoring
     container_name: suricata
     hostname: suricata
