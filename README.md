@@ -1,7 +1,4 @@
 
-Welcome to the S1EM wiki!
-
-
 ![20210518_v1d1an_bg1--white](https://user-images.githubusercontent.com/18678787/119020235-49428680-b99e-11eb-8621-935a62b966e1.png)
 
 # Objectives
