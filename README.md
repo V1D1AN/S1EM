@@ -19,7 +19,7 @@ Inside the solution:
 * Cortex
 * MISP
 * OpenCTI 
-* Suricata 5
+* Suricata 6
 * Zeek 3
 * FleetDm
 * StoQ
