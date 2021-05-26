@@ -1,0 +1,42 @@
+alert:
+- debug
+description: Rule for thehive
+filter:
+- query_string:
+    query: (signal.status:"in-progress" AND agent.type:"filebeat" AND NOT event.module:"suricata")
+index: .siem-signals-default
+category:
+ Detection
+ Signal
+name: TheHive_Filebeat
+priority: 3
+realert:
+  minutes: 0
+title: Rule for TheHive Filebeat
+type: any
+
+
+
+alert: hivealerter
+
+hive_alert_config:
+ title: '{match[signal][rule][name]}'
+ type: '{match[event][module]}'
+ source: '{match[host][name]}'
+ description: "`Rule description :` \n\n {match[signal][rule][description]} \n\n `Rule Query :` \n\n {match[signal][rule][query]} \n\n `Event Original :` \n\n '{match[message]} \n\n `Kibana link:` \n\n https://s1em.cyber.local/kibana/app/kibana#/discover?_g=(filters:!())&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'.siem-signals-default',key:_id,negate:!f,params:(query:'{match[_id]}'),type:phrase,value:'{match[_id]}'),query:(match:(_id:(query:'{match[_id]}',type:phrase))))),index:'.siem-signals-default',interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))"
+ severity: 3
+ tags: ['Signal', 'Detection', 'Filebeat']
+ tlp: 2
+ status: 'New'
+ follow: True
+
+hive_observable_data_mapping:
+ - hash: "{match[hash][sha1]}"
+ - hash: "{match[hash][md5]}"
+ - hash: "{match[hash][sha256]}"
+ - hash: "{match[pe][imphash]}"
+ - domain: "{match[dns][question][name]}"
+ - ip: "{match[source][ip]}"
+ - ip: "{match[destination][ip]}"
+ - filename: "{match[process][executable]}"
+

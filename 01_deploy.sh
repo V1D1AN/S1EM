@@ -11,7 +11,7 @@ read -p "Confirm (y/n) ?" confirm
 
 case $confirm in
         [yY][eE][sS]|[yY])
-        sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/pipeline/03_output.conf sigma/dockerfile
+        sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/300_output.conf sigma/dockerfile
         sed -i "s/elastic_opencti/$password/g" docker-compose.yml
         ;;
         [nN][oO]|[nN])
@@ -44,6 +44,12 @@ echo
 docker-compose pull
 docker-compose up -d
 sleep 45
+echo
+echo "##########################################"
+echo "########## DEPLOY KIBANA INDEX ###########"
+echo "##########################################"
+echo
+for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -X POST 'http://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 echo
 echo "##########################################"
 echo "######## UPDATE SURICATA RULES ###########"

@@ -63,6 +63,7 @@ services:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logstash/templates:/usr/share/logstash/templates
     networks:
       - s1em
     ports:
@@ -77,6 +78,7 @@ services:
       - elasticsearch
     volumes:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+      - ./kibana/index:/usr/share/kibana/index:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kibana.rule=PathPrefix(`/kibana`)"

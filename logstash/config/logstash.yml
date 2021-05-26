@@ -1,6 +1,6 @@
 http.host: "0.0.0.0"
 xpack.monitoring.elasticsearch.hosts: [ "http://elasticsearch:9200" ]
 xpack.monitoring.elasticsearch.username: "elastic"
-xpack.monitoring.elasticsearch.password: "elastic" 
+xpack.monitoring.elasticsearch.password: "changeme" 
 xpack.monitoring.enabled: false
 pipeline.ecs_compatibility: "v1"

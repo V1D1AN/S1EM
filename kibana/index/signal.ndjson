@@ -1,0 +1,2 @@
+{"attributes":{"fieldAttrs":"{}","fields":"[]","runtimeFieldMap":"{}","timeFieldName":"@timestamp","title":".siem-signals-default"},"coreMigrationVersion":"7.12.1","id":".siem-signals-default","migrationVersion":{"index-pattern":"7.11.0"},"references":[],"type":"index-pattern","updated_at":"2021-05-26T15:55:33.183Z","version":"WzczNTk5MCw0XQ=="}
+{"exportedCount":1,"missingRefCount":0,"missingReferences":[]}
