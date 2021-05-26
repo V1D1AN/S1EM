@@ -26,7 +26,7 @@ echo "##########################################"
 echo "#### CONFIGURING MONITORING INTERFACE ####"
 echo "##########################################"
 echo
-ip a | egrep "ens[[:digit:]]{1,3}:|eth[[:digit:]]{1,3}:"
+ip a | egrep -A 2 "ens[[:digit:]]{1,3}:|eth[[:digit:]]{1,3}:"
 echo
 echo
 read -r -p "Enter the monitoring interface (ex:ens32):" monitoring_interface
