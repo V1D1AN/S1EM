@@ -43,7 +43,7 @@ chmod 600 ssl/server.key ssl/server.crt
 echo
 docker-compose pull
 docker-compose up -d
-sleep 45
+sleep 60
 echo
 echo "##########################################"
 echo "########## DEPLOY KIBANA INDEX ###########"
