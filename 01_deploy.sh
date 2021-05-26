@@ -64,14 +64,15 @@ echo "##########################################"
 echo
 mkdir tmp
 git clone https://github.com/Yara-Rules/rules.git tmp
-rm -fr stoq/rules/yara/*
+rm -fr rules/yara/*
 rm tmp/malware/MALW_AZORULT.yar
-mv tmp/* stoq/rules/yara/
+mv tmp/* rules/yara/
 rm -fr tmp
-cd stoq/rules/yara
+cd rules/yara
 bash index_gen.sh
 cd -
 docker restart stoq
+docker restart cortex
 echo
 echo "##########################################"
 echo "########## UPDATE SIGMA RULES ############"

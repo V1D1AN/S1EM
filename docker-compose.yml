@@ -165,7 +165,7 @@ services:
       - SYS_NICE
     restart: always
     volumes:
-      - ./suricata/rules:/etc/suricata/rules
+      - ./rules/suricata:/etc/suricata/rules
       - ./suricata/suricata.yaml:/etc/suricata/suricata.yaml
       - ./suricata/threshold.config:/etc/suricata/threshold.config
       - suricatadata:/var/log/suricata
@@ -177,7 +177,8 @@ services:
     user: root
     restart: always
     volumes:
-      - ./stoq/rules:/rules:ro
+      - ./rules/yara:/rules/yara:ro
+      - ./stoq/custom:/rules/custom:ro
       - ./stoq/stoq.cfg:/home/stoq/.stoq/stoq.cfg:ro
       - stoq:/home/stoq/tmp/
       - suricatadata:/files:ro
@@ -205,6 +206,7 @@ services:
     restart: always
     volumes:
       - ./cortex/application.conf:/etc/cortex/application.conf:ro
+      - ./rules/yara:/opt/rules/yara:ro
     depends_on:
       - elasticsearch
     labels:
@@ -260,7 +262,7 @@ services:
       - elasticsearch
     volumes:
       - ./elastalert/elastalert.yaml:/opt/config/elastalert_config.yaml:ro
-      - ./elastalert/rules:/opt/elastalert/rules:ro
+      - ./rules/elastalert:/opt/elastalert/rules:ro
     networks:
       - s1em
 
