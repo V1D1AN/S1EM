@@ -1,0 +1,66 @@
+{
+  "name": "MISP",
+  "author": "Nils Kuhnert, CERT-Bund",
+  "license": "AGPL-V3",
+  "url": "https://github.com/BSI-CERT-Bund/cortex-analyzers",
+  "version": "2.1",
+  "description": "Query multiple MISP instances for events containing an observable.",
+  "dataTypeList": [
+    "domain",
+    "ip",
+    "url",
+    "fqdn",
+    "uri_path",
+    "user-agent",
+    "hash",
+    "mail",
+    "mail_subject",
+    "registry",
+    "regexp",
+    "other",
+    "filename"
+  ],
+  "baseConfig": "MISP",
+  "command": "MISP/misp.py",
+  "configurationItems": [
+    {
+      "name": "name",
+      "description": "Name of MISP servers",
+      "defaultValue": [ "MISP" ],
+      "multi": true,
+      "required": false,
+      "type": "string"
+    },
+    {
+      "name": "url",
+      "description": "URL of MISP servers",
+      "defaultValue": [ "http://misp/misp" ],
+      "type": "string",
+      "multi": true,
+      "required": true
+    },
+    {
+      "name": "key",
+      "description": "API key for each server",
+      "defaultValue": [ "misp_api_key" ],
+      "type": "string",
+      "multi": true,
+      "required": true
+    },
+    {
+      "name": "cert_check",
+      "description": "Verify server certificate",
+      "type": "boolean",
+      "multi": false,
+      "required": true,
+      "defaultValue": false
+    },
+    {
+      "name": "cert_path",
+      "description": "Path to the CA on the system used to check server certificate",
+      "type": "string",
+      "multi": true,
+      "required": false
+    }
+  ]
+}

@@ -206,7 +206,10 @@ services:
     restart: always
     volumes:
       - ./cortex/application.conf:/etc/cortex/application.conf:ro
-      - ./rules/yara:/opt/rules/yara:ro
+      - ./cortex/Yara.json:/opt/Cortex-Analyzers/analyzers/Yara/Yara.json:ro
+      - ./cortex/MISP.json:/opt/Cortex-Analyzers/analyzers/MISP/MISP.json:ro
+      - ./cortex/OpenCTI_SearchObservables.json:/opt/Cortex-Analyzers/analyzers/OpenCTI/OpenCTI_SearchObservables.json:ro
+      - ./rules/yara/signature-base:/opt/rules/yara:ro
     depends_on:
       - elasticsearch
     labels:

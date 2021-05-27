@@ -15,7 +15,7 @@ case $input in
         sed -i "s|thehive_api_key|$thehive|g" elastalert/elastalert.yaml
         read -r -p "Enter the API KEY of MISP:" misp
         misp=$misp
-        sed -i "s|misp_api_key|$misp|g" thehive/application.conf filebeat/modules.d/threatintel.yml docker-compose.yml
+        sed -i "s|misp_api_key|$misp|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml docker-compose.yml
         docker-compose restart elastalert filebeat thehive 
         docker-compose up -d connector-misp
         ;;
