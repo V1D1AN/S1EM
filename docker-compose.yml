@@ -62,8 +62,8 @@ services:
       - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
-      - ./logstash/pipeline:/usr/share/logstash/pipeline
-      - ./logstash/templates:/usr/share/logstash/templates
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./logstash/templates:/usr/share/logstash/templates:ro
     networks:
       - s1em
     ports:
@@ -136,8 +136,8 @@ services:
     depends_on:
       - elasticsearch
     volumes:
-      - /var/log:/var/log
-      - fleet:/var/log/osquery
+      - /var/log:/var/log:ro
+      - fleet:/var/log/osquery:ro
       - suricatadata:/var/log/suricata:ro
       - traefikdata:/var/log/traefik:ro
       - zeekdata:/var/log/bro/current:ro
