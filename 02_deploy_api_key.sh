@@ -16,7 +16,7 @@ case $input in
         read -r -p "Enter the API KEY of MISP:" misp
         misp=$misp
         sed -i "s|misp_api_key|$misp|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml docker-compose.yml
-        docker-compose restart elastalert filebeat thehive 
+        docker-compose restart elastalert filebeat thehive cortex
         docker-compose up -d connector-misp
         ;;
         [nN][oO]|[nN])
