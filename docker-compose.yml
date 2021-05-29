@@ -659,13 +659,13 @@ services:
     container_name: arkime
     hostname: arkime
     environment:
-      - ARKIME_USER=root
-      - ARKIME_PSWD=root
+      - ARKIME_USER=arkime_account
+      - ARKIME_PSWD=arkime_password
     depends_on:
       - elasticsearch
     volumes:
       - ./arkime/config.ini:/data/moloch/etc/config.ini.sample:ro
-      - ./log:/arkime/log
+      - arkimelog:/arkime/log
     networks:
       - s1em
     entrypoint: /arkime/bin/viewer.sh
@@ -686,10 +686,10 @@ services:
       - elasticsearch
       - arkime
     environment:
-      - ARKIME_USER=root
-      - ARKIME_PSWD=root
+      - ARKIME_USER=arkime_account
+      - ARKIME_PSWD=arkime_password
     volumes:
-      - ./log:/arkime/log
+      - arkimelog:/arkime/log
       - suricatapcap:/import:ro
     networks:
       - s1em
@@ -734,4 +734,6 @@ volumes:
    db-fleet:
     external: false
    fleet:
+    external: false
+   arkimelog:
     external: false

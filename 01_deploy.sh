@@ -23,6 +23,31 @@ esac
 echo
 echo
 echo "##########################################"
+echo "###### CONFIGURING OPENCTI ACCOUNT #######"
+echo "##########################################"
+echo
+echo
+read -r -sp "Enter the password for OpenCTI:" opencti_password
+opencti_password=$opencti_password
+sed -i "s/opencti_password/$opencti_password/g" .env
+echo
+echo
+echo "##########################################"
+echo "####### CONFIGURING ARKIME ACCOUNT #######"
+echo "##########################################"
+echo
+echo
+read -r -p "Enter the user for Arkime:" arkime_account
+arkime_account=$arkime_account
+sed -i "s/arkime_account/$arkime_account/g" docker-compose.yml
+echo
+echo
+read -r -sp "Enter the password for Arkime:" arkime_password
+arkime_password=$arkime_password
+sed -i "s/arkime_password/$arkime_password/g" docker-compose.yml
+echo
+echo
+echo "##########################################"
 echo "#### CONFIGURING MONITORING INTERFACE ####"
 echo "##########################################"
 echo
@@ -53,6 +78,7 @@ echo
 docker exec -ti suricata suricata-update update-sources
 docker exec -ti suricata suricata-update --no-test
 echo
+echo
 echo "##########################################"
 echo "########## UPDATE YARA RULES #############"
 echo "##########################################"
@@ -76,7 +102,8 @@ docker-compose -f sigma.yml build
 docker image prune -f
 docker-compose -f sigma.yml up -d
 echo
-sleep 30
+echo
+sleep 45
 echo "##########################################"
 echo "########## DEPLOY KIBANA INDEX ###########"
 echo "##########################################"
