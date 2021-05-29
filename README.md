@@ -19,6 +19,7 @@ Inside the solution:
 * Cortex
 * MISP
 * OpenCTI 
+* Arkime
 * Suricata 6
 * Zeek 3
 * FleetDm
@@ -57,7 +58,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [ ] Elasticsearch multi-nodes with ssl
 - [ ] Change Stoq to File-monitor ( Clamav,CAPA,Yara )
 - [ ] Extract file with Zeek
-- [ ] Integrate Arkime
+- [x] Integrate Arkime
 - [ ] SSO
 - [ ] Integrate Att@ck Navigator
 - [ ] Integration of OpenCVE
