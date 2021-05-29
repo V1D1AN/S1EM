@@ -76,6 +76,7 @@ docker-compose -f sigma.yml build
 docker image prune -f
 docker-compose -f sigma.yml up -d
 echo
+sleep 30
 echo "##########################################"
 echo "########## DEPLOY KIBANA INDEX ###########"
 echo "##########################################"
