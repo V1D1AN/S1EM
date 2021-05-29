@@ -66,7 +66,17 @@ mkdir ssl
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/server.key -out ssl/server.crt
 chmod 600 ssl/server.key ssl/server.crt
 echo
+echo
+echo "##########################################"
+echo "########## DOCKER DOWNLOADING ############"
+echo "##########################################"
 docker-compose pull
+echo
+echo
+echo "##########################################"
+echo "########## DOCKER DOWNLOADING ############"
+echo "##########################################"
+docker-compose up -d elasticsearch kibana
 docker-compose up -d
 sleep 45
 echo
