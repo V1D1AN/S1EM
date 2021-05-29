@@ -21,10 +21,10 @@ case $confirm in
      ;;
 esac
 echo
+echo
 echo "##########################################"
 echo "###### CONFIGURING KIBANA ACCOUNT #######"
 echo "##########################################"
-echo
 echo
 read -r -p "Enter the user for Kibana:" kibana_account
 kibana_account=$kibana_account
@@ -37,7 +37,6 @@ echo
 echo "##########################################"
 echo "###### CONFIGURING OPENCTI ACCOUNT #######"
 echo "##########################################"
-echo
 echo
 read -r -p "Enter the user for OpenCTI:" opencti_account
 opencti_account=$opencti_account
@@ -52,7 +51,6 @@ echo
 echo "##########################################"
 echo "####### CONFIGURING ARKIME ACCOUNT #######"
 echo "##########################################"
-echo
 echo
 read -r -p "Enter the user for Arkime:" arkime_account
 arkime_account=$arkime_account
@@ -79,6 +77,7 @@ echo
 echo "##########################################"
 echo "######### GENERATE CERTIFICATE ###########"
 echo "##########################################"
+echo
 mkdir ssl
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/server.key -out ssl/server.crt
 chmod 600 ssl/server.key ssl/server.crt
@@ -98,6 +97,20 @@ echo
 docker-compose up -d elasticsearch kibana
 docker-compose up -d
 sleep 45
+echo
+echo
+echo "##########################################"
+echo "########## DEPLOY KIBANA INDEX ###########"
+echo "##########################################"
+echo
+while [ "$(docker logs kibana | grep "Server running")" == "" ]; do
+  echo "Waiting for Kibana to come online.";
+  sleep 5;
+done
+echo
+echo
+docker exec -ti elasticsearch elasticsearch-users useradd $kibana_account -p $kibana_password -r superuser
+for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -X POST 'http://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 echo
 echo
 echo "##########################################"
@@ -123,6 +136,7 @@ cd -
 docker restart stoq
 docker restart cortex
 echo
+echo
 echo "##########################################"
 echo "########## UPDATE SIGMA RULES ############"
 echo "##########################################"
@@ -131,18 +145,4 @@ docker-compose -f sigma.yml build
 docker image prune -f
 docker-compose -f sigma.yml up -d
 echo
-echo
-echo "##########################################"
-echo "########## DEPLOY KIBANA INDEX ###########"
-echo "##########################################"
-echo
-while [ "$(curl --insecure https://localhost/kibana 2> /dev/null | grep "Bad Gateway" )" ]; do
-  echo "Waiting for Kibana to come online.";
-  sleep 5;
-done
-echo
-echo
-echo
-docker exec -ti elasticsearch elasticsearch-users useradd $kibana_account -p $kibana_password -r superuser
-for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -X POST 'http://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 echo
