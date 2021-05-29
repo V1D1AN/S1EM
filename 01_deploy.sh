@@ -119,10 +119,14 @@ docker image prune -f
 docker-compose -f sigma.yml up -d
 echo
 echo
-sleep 45
 echo "##########################################"
 echo "########## DEPLOY KIBANA INDEX ###########"
 echo "##########################################"
+echo
+while [ "$(curl --insecure https://localhost/kibana 2> /dev/null | grep "Bad Gateway" ]; do
+  echo "Waiting for Kibana to come online.";
+  sleep 5;
+done
 echo
 for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -X POST 'http://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 echo
