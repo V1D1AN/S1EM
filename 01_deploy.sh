@@ -23,7 +23,7 @@ esac
 echo
 echo
 echo "##########################################"
-echo "###### CONFIGURING KIBANA ACCOUNT #######"
+echo "####### CONFIGURING KIBANA ACCOUNT #######"
 echo "##########################################"
 echo
 read -r -p "Enter the user for Kibana:" kibana_account
@@ -91,7 +91,7 @@ docker-compose pull
 echo
 echo
 echo "##########################################"
-echo "########## DOCKER DOWNLOADING ############"
+echo "############ DOCKER STARTING #############"
 echo "##########################################"
 echo
 docker-compose up -d elasticsearch kibana
