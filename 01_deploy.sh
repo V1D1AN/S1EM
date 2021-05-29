@@ -26,6 +26,10 @@ echo "##########################################"
 echo "###### CONFIGURING OPENCTI ACCOUNT #######"
 echo "##########################################"
 echo
+read -r -p "Enter the user for OpenCTI:" opencti_account
+opencti_account=$opencti_account
+sed -i "s/opencti_account/$opencti_account/g" .env
+echo
 echo
 read -r -sp "Enter the password for OpenCTI:" opencti_password
 opencti_password=$opencti_password
@@ -70,12 +74,14 @@ echo
 echo "##########################################"
 echo "########## DOCKER DOWNLOADING ############"
 echo "##########################################"
+echo
 docker-compose pull
 echo
 echo
 echo "##########################################"
 echo "########## DOCKER DOWNLOADING ############"
 echo "##########################################"
+echo
 docker-compose up -d elasticsearch kibana
 docker-compose up -d
 sleep 45
