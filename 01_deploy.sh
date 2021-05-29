@@ -62,7 +62,7 @@ rm -fr rules/yara/signature-base/*
 mv tmp/yara/* rules/yara/signature-base/
 rm -fr tmp
 cd rules/yara
-rm index.yar ./signature-base/general_cloaking.yar ./signature-base/generic_anomalies.yar ./signature-base/yara_mixed_ext_vars.yar ./signature-base/thor_inverse_matches.yar
+rm ./signature-base/general_cloaking.yar ./signature-base/generic_anomalies.yar ./signature-base/yara_mixed_ext_vars.yar ./signature-base/thor_inverse_matches.yar
 for i in `ls $(pwd)/signature-base`; do echo "include \"./signature-base/$i\"" >> index.yar; done
 cd -
 docker restart stoq
