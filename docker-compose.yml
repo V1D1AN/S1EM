@@ -169,6 +169,8 @@ services:
       - ./suricata/suricata.yaml:/etc/suricata/suricata.yaml
       - ./suricata/threshold.config:/etc/suricata/threshold.config
       - suricatadata:/var/log/suricata
+      - suricatapcap:/var/log/suricata/pcap
+
   
   stoq:
     image: v1d1an/stoq:3.0.1
@@ -649,6 +651,49 @@ services:
       - "80"
       - "443"
 
+  arkime:
+    build:
+      context: .
+      dockerfile: arkime/dockerfile
+    image: arkime:2.7.1-1
+    container_name: arkime
+    hostname: arkime
+    environment:
+      - ARKIME_USER=root
+      - ARKIME_PSWD=root
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./arkime/config.ini:/data/moloch/etc/config.ini.sample:ro
+      - ./log:/arkime/log
+    networks:
+      - s1em
+    entrypoint: /arkime/bin/viewer.sh
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.arkime.rule=PathPrefix(`/arkime`)"
+      - "traefik.http.routers.arkime.entryPoints=secure"
+      - "traefik.http.routers.arkime.tls=true"
+
+  import:
+    build:
+      context: .
+      dockerfile: arkime/dockerfile
+    image: arkime:2.7.1-1
+    container_name: import
+    hostname: import
+    depends_on:
+      - elasticsearch
+      - arkime
+    environment:
+      - ARKIME_USER=root
+      - ARKIME_PSWD=root
+    volumes:
+      - ./log:/arkime/log
+      - suricatapcap:/import:ro
+    networks:
+      - s1em
+    entrypoint: /arkime/bin/import.sh
 
 
 networks:
@@ -656,6 +701,7 @@ networks:
     driver: bridge
    s1em:
     driver: bridge
+    
 volumes:
    esdata:
     external: false
@@ -664,6 +710,8 @@ volumes:
    zeekdata:
     external: false
    suricatadata:
+    external: false
+   suricatapcap:
     external: false
    amqpdata:
     external: false
