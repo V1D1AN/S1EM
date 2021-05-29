@@ -5,7 +5,7 @@ echo "###### CONFIGURING ACCOUNT ELASTIC #######"
 echo "##########################################"
 echo  
 password=$(cat .env | head -n 1 | awk -F= '{print $2}')
-echo "The elastic password set in .env:" $password
+echo "The master password Elastic set in .env:" $password
 echo
 read -p "Confirm (y/n) ?" confirm
 
@@ -21,10 +21,23 @@ case $confirm in
      ;;
 esac
 echo
+echo "##########################################"
+echo "###### CONFIGURING KIBANA ACCOUNT #######"
+echo "##########################################"
+echo
+echo
+read -r -p "Enter the user for Kibana:" kibana_account
+kibana_account=$kibana_account
+echo
+echo
+read -r -sp "Enter the password for Kibana:" kibana_password
+kibana_password=$kibana_password
+echo
 echo
 echo "##########################################"
 echo "###### CONFIGURING OPENCTI ACCOUNT #######"
 echo "##########################################"
+echo
 echo
 read -r -p "Enter the user for OpenCTI:" opencti_account
 opencti_account=$opencti_account
@@ -123,10 +136,13 @@ echo "##########################################"
 echo "########## DEPLOY KIBANA INDEX ###########"
 echo "##########################################"
 echo
-while [ "$(curl --insecure https://localhost/kibana 2> /dev/null | grep "Bad Gateway" ]; do
+while [ "$(curl --insecure https://localhost/kibana 2> /dev/null | grep "Bad Gateway" )" ]; do
   echo "Waiting for Kibana to come online.";
   sleep 5;
 done
 echo
+echo
+echo
+docker exec -ti elasticsearch elasticsearch-users useradd $kibana_account -p $kibana_password -r superuser
 for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -X POST 'http://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 echo
