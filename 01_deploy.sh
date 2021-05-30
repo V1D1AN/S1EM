@@ -103,7 +103,7 @@ echo "##########################################"
 echo "########## DEPLOY KIBANA INDEX ###########"
 echo "##########################################"
 echo
-while [ "$(docker logs kibana | grep "Server running")" == "" ]; do
+while [ "$(docker logs kibana | grep -i "server running")" == "" ]; do
   echo "Waiting for Kibana to come online.";
   sleep 5;
 done
