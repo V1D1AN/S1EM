@@ -62,7 +62,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [ ] SSO
 - [ ] Integrate Att@ck Navigator
 - [ ] Integration of OpenCVE
-- [ ] Upgrade to ELK 7.13.0
+- [x] Upgrade to ELK 7.13.0
 
 # Special thanks
 En français cette fois. <br />
