@@ -138,12 +138,8 @@ docker restart stoq
 docker restart cortex
 echo
 echo
-echo "##########################################"
-echo "########## UPDATE SIGMA RULES ############"
-echo "##########################################"
+echo "#########################################"
+echo "############ DEPLOY FINISH ##############"
+echo "#########################################"
 echo
-docker-compose -f sigma.yml build
-docker image prune -f
-docker-compose -f sigma.yml up -d
-echo
-echo
+
