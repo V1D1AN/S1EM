@@ -107,6 +107,7 @@ while [ "$(docker logs kibana | grep -i "server running")" == "" ]; do
   echo "Waiting for Kibana to come online.";
   sleep 5;
 done
+echo "Kibana is online"
 echo
 echo
 docker exec -ti elasticsearch elasticsearch-users useradd $kibana_account -p $kibana_password -r superuser
