@@ -26,8 +26,9 @@ echo "##########################################"
 echo "########## UPDATE SIGMA RULES ############"
 echo "##########################################"
 echo
+docker image rm -f sigma:1.0
+docker container prune -f
 docker-compose -f sigma.yml build
-docker image prune -f
 docker-compose -f sigma.yml up -d
 
 
