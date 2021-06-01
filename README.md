@@ -4,7 +4,7 @@
 # Objectives
 Today, cyber attacks are more numerous and cause damage in companies. Nevertheless, many software products exist to detect cyber threats. The S1EM solution is based on the principle of bringing together the best products in their field, free of charge, and making them quickly interoperable.
 
-S1EM is a SIEM with SIRP and Threat Intel,all in one.
+S1EM is a SIEM with SIRP and Threat Intel, a full packet capture, all in one.
 
 Inside the solution:
 
