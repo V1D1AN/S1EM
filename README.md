@@ -63,7 +63,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [ ] Integrate Att@ck Navigator
 - [ ] Integration of OpenCVE
 - [ ] Integrate Pfelk
-- [ ] Send malware to Sandbox
+- [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
 - [x] Upgrade to ELK 7.13.0
 
 # Special thanks
