@@ -60,6 +60,7 @@ echo
 read -r -sp "Enter the password for Arkime:" arkime_password
 arkime_password=$arkime_password
 sed -i "s/arkime_password/$arkime_password/g" docker-compose.yml
+chmod 644 ./arkime/scripts/*.sh
 echo
 echo
 echo "##########################################"
