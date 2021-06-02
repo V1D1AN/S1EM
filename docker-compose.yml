@@ -651,7 +651,7 @@ services:
       - "443"
 
   arkime:
-    image: arkime:2.7.1-1
+    image: v1d1an/arkime:2.7.1-1
     container_name: arkime
     hostname: arkime
     environment:
@@ -673,7 +673,7 @@ services:
       - "traefik.http.routers.arkime.tls=true"
 
   import:
-    image: arkime:2.7.1-1
+    image: v1d1an/arkime:2.7.1-1
     container_name: import
     hostname: import
     depends_on:
