@@ -112,6 +112,7 @@ echo "Kibana is online"
 echo
 echo
 docker exec -ti elasticsearch elasticsearch-users useradd $kibana_account -p $kibana_password -r superuser
+docker cp elasticsearch:/usr/share/elasticsearch/config/users elasticsearch/users
 for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -X POST 'http://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 echo
 echo
