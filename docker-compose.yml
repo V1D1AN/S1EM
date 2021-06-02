@@ -651,10 +651,7 @@ services:
       - "443"
 
   arkime:
-    build:
-      context: .
-      dockerfile: arkime/dockerfile
-    image: arkime:2.7.1-1
+    image: v1d1an/arkime:2.7.1-1
     container_name: arkime
     hostname: arkime
     environment:
@@ -663,6 +660,7 @@ services:
     depends_on:
       - elasticsearch
     volumes:
+      - ./arkime/scripts:/arkime/bin:ro
       - ./arkime/config.ini:/data/moloch/etc/config.ini.sample:ro
       - arkimelog:/arkime/log
     networks:
@@ -675,10 +673,7 @@ services:
       - "traefik.http.routers.arkime.tls=true"
 
   import:
-    build:
-      context: .
-      dockerfile: arkime/dockerfile
-    image: arkime:2.7.1-1
+    image: v1d1an/arkime:2.7.1-1
     container_name: import
     hostname: import
     depends_on:
@@ -688,6 +683,7 @@ services:
       - ARKIME_USER=arkime_account
       - ARKIME_PSWD=arkime_password
     volumes:
+      - ./arkime/scripts:/arkime/bin:ro
       - arkimelog:/arkime/log
       - suricatapcap:/import:ro
     networks:
