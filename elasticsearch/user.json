@@ -1,0 +1,6 @@
+{
+  "enabled" : true ,
+  "password" : "kibana_password" ,
+  "roles" : "superuser" ,
+  "full_name" : "kibana_account"
+}
