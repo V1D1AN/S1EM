@@ -47,6 +47,7 @@ services:
         soft: 65536
         hard: 65536
     volumes:
+      - ./elasticsearch/user.json:/usr/share/elasticsearch/config/user.json
       - esdata:/usr/share/elasticsearch/data
       - eslogs:/usr/share/elasticsearch/logs
     networks:
