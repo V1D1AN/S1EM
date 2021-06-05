@@ -84,7 +84,7 @@ done
 echo "Kibana is online"
 echo
 echo
-docker exec elasticsearch sh -c "curl -X POST 'http://127.0.0.1:9200/_security/user/$kibana_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/elasticsearch/config/user.json"
+docker exec elasticsearch sh -c "curl -X POST 'http://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/elasticsearch/config/user.json"
 for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -X POST 'http://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 echo
 echo
