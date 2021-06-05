@@ -14,6 +14,7 @@ Inside the solution:
 * Logstash
 * Metricbeat
 * Auditbeat
+* Syslog-ng
 * Elastalert
 * TheHive
 * Cortex
