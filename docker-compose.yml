@@ -668,9 +668,8 @@ services:
     image: v1d1an/arkime:2.7.1-1
     container_name: arkime
     hostname: arkime
-    environment:
-      - ARKIME_USER=arkime_account
-      - ARKIME_PSWD=arkime_password
+    env_file:
+      - .env
     depends_on:
       - elasticsearch
     volumes:
@@ -693,9 +692,8 @@ services:
     depends_on:
       - elasticsearch
       - arkime
-    environment:
-      - ARKIME_USER=arkime_account
-      - ARKIME_PSWD=arkime_password
+    env_file:
+      - .env
     volumes:
       - ./arkime/scripts:/arkime/bin:ro
       - arkimelog:/arkime/log
