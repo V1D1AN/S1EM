@@ -12,46 +12,27 @@ sed -i "s/elastic_opencti/$password/g" docker-compose.yml
 echo
 echo
 echo "##########################################"
-echo "####### CONFIGURING KIBANA ACCOUNT #######"
+echo "####### CONFIGURING ADMIN ACCOUNT ########"
+echo "##### FOR KIBANA / OPENCTI / ARKIME ######"
 echo "##########################################"
 echo
-read -r -p "Enter the user for Kibana:" kibana_account
-kibana_account=$kibana_account
-sed -i "s/kibana_account/$kibana_account/g" elasticsearch/user.json
+read -r -p "Enter the admin account:" admin_account
+admin_account=$admin_account
+sed -i "s/kibana_account/$admin_account/g" elasticsearch/user.json
+sed -i "s/opencti_account/$admin_account/g" .env
+sed -i "s/arkime_account/$admin_account/g" .env
 echo
-echo
-read -r -sp "Enter the password for Kibana:" kibana_password
-kibana_password=$kibana_password
-sed -i "s/kibana_password/$kibana_password/g" elasticsearch/user.json
-echo
-echo
-echo "##########################################"
-echo "###### CONFIGURING OPENCTI ACCOUNT #######"
-echo "##########################################"
-echo
-read -r -p "Enter the user for OpenCTI:" opencti_account
-opencti_account=$opencti_account
-sed -i "s/opencti_account/$opencti_account/g" .env
-echo
-echo
-read -r -sp "Enter the password for OpenCTI:" opencti_password
-opencti_password=$opencti_password
-sed -i "s/opencti_password/$opencti_password/g" .env
-echo
-echo
-echo "##########################################"
-echo "####### CONFIGURING ARKIME ACCOUNT #######"
-echo "##########################################"
-echo
-read -r -p "Enter the user for Arkime:" arkime_account
-arkime_account=$arkime_account
-sed -i "s/arkime_account/$arkime_account/g" docker-compose.yml
-echo
-echo
-read -r -sp "Enter the password for Arkime:" arkime_password
-arkime_password=$arkime_password
-sed -i "s/arkime_password/$arkime_password/g" docker-compose.yml
-chmod u=rx ./arkime/scripts/*.sh
+while true; do
+    read -s -p "Password (Must be a password with at least 6 characters): " admin_password
+    echo
+    read -s -p "Password (again): " admin_password2
+    echo
+    [ "$admin_password" = "$admin_password2" ] && break
+    echo "Please try again"
+done
+sed -i "s/kibana_password/$admin_password/g" elasticsearch/user.json
+sed -i "s/opencti_password/$admin_password/g" .env
+sed -i "s/arkime_password/$admin_password/g" .env
 echo
 echo
 echo "##########################################"
@@ -86,6 +67,7 @@ echo "##########################################"
 echo "############ DOCKER STARTING #############"
 echo "##########################################"
 echo
+chmod u=rx ./arkime/scripts/*.sh
 docker-compose up -d elasticsearch kibana
 docker-compose up -d
 sleep 45
@@ -135,4 +117,7 @@ echo "#########################################"
 echo "############ DEPLOY FINISH ##############"
 echo "#########################################"
 echo
-
+echo "Access url: https://s1em.cyber.local"
+echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime"
+echo "The user for MISP / TheHive / Cortex / Fleet is not configured"
+echo "The master password of elastic is in \".env\" "
