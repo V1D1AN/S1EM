@@ -16,7 +16,7 @@ echo "####### CONFIGURING ADMIN ACCOUNT ########"
 echo "##### FOR KIBANA / OPENCTI / ARKIME ######"
 echo "##########################################"
 echo
-read -r -p "Enter the admin account:" admin_account
+read -r -p "Enter the admin account (Must be like user@domain.tld):" admin_account
 admin_account=$admin_account
 sed -i "s/kibana_account/$admin_account/g" elasticsearch/user.json
 sed -i "s/opencti_account/$admin_account/g" .env
