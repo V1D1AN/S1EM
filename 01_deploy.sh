@@ -4,65 +4,35 @@ echo "##########################################"
 echo "###### CONFIGURING ACCOUNT ELASTIC #######"
 echo "##########################################"
 echo  
-password=$(cat .env | head -n 1 | awk -F= '{print $2}')
+password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 echo "The master password Elastic set in .env:" $password
 echo
-read -p "Confirm (y/n) ?" confirm
-
-case $confirm in
-        [yY][eE][sS]|[yY])
-        sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/300_output.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini
-        sed -i "s/elastic_opencti/$password/g" docker-compose.yml
-        ;;
-        [nN][oO]|[nN])
-        ;; *)
-        echo "Invalid input ..."
-     exit 1
-     ;;
-esac
+sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/300_output.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini
+sed -i "s/elastic_opencti/$password/g" docker-compose.yml
 echo
 echo
 echo "##########################################"
-echo "####### CONFIGURING KIBANA ACCOUNT #######"
+echo "####### CONFIGURING ADMIN ACCOUNT ########"
+echo "##### FOR KIBANA / OPENCTI / ARKIME ######"
 echo "##########################################"
 echo
-read -r -p "Enter the user for Kibana:" kibana_account
-kibana_account=$kibana_account
-sed -i "s/kibana_account/$kibana_account/g" elasticsearch/user.json
+read -r -p "Enter the admin account (Must be like user@domain.tld):" admin_account
+admin_account=$admin_account
+sed -i "s/kibana_account/$admin_account/g" elasticsearch/user.json
+sed -i "s/opencti_account/$admin_account/g" .env
+sed -i "s/arkime_account/$admin_account/g" .env
 echo
-echo
-read -r -sp "Enter the password for Kibana:" kibana_password
-kibana_password=$kibana_password
-sed -i "s/kibana_password/$kibana_password/g" elasticsearch/user.json
-echo
-echo
-echo "##########################################"
-echo "###### CONFIGURING OPENCTI ACCOUNT #######"
-echo "##########################################"
-echo
-read -r -p "Enter the user for OpenCTI:" opencti_account
-opencti_account=$opencti_account
-sed -i "s/opencti_account/$opencti_account/g" .env
-echo
-echo
-read -r -sp "Enter the password for OpenCTI:" opencti_password
-opencti_password=$opencti_password
-sed -i "s/opencti_password/$opencti_password/g" .env
-echo
-echo
-echo "##########################################"
-echo "####### CONFIGURING ARKIME ACCOUNT #######"
-echo "##########################################"
-echo
-read -r -p "Enter the user for Arkime:" arkime_account
-arkime_account=$arkime_account
-sed -i "s/arkime_account/$arkime_account/g" docker-compose.yml
-echo
-echo
-read -r -sp "Enter the password for Arkime:" arkime_password
-arkime_password=$arkime_password
-sed -i "s/arkime_password/$arkime_password/g" docker-compose.yml
-chmod u=rx ./arkime/scripts/*.sh
+while true; do
+    read -s -p "Password (Must be a password with at least 6 characters): " admin_password
+    echo
+    read -s -p "Password (again): " admin_password2
+    echo
+    [ "$admin_password" = "$admin_password2" ] && break
+    echo "Please try again"
+done
+sed -i "s/kibana_password/$admin_password/g" elasticsearch/user.json
+sed -i "s/opencti_password/$admin_password/g" .env
+sed -i "s/arkime_password/$admin_password/g" .env
 echo
 echo
 echo "##########################################"
@@ -97,6 +67,7 @@ echo "##########################################"
 echo "############ DOCKER STARTING #############"
 echo "##########################################"
 echo
+chmod u=rx ./arkime/scripts/*.sh
 docker-compose up -d elasticsearch kibana
 docker-compose up -d
 sleep 45
@@ -113,7 +84,7 @@ done
 echo "Kibana is online"
 echo
 echo
-docker exec elasticsearch sh -c "curl -X POST 'http://127.0.0.1:9200/_security/user/$kibana_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/elasticsearch/config/user.json"
+docker exec elasticsearch sh -c "curl -X POST 'http://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/elasticsearch/config/user.json"
 for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -X POST 'http://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 echo
 echo
@@ -146,4 +117,7 @@ echo "#########################################"
 echo "############ DEPLOY FINISH ##############"
 echo "#########################################"
 echo
-
+echo "Access url: https://s1em.cyber.local"
+echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime"
+echo "The user for MISP / TheHive / Cortex / Fleet is not configured"
+echo "The master password of elastic is in \".env\" "

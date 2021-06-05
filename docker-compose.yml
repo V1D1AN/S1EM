@@ -138,6 +138,7 @@ services:
       - elasticsearch
     volumes:
       - /var/log:/var/log:ro
+      - syslog-ng-data:/var/log/syslog-ng:ro
       - fleet:/var/log/osquery:ro
       - suricatadata:/var/log/suricata:ro
       - traefikdata:/var/log/traefik:ro
@@ -151,6 +152,18 @@ services:
       - ./filebeat/modules.d/zeek.yml:/usr/share/filebeat/modules.d/zeek.yml:ro
     networks:
       - s1em
+      
+  syslog-ng:
+    image: 'balabit/syslog-ng:latest'
+    container_name: syslog-ng
+    hostname: syslog-ng
+    restart: always
+    networks:
+      - s1em
+    ports:
+      - "514:514/udp"
+    volumes:
+      - syslog-ng-data:/var/log
 
   suricata:
     image: jasonish/suricata:6.0
@@ -655,9 +668,8 @@ services:
     image: v1d1an/arkime:2.7.1-1
     container_name: arkime
     hostname: arkime
-    environment:
-      - ARKIME_USER=arkime_account
-      - ARKIME_PSWD=arkime_password
+    env_file:
+      - .env
     depends_on:
       - elasticsearch
     volumes:
@@ -680,9 +692,8 @@ services:
     depends_on:
       - elasticsearch
       - arkime
-    environment:
-      - ARKIME_USER=arkime_account
-      - ARKIME_PSWD=arkime_password
+    env_file:
+      - .env
     volumes:
       - ./arkime/scripts:/arkime/bin:ro
       - arkimelog:/arkime/log
@@ -732,4 +743,6 @@ volumes:
    fleet:
     external: false
    arkimelog:
+    external: false
+   syslog-ng-data:
     external: false
