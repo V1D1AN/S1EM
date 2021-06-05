@@ -151,6 +151,18 @@ services:
       - ./filebeat/modules.d/zeek.yml:/usr/share/filebeat/modules.d/zeek.yml:ro
     networks:
       - s1em
+      
+  syslog-ng:
+    image: 'balabit/syslog-ng:latest'
+    container_name: syslog-ng
+    hostname: syslog-ng
+    restart: always
+    networks:
+      - s1em
+    ports:
+      - "514:514/udp"
+    volumes:
+      - /var/log:/var/log
 
   suricata:
     image: jasonish/suricata:6.0
