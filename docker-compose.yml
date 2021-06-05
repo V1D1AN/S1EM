@@ -138,6 +138,7 @@ services:
       - elasticsearch
     volumes:
       - /var/log:/var/log:ro
+      - syslog-ng-data:/var/log/syslog-ng:ro
       - fleet:/var/log/osquery:ro
       - suricatadata:/var/log/suricata:ro
       - traefikdata:/var/log/traefik:ro
@@ -162,7 +163,7 @@ services:
     ports:
       - "514:514/udp"
     volumes:
-      - /var/log:/var/log
+      - syslog-ng-data:/var/log
 
   suricata:
     image: jasonish/suricata:6.0
@@ -744,4 +745,6 @@ volumes:
    fleet:
     external: false
    arkimelog:
+    external: false
+   syslog-ng-data:
     external: false
