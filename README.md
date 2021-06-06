@@ -33,9 +33,9 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
 # Guides
 - [Installation Guide](https://github.com/V1D1AN/S1EM/wiki/Installation-Guide)
-- [Upgrade guide](https://github.com/V1D1AN/S1EM/wiki/Upgrade-guide)
-- [Configuration Guide](https://github.com/V1D1AN/S1EM/wiki/Configuration-guide)
 - [Access Guide](https://github.com/V1D1AN/S1EM/wiki/Access-guide)
+- [Configuration Guide](https://github.com/V1D1AN/S1EM/wiki/Configuration-guide)
+- [Upgrade guide](https://github.com/V1D1AN/S1EM/wiki/Upgrade-guide)
 - [Detection Guide](https://github.com/V1D1AN/S1EM/wiki/Detection-guide)
 - [Incident Response Guide](https://github.com/V1D1AN/S1EM/wiki/Incident-response-guide)
 - [Threat Intel Guide](https://github.com/V1D1AN/S1EM/wiki/Threat-intel-guide)
