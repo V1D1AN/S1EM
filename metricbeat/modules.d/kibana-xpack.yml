@@ -7,4 +7,4 @@
   hosts: ["kibana:5601"]
   basepath: "/kibana"
   username: "elastic"
-  password: "elastic"
+  password: "changeme"
