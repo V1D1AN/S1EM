@@ -6,5 +6,5 @@
   period: 60s
   hosts: ["http://elasticsearch:9200"]
   username: "elastic"
-  password: "elastic"
+  password: "changeme"
 
