@@ -25,7 +25,7 @@ services:
       - s1em
 
   elasticsearch:
-    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.13.0'
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.13.1'
     container_name: elasticsearch
     hostname: elasticsearch
     restart: always
@@ -54,7 +54,7 @@ services:
       - s1em
       
   logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.13.0'
+    image: 'docker.elastic.co/logstash/logstash:7.13.1'
     container_name: logstash
     hostname: logstash
     restart: always
@@ -71,7 +71,7 @@ services:
       - "5044:5044"
       
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.13.0'
+    image: 'docker.elastic.co/kibana/kibana:7.13.1'
     container_name: kibana
     hostname: kibana
     restart: always
@@ -89,7 +89,7 @@ services:
       - s1em
 
   auditbeat:
-    image: 'docker.elastic.co/beats/auditbeat:7.13.0'
+    image: 'docker.elastic.co/beats/auditbeat:7.13.1'
     container_name: auditbeat
     hostname: auditbeat
     restart: always
@@ -107,7 +107,7 @@ services:
       - s1em
 
   metricbeat:
-    image: 'docker.elastic.co/beats/metricbeat:7.13.0'
+    image: 'docker.elastic.co/beats/metricbeat:7.13.1'
     container_name: metricbeat
     restart: always
     depends_on:
@@ -130,7 +130,7 @@ services:
 
 
   filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.13.0'
+    image: 'docker.elastic.co/beats/filebeat:7.13.1'
     container_name: filebeat
     hostname: filebeat
     restart: always
