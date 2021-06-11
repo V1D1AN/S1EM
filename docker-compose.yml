@@ -137,7 +137,7 @@ services:
     depends_on:
       - elasticsearch
     volumes:
-      - /var/log:/var/log:ro
+      - /var/log:/var/log
       - syslog-ng-data:/var/log/syslog-ng:ro
       - fleet:/var/log/osquery:ro
       - suricatadata:/var/log/suricata:ro
