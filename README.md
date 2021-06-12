@@ -65,7 +65,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [ ] Integration of OpenCVE
 - [ ] Integrate Pfelk
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
-- [ ] Upgrade to ELK 7.13.1
+- [x] Upgrade to ELK 7.13.1
 
 # Special thanks
 En français cette fois. <br />
