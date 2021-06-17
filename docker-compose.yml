@@ -667,6 +667,7 @@ services:
   arkime:
     image: v1d1an/arkime:2.7.1-1
     container_name: arkime
+    restart: always
     hostname: arkime
     env_file:
       - .env
@@ -688,6 +689,7 @@ services:
   import:
     image: v1d1an/arkime:2.7.1-1
     container_name: import
+    restart: always
     hostname: import
     depends_on:
       - elasticsearch
