@@ -8,3 +8,5 @@ elasticsearch.password: changeme
 xpack.security.enabled: true
 xpack.fleet.agents.tlsCheckDisabled: true
 xpack.encryptedSavedObjects.encryptionKey: 'azertyuiopqsdfghjklmwxcvbn1234567890'
+kibana.autocompleteTerminateAfter: 10000000
+
