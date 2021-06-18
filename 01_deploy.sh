@@ -2,11 +2,15 @@
 mv env.sample .env
 echo "##########################################"
 echo "###### CONFIGURING ACCOUNT ELASTIC #######"
+echo "###### AND KIBANA API KEY          ######"
 echo "##########################################"
 echo  
 password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
+kibana_api_key=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
+echo "The Kibana api key is : " $kibana_api_key
 echo "The master password Elastic set in .env:" $password
 echo
+sed -i "s/kibana_api_key/$kibana_api_key/g" kibana/kibana.yml
 sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/300_output.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini
 sed -i "s/elastic_opencti/$password/g" docker-compose.yml
 echo
