@@ -80,6 +80,7 @@ services:
     volumes:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
       - ./kibana/index:/usr/share/kibana/index:ro
+      - ./kibana/dashboard:/usr/share/kibana/dashboard:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kibana.rule=PathPrefix(`/kibana`)"
