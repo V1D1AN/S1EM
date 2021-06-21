@@ -553,6 +553,8 @@ services:
       - minio
       - rabbitmq
     restart: always
+    volumes:
+      - certs:/usr/share/certificates
     networks:
       - s1em
 
