@@ -1,4 +1,4 @@
-version: "3.5"
+version: "2.2"
 services:
   traefik:
     image: traefik:2.4
@@ -134,7 +134,7 @@ services:
     hostname: kibana
     restart: always
     depends_on:
-      - elasticsearch
+      - es01
     volumes:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
       - ./kibana/index:/usr/share/kibana/index:ro
@@ -161,7 +161,7 @@ services:
     privileged: true
     pid: host
     depends_on:
-      - elasticsearch
+      - es01
     volumes:
       - ./auditbeat/auditbeat.yml:/usr/share/auditbeat/auditbeat.yml:ro
       - certs:/usr/share/certificates
@@ -173,7 +173,7 @@ services:
     container_name: metricbeat
     restart: always
     depends_on:
-      - elasticsearch
+      - es01
     hostname: ${HOSTNAME}
     command: ["-system.hostfs=/hostfs", "-e"]
     user: root
@@ -197,7 +197,7 @@ services:
     hostname: filebeat
     restart: always
     depends_on:
-      - elasticsearch
+      - es01
     volumes:
       - /var/log:/var/log
       - syslog-ng-data:/var/log/syslog-ng:ro
@@ -289,7 +289,7 @@ services:
       - ./cortex/OpenCTI_SearchObservables.json:/opt/Cortex-Analyzers/analyzers/OpenCTI/OpenCTI_SearchObservables.json:ro
       - ./rules/yara/signature-base:/opt/rules/yara:ro
     depends_on:
-      - elasticsearch
+      - es01
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cortex.rule=PathPrefix(`/cortex`)"
@@ -340,7 +340,7 @@ services:
     hostname: elastalert
     restart: always
     depends_on:
-      - elasticsearch
+      - es01
     volumes:
       - ./elastalert/elastalert.yaml:/opt/config/elastalert_config.yaml:ro
       - ./rules/elastalert:/opt/elastalert/rules:ro
@@ -523,7 +523,7 @@ services:
       - APP__BASE_PATH=/opencti
       - REDIS__HOSTNAME=redis
       - REDIS__PORT=6379
-      - ELASTICSEARCH__URL=http://elastic:elastic_opencti@elasticsearch:9200
+      - ELASTICSEARCH__URL=http://elastic:elastic_opencti@es01:9200
       - ELASTICSEARCH__SSL__CA=/usr/share/certificates/ca/ca.crt
       - ELASTICSEARCH__SSL__KEY=/usr/share/certificates/es01/es01.key
       - ELASTICSEARCH__SSL__CERT=/usr/share/certificates/es01/es01.crt
@@ -549,7 +549,7 @@ services:
       - "8080"
     depends_on:
       - redis
-      - elasticsearch
+      - es01
       - minio
       - rabbitmq
     restart: always
@@ -739,7 +739,7 @@ services:
     env_file:
       - .env
     depends_on:
-      - elasticsearch
+      - es01
     volumes:
       - ./arkime/scripts:/arkime/bin:ro
       - ./arkime/config.ini:/data/moloch/etc/config.ini.sample:ro
@@ -760,7 +760,7 @@ services:
     restart: always
     hostname: import
     depends_on:
-      - elasticsearch
+      - es01
       - arkime
     env_file:
       - .env
