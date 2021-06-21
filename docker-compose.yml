@@ -746,7 +746,7 @@ services:
       - ./arkime/scripts:/arkime/bin:ro
       - ./arkime/config.ini:/data/moloch/etc/config.ini.sample:ro
       - arkimelog:/arkime/log
-      - certs:/data/moloch/etc/certs
+      - certs:/data/moloch/etc/certs:ro
     networks:
       - s1em
     entrypoint: /arkime/bin/viewer.sh
@@ -770,6 +770,8 @@ services:
       - ./arkime/scripts:/arkime/bin:ro
       - arkimelog:/arkime/log
       - suricatapcap:/import:ro
+      - ./arkime/config.ini:/arkime/etc/config.ini:ro
+      - certs:/data/moloch/etc/certs:ro
     networks:
       - s1em
     entrypoint: /arkime/bin/import.sh
