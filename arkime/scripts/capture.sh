@@ -11,7 +11,7 @@ info_msg "TODO - Explain running on specified interface..."
 
 ## WAIT FOR ELASTICSEARCH TO COME ONLINE ##
 #
-while [ "$(curl elastic:changeme@elasticsearch:9200/_cluster/health?pretty 2> /dev/null | grep status | awk -F '"' '{print $4}')" != "yellow" ]; do 
+while [ "$(curl -k https://elastic:changeme@elasticsearch:9200/_cluster/health?pretty 2> /dev/null | grep status | awk -F '"' '{print $4}')" != "green" ]; do 
   warn_msg "Waiting for ElasticSearch to come online."; 
   sleep 5; 
 done

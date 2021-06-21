@@ -31,16 +31,22 @@ processors:
   - add_docker_metadata: ~
 
 
-setup.kibana.host: "http://kibana:5601/kibana"
+setup.template.overwrite: true
+
+setup.kibana.host: "https://kibana:5601/kibana"
+setup.kibana.ssl.enabled: true
+setup.kibana.ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
+setup.kibana.ssl.certificate: "/usr/share/certificates/kibana/kibana.crt"
+setup.kibana.ssl.key: "/usr/share/certificates/kibana/kibana.key"
+
 setup.dashboards.enabled: true
 
 
-setup.template.overwrite: true
-setup.template.settings:
-  index.number_of_shards: 1
-  index.number_of_replicas: 0
-
 output.elasticsearch:
-  hosts: "elasticsearch:9200"
+  hosts: "https://es01:9200"
   username: "elastic"
   password: "changeme"
+  ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
+  ssl.certificate: "/usr/share/certificates/auditbeat/auditbeat.crt"
+  ssl.key: "/usr/share/certificates/auditbeat/auditbeat.key"
+

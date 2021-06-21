@@ -1,0 +1,36 @@
+  - name: es01
+    dns:
+       - es01
+  - name: es02
+    dns:
+       - es02
+  - name: es03
+    dns:
+       - es03
+  - name: kibana
+    dns:
+       - kibana
+  - name: metricbeat
+    dns:
+       - metricbeat
+  - name: logstash
+    dns:
+       - logstash
+  - name: filebeat
+    dns:
+       - filebeat
+  - name: auditbeat
+    dns:
+       - auditbeat
+  - name: cortex
+    dns:
+       - cortex
+  - name: elastalert
+    dns:
+       - elastalert
+  - name: traefik
+    dns:
+       - traefik
+  - name: arkime
+    dns:
+       - arkime

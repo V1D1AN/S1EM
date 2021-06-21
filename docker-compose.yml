@@ -9,9 +9,9 @@ services:
     volumes:
       - ./traefik/traefik.toml:/etc/traefik/traefik.toml:ro
       - ./traefik/dyn.toml:/etc/traefik/dyn.toml:ro
-      - ./ssl:/etc/ssl/traefik:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - traefikdata:/tmp
+      - certs:/etc/ssl:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
@@ -23,42 +23,100 @@ services:
     networks:
       - reverse_proxy
       - s1em
-
-  elasticsearch:
-    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.13.2'
-    container_name: elasticsearch
-    hostname: elasticsearch
+      
+  es01:
+    container_name: es01
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
     restart: always
     environment:
-      - http.host=0.0.0.0
-      - discovery.type=single-node
-      - cluster.name=s1em
-      - script.allowed_types= inline
-      - thread_pool.search.queue_size=100000
-      - thread_pool.write.queue_size=10000
-      - gateway.recover_after_nodes=1
-      - xpack.security.enabled=true
-      - xpack.security.authc.api_key.enabled=true
-      - bootstrap.memory_lock=true
-      - 'ES_JAVA_OPTS=-Xms1g -Xmx1g'
+      - node.name=es01
+      - discovery.seed_hosts=es01,es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-    ulimits:
-      nofile:
-        soft: 65536
-        hard: 65536
-    volumes:
-      - ./elasticsearch/user.json:/usr/share/elasticsearch/config/user.json
-      - esdata:/usr/share/elasticsearch/data
-      - eslogs:/usr/share/elasticsearch/logs
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.license.self_generated.type=basic
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=$CERTS_DIR/es01/es01.key
+      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es01/es01.crt
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.transport.ssl.certificate=$CERTS_DIR/es01/es01.crt
+      - xpack.security.transport.ssl.key=$CERTS_DIR/es01/es01.key
+    volumes: ['data01:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR', './elasticsearch/user.json:/usr/share/elasticsearch/config/user.json']
     networks:
       - s1em
-      
+    healthcheck:
+      test: curl --cacert $CERTS_DIR/ca/ca.crt -s https://localhost:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  es02:
+    container_name: es02
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
+    restart: always
+    environment:
+      - node.name=es02
+      - discovery.seed_hosts=es01,es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.license.self_generated.type=basic
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=$CERTS_DIR/es02/es02.key
+      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es02/es02.crt
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.transport.ssl.certificate=$CERTS_DIR/es02/es02.crt
+      - xpack.security.transport.ssl.key=$CERTS_DIR/es02/es02.key
+    volumes: ['data02:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR']
+    networks:
+      - s1em
+
+  es03:
+    container_name: es03
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
+    restart: always
+    environment:
+      - node.name=es03
+      - discovery.seed_hosts=es01,es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.license.self_generated.type=basic
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=$CERTS_DIR/es03/es03.key
+      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es03/es03.crt
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.transport.ssl.certificate=$CERTS_DIR/es03/es03.crt
+      - xpack.security.transport.ssl.key=$CERTS_DIR/es03/es03.key
+    volumes: ['data03:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR']
+    networks:
+      - s1em
+
+  wait_until_ready:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
+    command: /usr/bin/true
+    depends_on: {"es01": {"condition": "service_healthy"}}
+ 
+ 
   logstash:
     image: 'docker.elastic.co/logstash/logstash:7.13.2'
     container_name: logstash
     hostname: logstash
     restart: always
     volumes:
+      - certs:/usr/share/certificates
       - stoq:/var/log/stoq:ro
       - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
@@ -81,11 +139,13 @@ services:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
       - ./kibana/index:/usr/share/kibana/index:ro
       - ./kibana/dashboard:/usr/share/kibana/dashboard:ro
+      - certs:/usr/share/certificates
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kibana.rule=PathPrefix(`/kibana`)"
       - "traefik.http.routers.kibana.entryPoints=secure"
       - "traefik.http.routers.kibana.tls=true"
+      - "traefik.http.services.kibana.loadbalancer.server.scheme=https"
     networks:
       - s1em
 
@@ -104,6 +164,7 @@ services:
       - elasticsearch
     volumes:
       - ./auditbeat/auditbeat.yml:/usr/share/auditbeat/auditbeat.yml:ro
+      - certs:/usr/share/certificates
     networks:
       - s1em
 
@@ -128,7 +189,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /proc:/hostfs/proc:ro
       - /:/hostfs:ro
-
+      - certs:/usr/share/certificates
 
   filebeat:
     image: 'docker.elastic.co/beats/filebeat:7.13.2'
@@ -144,6 +205,7 @@ services:
       - suricatadata:/var/log/suricata:ro
       - traefikdata:/var/log/traefik:ro
       - zeekdata:/var/log/bro/current:ro
+      - certs:/usr/share/certificates
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       - ./filebeat/modules.d/osquery.yml:/usr/share/filebeat/modules.d/osquery.yml:ro
       - ./filebeat/modules.d/system.yml:/usr/share/filebeat/modules.d/system.yml:ro
@@ -462,6 +524,10 @@ services:
       - REDIS__HOSTNAME=redis
       - REDIS__PORT=6379
       - ELASTICSEARCH__URL=http://elastic:elastic_opencti@elasticsearch:9200
+      - ELASTICSEARCH__SSL__CA=/usr/share/certificates/ca/ca.crt
+      - ELASTICSEARCH__SSL__KEY=/usr/share/certificates/es01/es01.key
+      - ELASTICSEARCH__SSL__CERT=/usr/share/certificates/es01/es01.crt
+      - ELASTICSEARCH__SSL__REJECT_UNAUTHORIZED=false      
       - MINIO__ENDPOINT=minio
       - MINIO__PORT=9000
       - MINIO__USE_SSL=false
@@ -678,6 +744,7 @@ services:
       - ./arkime/scripts:/arkime/bin:ro
       - ./arkime/config.ini:/data/moloch/etc/config.ini.sample:ro
       - arkimelog:/arkime/log
+      - certs:/data/moloch/etc/certs
     networks:
       - s1em
     entrypoint: /arkime/bin/viewer.sh
@@ -713,10 +780,14 @@ networks:
     driver: bridge
     
 volumes:
-   esdata:
+   data01:
     external: false
-   eslogs:
+   data02:
     external: false
+   data03:
+    external: false
+   certs:
+    external: false   
    zeekdata:
     external: false
    suricatadata:

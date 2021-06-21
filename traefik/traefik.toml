@@ -1,6 +1,9 @@
 [global]
   sendAnonymousUsage = false
 
+[serversTransport]
+  InsecureSkipVerify = true
+
 [log]
   level = "INFO"
   format = "common"

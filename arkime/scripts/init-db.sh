@@ -8,7 +8,7 @@ info_msg () { printf '\033[0;36m[ INFO ]\033[0m' && echo -e "\t"$(date)"\t"$BASH
 #
 info_msg "Initializing ElasticSearch database...";
 
-echo INIT | /data/moloch/db/db.pl http://elastic:changeme@elasticsearch:9200 init | tee -a /arkime/log/$(hostname).log > /dev/null;
+echo INIT | /data/moloch/db/db.pl --insecure https://elastic:changeme@es01:9200 init | tee -a /arkime/log/$(hostname).log > /dev/null;
 
 info_msg "ElasticSearch database was initialized."
 

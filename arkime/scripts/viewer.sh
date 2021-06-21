@@ -10,7 +10,7 @@ info_msg "[ Arkime Viewer ] has been started."
 
 ## WAIT FOR ELASTICSEARCH TO COME ONLINE ##
 #
-while [ "$(curl elastic:changeme@elasticsearch:9200/_cluster/health?pretty 2> /dev/null | grep status | awk -F '"' '{print $4}')" != "yellow" ]; do 
+while [ "$(curl -k https://elastic:changeme@es01:9200/_cluster/health?pretty 2> /dev/null | grep status | awk -F '"' '{print $4}')" != "green" ]; do 
   warn_msg "Waiting for Elasticsearch to come online."; 
   sleep 5; 
 done
@@ -27,14 +27,14 @@ fi
 #
 if [ -e "$FLAG/init_db" ]; then
   /arkime/bin/init-db.sh;
-  rm $FLAG/init_db;
+  # rm $FLAG/init_db;
 fi
 
 ## CREATE USER ##
 #
 if [ -e "$FLAG/conf_viewer" ]; then
   /arkime/bin/add-user.sh;
-  rm $FLAG/conf_arkime;
+  # rm $FLAG/conf_arkime;
 fi
 
 ## START [ ARKIME VIEWER ] WITH LOGGING ##

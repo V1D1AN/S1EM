@@ -55,9 +55,7 @@ echo "##########################################"
 echo "######### GENERATE CERTIFICATE ###########"
 echo "##########################################"
 echo
-mkdir ssl
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/server.key -out ssl/server.crt
-chmod 600 ssl/server.key ssl/server.crt
+docker-compose -f create-certs run --rm create_certs
 echo
 echo
 echo "##########################################"
@@ -88,9 +86,9 @@ done
 echo "Kibana is online"
 echo
 echo
-docker exec elasticsearch sh -c "curl -X POST 'http://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/elasticsearch/config/user.json"
-for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -X POST 'http://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
-for dashboard in $(find kibana/dashboard/* -type f); do docker exec kibana sh -c "curl -X POST 'http://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$dashboard"; done
+docker exec elasticsearch sh -c "curl -k -X POST 'https://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/elasticsearch/config/user.json"
+for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -k -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
+for dashboard in $(find kibana/dashboard/* -type f); do docker exec kibana sh -c "curl -k -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$dashboard"; done
 echo
 echo
 echo "##########################################"
