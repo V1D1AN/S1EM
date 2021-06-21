@@ -1,3 +1,4 @@
+instances:
   - name: es01
     dns:
        - es01
