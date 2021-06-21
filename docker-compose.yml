@@ -523,7 +523,7 @@ services:
       - APP__BASE_PATH=/opencti
       - REDIS__HOSTNAME=redis
       - REDIS__PORT=6379
-      - ELASTICSEARCH__URL=http://elastic:elastic_opencti@es01:9200
+      - ELASTICSEARCH__URL=https://elastic:elastic_opencti@es01:9200
       - ELASTICSEARCH__SSL__CA=/usr/share/certificates/ca/ca.crt
       - ELASTICSEARCH__SSL__KEY=/usr/share/certificates/es01/es01.key
       - ELASTICSEARCH__SSL__CERT=/usr/share/certificates/es01/es01.crt
