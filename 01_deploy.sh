@@ -55,7 +55,7 @@ echo "##########################################"
 echo "######### GENERATE CERTIFICATE ###########"
 echo "##########################################"
 echo
-docker-compose -f create-certs run --rm create_certs
+docker-compose -f create-certs.yml run --rm create_certs
 echo
 echo
 echo "##########################################"
