@@ -33,7 +33,7 @@ services:
       - discovery.seed_hosts=es01,es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - xpack.license.self_generated.type=basic
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -63,7 +63,7 @@ services:
       - discovery.seed_hosts=es01,es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - xpack.license.self_generated.type=basic
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -88,7 +88,7 @@ services:
       - discovery.seed_hosts=es01,es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - xpack.license.self_generated.type=basic
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
