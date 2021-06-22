@@ -290,6 +290,7 @@ services:
       - ./cortex/OpenCTI_SearchObservables.json:/opt/Cortex-Analyzers/analyzers/OpenCTI/OpenCTI_SearchObservables.json:ro
       - ./rules/yara/signature-base:/opt/rules/yara:ro
       - certs:/opt/cortex/certificates:ro
+      - ./cortex/ccerts:/usr/local/openjdk-8/jre/lib/security/cacerts
     depends_on:
       - es01
     labels:
