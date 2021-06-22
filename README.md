@@ -56,7 +56,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [x] Upload SigmaHQ rules automatically into kibana
 - [x] Update Suricata rules automatically
 - [x] Update Yara rules automatically
-- [ ] Elasticsearch multi-nodes with ssl
+- [x] Elasticsearch multi-nodes with ssl
 - [ ] Change Stoq to File-monitor ( Clamav,CAPA,Yara )
 - [ ] Extract file with Zeek
 - [x] Integrate Arkime
