@@ -1,11 +1,11 @@
 {
   "index_patterns": [
-    "winlogbeat-7.12.0-*"
+    "winlogbeat-7.13.2-*"
   ],
   "mappings": {
     "_meta": {
       "beat": "winlogbeat",
-      "version": "7.12.0"
+      "version": "7.13.2"
     },
     "date_detection": false,
     "dynamic_templates": [
@@ -64,12 +64,12 @@
         }
       },
       {
-        "kubernetes.service.selectors.*": {
+        "kubernetes.selectors.*": {
           "mapping": {
             "type": "keyword"
           },
           "match_mapping_type": "*",
-          "path_match": "kubernetes.service.selectors.*"
+          "path_match": "kubernetes.selectors.*"
         }
       },
       {
@@ -201,6 +201,10 @@
                 "ignore_above": 1024,
                 "type": "keyword"
               },
+              "continent_code": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "continent_name": {
                 "ignore_above": 1024,
                 "type": "keyword"
@@ -220,11 +224,19 @@
                 "ignore_above": 1024,
                 "type": "keyword"
               },
+              "postal_code": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "region_iso_code": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
               "region_name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "timezone": {
                 "ignore_above": 1024,
                 "type": "keyword"
               }
@@ -392,6 +404,14 @@
           "region": {
             "ignore_above": 1024,
             "type": "keyword"
+          },
+          "service": {
+            "properties": {
+              "name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
           }
         }
       },
@@ -400,11 +420,19 @@
           "exists": {
             "type": "boolean"
           },
+          "signing_id": {
+            "ignore_above": 1024,
+            "type": "keyword"
+          },
           "status": {
             "ignore_above": 1024,
             "type": "keyword"
           },
           "subject_name": {
+            "ignore_above": 1024,
+            "type": "keyword"
+          },
+          "team_id": {
             "ignore_above": 1024,
             "type": "keyword"
           },
@@ -487,6 +515,10 @@
                 "ignore_above": 1024,
                 "type": "keyword"
               },
+              "continent_code": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "continent_name": {
                 "ignore_above": 1024,
                 "type": "keyword"
@@ -506,11 +538,19 @@
                 "ignore_above": 1024,
                 "type": "keyword"
               },
+              "postal_code": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "region_iso_code": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
               "region_name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "timezone": {
                 "ignore_above": 1024,
                 "type": "keyword"
               }
@@ -620,11 +660,19 @@
               "exists": {
                 "type": "boolean"
               },
+              "signing_id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "status": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
               "subject_name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "team_id": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
@@ -651,6 +699,10 @@
                 "type": "keyword"
               },
               "sha512": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "ssdeep": {
                 "ignore_above": 1024,
                 "type": "keyword"
               }
@@ -939,11 +991,19 @@
               "exists": {
                 "type": "boolean"
               },
+              "signing_id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "status": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
               "subject_name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "team_id": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
@@ -1000,6 +1060,10 @@
                 "type": "keyword"
               },
               "sha512": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "ssdeep": {
                 "ignore_above": 1024,
                 "type": "keyword"
               }
@@ -1204,6 +1268,10 @@
             "ignore_above": 1024,
             "type": "keyword"
           },
+          "continent_code": {
+            "ignore_above": 1024,
+            "type": "keyword"
+          },
           "continent_name": {
             "ignore_above": 1024,
             "type": "keyword"
@@ -1223,11 +1291,19 @@
             "ignore_above": 1024,
             "type": "keyword"
           },
+          "postal_code": {
+            "ignore_above": 1024,
+            "type": "keyword"
+          },
           "region_iso_code": {
             "ignore_above": 1024,
             "type": "keyword"
           },
           "region_name": {
+            "ignore_above": 1024,
+            "type": "keyword"
+          },
+          "timezone": {
             "ignore_above": 1024,
             "type": "keyword"
           }
@@ -1266,6 +1342,10 @@
           "sha512": {
             "ignore_above": 1024,
             "type": "keyword"
+          },
+          "ssdeep": {
+            "ignore_above": 1024,
+            "type": "keyword"
           }
         }
       },
@@ -1278,6 +1358,32 @@
           "containerized": {
             "type": "boolean"
           },
+          "cpu": {
+            "properties": {
+              "usage": {
+                "scaling_factor": 1000,
+                "type": "scaled_float"
+              }
+            }
+          },
+          "disk": {
+            "properties": {
+              "read": {
+                "properties": {
+                  "bytes": {
+                    "type": "long"
+                  }
+                }
+              },
+              "write": {
+                "properties": {
+                  "bytes": {
+                    "type": "long"
+                  }
+                }
+              }
+            }
+          },
           "domain": {
             "ignore_above": 1024,
             "type": "keyword"
@@ -1285,6 +1391,10 @@
           "geo": {
             "properties": {
               "city_name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "continent_code": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
@@ -1307,11 +1417,19 @@
                 "ignore_above": 1024,
                 "type": "keyword"
               },
+              "postal_code": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "region_iso_code": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
               "region_name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "timezone": {
                 "ignore_above": 1024,
                 "type": "keyword"
               }
@@ -1335,6 +1453,30 @@
           "name": {
             "ignore_above": 1024,
             "type": "keyword"
+          },
+          "network": {
+            "properties": {
+              "egress": {
+                "properties": {
+                  "bytes": {
+                    "type": "long"
+                  },
+                  "packets": {
+                    "type": "long"
+                  }
+                }
+              },
+              "ingress": {
+                "properties": {
+                  "bytes": {
+                    "type": "long"
+                  },
+                  "packets": {
+                    "type": "long"
+                  }
+                }
+              }
+            }
           },
           "os": {
             "properties": {
@@ -1481,6 +1623,10 @@
               "bytes": {
                 "type": "long"
               },
+              "id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "method": {
                 "ignore_above": 1024,
                 "type": "keyword"
@@ -1599,8 +1745,8 @@
           "container": {
             "properties": {
               "image": {
-                "ignore_above": 1024,
-                "type": "keyword"
+                "path": "container.image.name",
+                "type": "alias"
               },
               "name": {
                 "ignore_above": 1024,
@@ -1641,6 +1787,9 @@
           },
           "pod": {
             "properties": {
+              "ip": {
+                "type": "ip"
+              },
               "name": {
                 "ignore_above": 1024,
                 "type": "keyword"
@@ -1659,14 +1808,10 @@
               }
             }
           },
-          "service": {
+          "selectors": {
             "properties": {
-              "selectors": {
-                "properties": {
-                  "*": {
-                    "type": "object"
-                  }
-                }
+              "*": {
+                "type": "object"
               }
             }
           },
@@ -1880,6 +2025,10 @@
                 "ignore_above": 1024,
                 "type": "keyword"
               },
+              "continent_code": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "continent_name": {
                 "ignore_above": 1024,
                 "type": "keyword"
@@ -1899,11 +2048,19 @@
                 "ignore_above": 1024,
                 "type": "keyword"
               },
+              "postal_code": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "region_iso_code": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
               "region_name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "timezone": {
                 "ignore_above": 1024,
                 "type": "keyword"
               }
@@ -2189,11 +2346,19 @@
               "exists": {
                 "type": "boolean"
               },
+              "signing_id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "status": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
               "subject_name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "team_id": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
@@ -2249,6 +2414,10 @@
               "sha512": {
                 "ignore_above": 1024,
                 "type": "keyword"
+              },
+              "ssdeep": {
+                "ignore_above": 1024,
+                "type": "keyword"
               }
             }
           },
@@ -2276,11 +2445,19 @@
                   "exists": {
                     "type": "boolean"
                   },
+                  "signing_id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
                   "status": {
                     "ignore_above": 1024,
                     "type": "keyword"
                   },
                   "subject_name": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "team_id": {
                     "ignore_above": 1024,
                     "type": "keyword"
                   },
@@ -2334,6 +2511,10 @@
                     "type": "keyword"
                   },
                   "sha512": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "ssdeep": {
                     "ignore_above": 1024,
                     "type": "keyword"
                   }
@@ -2648,6 +2829,10 @@
                 "ignore_above": 1024,
                 "type": "keyword"
               },
+              "continent_code": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "continent_name": {
                 "ignore_above": 1024,
                 "type": "keyword"
@@ -2667,11 +2852,19 @@
                 "ignore_above": 1024,
                 "type": "keyword"
               },
+              "postal_code": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "region_iso_code": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
               "region_name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "timezone": {
                 "ignore_above": 1024,
                 "type": "keyword"
               }
@@ -2850,6 +3043,10 @@
                 "ignore_above": 1024,
                 "type": "keyword"
               },
+              "continent_code": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "continent_name": {
                 "ignore_above": 1024,
                 "type": "keyword"
@@ -2869,11 +3066,19 @@
                 "ignore_above": 1024,
                 "type": "keyword"
               },
+              "postal_code": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
               "region_iso_code": {
                 "ignore_above": 1024,
                 "type": "keyword"
               },
               "region_name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "timezone": {
                 "ignore_above": 1024,
                 "type": "keyword"
               }
@@ -4396,6 +4601,9 @@
             "ignore_above": 1024,
             "type": "keyword"
           },
+          "time_created": {
+            "type": "date"
+          },
           "user": {
             "properties": {
               "domain": {
@@ -4536,7 +4744,7 @@
     "index": {
       "lifecycle": {
         "name": "winlogbeat",
-        "rollover_alias": "winlogbeat-7.12.0"
+        "rollover_alias": "winlogbeat-7.13.2"
       },
       "mapping": {
         "total_fields": {
@@ -4888,7 +5096,6 @@
           "kubernetes.deployment.name",
           "kubernetes.statefulset.name",
           "kubernetes.container.name",
-          "kubernetes.container.image",
           "jolokia.agent.version",
           "jolokia.agent.id",
           "jolokia.server.product",
