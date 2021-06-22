@@ -186,6 +186,7 @@ services:
       - ./metricbeat/modules.d/rabbitmq.yml:/usr/share/metricbeat/modules.d/rabbitmq.yml:ro
       - ./metricbeat/modules.d/elasticsearch-xpack.yml:/usr/share/metricbeat/modules.d/elasticsearch-xpack.yml:ro
       - ./metricbeat/modules.d/kibana-xpack.yml:/usr/share/metricbeat/modules.d/kibana-xpack.yml:ro
+      - ./metricbeat/modules.d/logstash-xpack.yml:/usr/share/metricbeat/modules.d/logstash-xpack.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /proc:/hostfs/proc:ro
       - /:/hostfs:ro
