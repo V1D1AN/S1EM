@@ -5,3 +5,6 @@
   xpack.enabled: true
   period: 60s
   hosts: ["logstash:9600"]
+  metricsets:
+    - node
+    - node_stats
