@@ -100,7 +100,7 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es03/es03.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es03/es03.key
-    volumes: ['data03:/usr/share/elasticsearch/data', 'certs:$CERTS_DIRro']
+    volumes: ['data03:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro']
     networks:
       - s1em
 
