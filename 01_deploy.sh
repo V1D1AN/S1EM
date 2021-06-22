@@ -73,6 +73,7 @@ chmod u=rx ./arkime/scripts/*.sh
 docker-compose up -d es01 es02 es03 kibana
 docker-compose up -d
 sleep 45
+docker exec -ti cortex keytool -import -alias ca -file /opt/cortex/certificates/ca/ca.crt -keystore /usr/local/openjdk-8/jre/lib/security/cacerts --storepass changeit -noprompt
 echo
 echo
 echo "##########################################"

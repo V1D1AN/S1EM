@@ -45,7 +45,7 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es01/es01.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es01/es01.key
-    volumes: ['data01:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR', './elasticsearch/user.json:/usr/share/elasticsearch/config/user.json']
+    volumes: ['data01:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro', './elasticsearch/user.json:/usr/share/elasticsearch/config/user.json']
     networks:
       - s1em
     healthcheck:
@@ -75,7 +75,7 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es02/es02.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es02/es02.key
-    volumes: ['data02:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR']
+    volumes: ['data02:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro']
     networks:
       - s1em
 
@@ -100,7 +100,7 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es03/es03.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es03/es03.key
-    volumes: ['data03:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR']
+    volumes: ['data03:/usr/share/elasticsearch/data', 'certs:$CERTS_DIRro']
     networks:
       - s1em
 
@@ -116,7 +116,7 @@ services:
     hostname: logstash
     restart: always
     volumes:
-      - certs:/usr/share/certificates
+      - certs:/usr/share/certificates:ro
       - stoq:/var/log/stoq:ro
       - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
@@ -139,7 +139,7 @@ services:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
       - ./kibana/index:/usr/share/kibana/index:ro
       - ./kibana/dashboard:/usr/share/kibana/dashboard:ro
-      - certs:/usr/share/certificates
+      - certs:/usr/share/certificates:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kibana.rule=PathPrefix(`/kibana`)"
@@ -164,7 +164,7 @@ services:
       - es01
     volumes:
       - ./auditbeat/auditbeat.yml:/usr/share/auditbeat/auditbeat.yml:ro
-      - certs:/usr/share/certificates
+      - certs:/usr/share/certificates:ro
     networks:
       - s1em
 
@@ -190,7 +190,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /proc:/hostfs/proc:ro
       - /:/hostfs:ro
-      - certs:/usr/share/certificates
+      - certs:/usr/share/certificates:ro
 
   filebeat:
     image: 'docker.elastic.co/beats/filebeat:7.13.2'
@@ -206,7 +206,7 @@ services:
       - suricatadata:/var/log/suricata:ro
       - traefikdata:/var/log/traefik:ro
       - zeekdata:/var/log/bro/current:ro
-      - certs:/usr/share/certificates
+      - certs:/usr/share/certificates:ro
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       - ./filebeat/modules.d/osquery.yml:/usr/share/filebeat/modules.d/osquery.yml:ro
       - ./filebeat/modules.d/system.yml:/usr/share/filebeat/modules.d/system.yml:ro
@@ -289,6 +289,7 @@ services:
       - ./cortex/MISP.json:/opt/Cortex-Analyzers/analyzers/MISP/MISP.json:ro
       - ./cortex/OpenCTI_SearchObservables.json:/opt/Cortex-Analyzers/analyzers/OpenCTI/OpenCTI_SearchObservables.json:ro
       - ./rules/yara/signature-base:/opt/rules/yara:ro
+      - certs:/opt/cortex/certificates:ro
     depends_on:
       - es01
     labels:
@@ -556,7 +557,7 @@ services:
       - rabbitmq
     restart: always
     volumes:
-      - certs:/usr/share/certificates
+      - certs:/usr/share/certificates:ro
     networks:
       - s1em
 
