@@ -38,3 +38,6 @@ instances:
   - name: opencti
     dns:
        - opencti
+  - name: fleet
+    dns:
+       - fleet
