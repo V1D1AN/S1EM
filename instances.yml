@@ -35,3 +35,6 @@ instances:
   - name: arkime
     dns:
        - arkime
+  - name: opencti
+    dns:
+       - opencti
