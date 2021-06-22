@@ -344,6 +344,7 @@ services:
     volumes:
       - ./elastalert/elastalert.yaml:/opt/config/elastalert_config.yaml:ro
       - ./rules/elastalert:/opt/elastalert/rules:ro
+      - certs:/usr/share/certificates:ro
     networks:
       - s1em
 
