@@ -526,8 +526,8 @@ services:
       - REDIS__PORT=6379
       - ELASTICSEARCH__URL=https://elastic:elastic_opencti@es01:9200
       - ELASTICSEARCH__SSL__CA=/usr/share/certificates/ca/ca.crt
-      - ELASTICSEARCH__SSL__KEY=/usr/share/certificates/es01/es01.key
-      - ELASTICSEARCH__SSL__CERT=/usr/share/certificates/es01/es01.crt
+      - ELASTICSEARCH__SSL__KEY=/usr/share/certificates/opencti/opencti.key
+      - ELASTICSEARCH__SSL__CERT=/usr/share/certificates/opencti/opencti.crt
       - ELASTICSEARCH__SSL__REJECT_UNAUTHORIZED=false      
       - MINIO__ENDPOINT=minio
       - MINIO__PORT=9000
