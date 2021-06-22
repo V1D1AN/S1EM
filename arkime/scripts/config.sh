@@ -8,7 +8,7 @@ info_msg () { printf '\033[0;36m[ INFO ]\033[0m' && echo -e "\t"$(date)"\t"$BASH
 #
 if [ -z "$CAP_INTERFACE" ]; then CAP_INTERFACE='eth1'; fi
 if [ -z "$ARKIME_S2S" ]; then ARKIME_S2S=$(echo deeznuts | sha256sum | cut -d' ' -f1); fi
-if [ -z "$ES_HOST" ]; then ES_HOST='http://elastic:changeme@elasticsearch:9200'; fi
+if [ -z "$ES_HOST" ]; then ES_HOST='https://elastic:changeme@es01:9200'; fi
 
 info_msg "Generating [ Arkime $(hostname) ] configuration file..."
 mkdir /arkime/etc
