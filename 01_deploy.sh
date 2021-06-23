@@ -90,6 +90,7 @@ echo
 docker exec es01 sh -c "curl -k -X POST 'https://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/elasticsearch/config/user.json"
 for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -k -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 for dashboard in $(find kibana/dashboard/* -type f); do docker exec kibana sh -c "curl -k -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$dashboard"; done
+for templates in $(find logstash/templates/* -type f | awk 'BEGIN{FS="/"}{print $NF}' ); do docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_template/$templates?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' --form file=@/usr/share/logstash/templates/$templates"; done
 echo
 echo
 echo "##########################################"
