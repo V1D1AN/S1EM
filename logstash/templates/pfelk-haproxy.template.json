@@ -1,4 +1,3 @@
-PUT _index_template/pfelk-haproxy
 {
   "version": 8,
   "priority": 90,

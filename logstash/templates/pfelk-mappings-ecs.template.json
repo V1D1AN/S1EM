@@ -1,4 +1,3 @@
-PUT _component_template/pfelk-mappings-ecs
 {
   "version": 8,
   "template": {

@@ -1,4 +1,3 @@
-PUT _index_template/pfelk-suricata
 {
   "version": 8,
   "priority": 20,

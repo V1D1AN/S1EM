@@ -1,4 +1,3 @@
-PUT _index_template/pfelk-dhcp
 {
   "version": 8,
   "priority": 40,

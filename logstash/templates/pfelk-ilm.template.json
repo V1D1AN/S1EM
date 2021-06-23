@@ -1,4 +1,3 @@
-PUT _ilm/policy/pfelk-ilm
 {
   "policy": {
     "phases": {

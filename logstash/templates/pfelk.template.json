@@ -1,4 +1,3 @@
-PUT _index_template/pfelk
 {
   "version": 9,
   "priority": 10,
