@@ -123,6 +123,8 @@ services:
       - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
       - ./logstash/templates:/usr/share/logstash/templates:ro
+      - ./logstash/patterns:/usr/share/logstash/patterns:ro
+      - ./logstash/databases:/usr/share/logstash/databases:ro
     networks:
       - s1em
     ports:
