@@ -30,9 +30,5 @@
       "dynamic_templates": [],
       "date_detection": true
     }
-  },
-  "_meta": {
-    "description": "default settings for the pfelk indexes installed by pfelk",
-    "managed": true
   }
 }

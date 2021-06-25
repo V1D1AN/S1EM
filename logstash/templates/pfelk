@@ -111,9 +111,5 @@
   "composed_of": [
     "pfelk-settings",
     "pfelk-mappings-ecs"
-  ],
-  "_meta": {
-    "description": "default pfelk indexes installed by pfelk",
-    "managed": true
-  }
+  ]
 }

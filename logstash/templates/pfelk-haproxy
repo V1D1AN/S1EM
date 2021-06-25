@@ -167,9 +167,5 @@
   "composed_of": [
     "pfelk-settings",
     "pfelk-mappings-ecs"
-  ],
-  "_meta": {
-    "description": "default haproxy indexes installed by pfelk",
-    "managed": true
-  }
+  ]
 }

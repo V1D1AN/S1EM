@@ -3602,9 +3602,5 @@
         }
       }
     }
-  },
-  "_meta": {
-    "description": "ecs for the pfelk indexes installed by pfelk",
-    "managed": true
   }
 }
