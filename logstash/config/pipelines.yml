@@ -1,3 +1,9 @@
-- pipeline.id: pipeline
-  path.config: "/usr/share/logstash/pipeline/*.conf"
+- pipeline.id: beats
+  path.config: "/usr/share/logstash/pipeline/beats/*.conf"
+  pipeline.workers: 3
+- pipeline.id: stoq
+  path.config: "/usr/share/logstash/pipeline/stoq/*.conf"
+  pipeline.workers: 3
+- pipeline.id: pfelk
+  path.config: "/usr/share/logstash/pipeline/pfelk/*.conf"
   pipeline.workers: 3

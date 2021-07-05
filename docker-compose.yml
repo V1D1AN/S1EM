@@ -123,10 +123,15 @@ services:
       - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
       - ./logstash/templates:/usr/share/logstash/templates:ro
+      - ./logstash/patterns:/usr/share/logstash/patterns:ro
+      - ./logstash/databases:/usr/share/logstash/databases:ro
     networks:
       - s1em
     ports:
       - "5044:5044"
+      - "5140:5140/udp"
+      - "5040:5040"
+      - "5190:5190/udp"
       
   kibana:
     image: 'docker.elastic.co/kibana/kibana:7.13.2'

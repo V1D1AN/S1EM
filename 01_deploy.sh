@@ -11,7 +11,7 @@ echo "The Kibana api key is : " $kibana_api_key
 echo "The master password Elastic set in .env:" $password
 echo
 sed -i "s/kibana_api_key/$kibana_api_key/g" kibana/kibana.yml
-sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/300_output.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini
+sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/stoq/300_output_stoq.conf logstash/pipeline/pfelk/300_output_pfelk.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini
 sed -i "s/elastic_opencti/$password/g" docker-compose.yml
 echo
 echo
@@ -90,6 +90,13 @@ echo
 docker exec es01 sh -c "curl -k -X POST 'https://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/elasticsearch/config/user.json"
 for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -k -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 for dashboard in $(find kibana/dashboard/* -type f); do docker exec kibana sh -c "curl -k -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$dashboard"; done
+docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_component_template/pfelk-settings?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-settings"
+docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_component_template/pfelk-mappings-ecs?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-mappings-ecs"
+docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_ilm/policy/pfelk-ilm?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-ilm"
+docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_index_template/pfelk?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk"
+docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_index_template/pfelk-dhcp?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-dhcp"
+docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_index_template/pfelk-haproxy?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-haproxy"
+docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_index_template/pfelk-suricata?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-suricata"
 echo
 echo
 echo "##########################################"
