@@ -5,3 +5,5 @@ xpack.monitoring.elasticsearch.password: "changeme"
 xpack.monitoring.elasticsearch.ssl.certificate_authority: /usr/share/certificates/ca/ca.crt
 xpack.monitoring.enabled: true
 pipeline.ecs_compatibility: "v1"
+config.reload.automatic: true
+config.reload.interval: 30s
