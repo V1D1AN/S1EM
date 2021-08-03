@@ -60,10 +60,11 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [x] Integrate Arkime
 - [ ] SSO
 - [ ] Integrate Att@ck Navigator
-- [ ] Integration of OpenCVE
-- [ ] Integrate Pfelk
+- [x] Integrate Pfelk
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
 - [ ] Integrate Spiderfoot
+- [ ] Update ELK to 7.14.0
+- [ ] Add branch for single node elasticsearch
 
 # Special thanks
 En français cette fois. <br />
