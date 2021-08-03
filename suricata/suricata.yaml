@@ -1858,7 +1858,7 @@ rule-files:
   - emerging-web_client.rules
   - emerging-web_server.rules
   - emerging-web_specific_apps.rules
-  - emerging-worm.rules1
+  - emerging-worm.rules
 
 ##
 ## Auxiliary configuration files.
