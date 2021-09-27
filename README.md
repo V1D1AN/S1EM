@@ -64,6 +64,8 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
 - [ ] Integrate Spiderfoot
 - [ ] Add branch for single node elasticsearch
+- [ ] Update to ELK 7.15.0
+- [ ] Update to Arkime 3.0.0
 
 # Special thanks
 En français cette fois. <br />
