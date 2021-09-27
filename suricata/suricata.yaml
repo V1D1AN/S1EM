@@ -1055,8 +1055,8 @@ host-mode: auto
 # activated in live capture mode. You can use the filename variable to set
 # the file name of the socket.
 unix-command:
-  enabled: auto
-  #filename: custom.socket
+  enabled: yes
+  filename: /var/run/suricata/suricata-command.socket
 
 # Magic file. The extension .mgc is added to the value here.
 #magic-file: /usr/share/file/magic
