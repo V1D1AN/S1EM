@@ -747,7 +747,7 @@ services:
       - "443"
 
   arkime:
-    image: v1d1an/arkime:2.7.1-1
+    image: v1d1an/arkime:3.0.0
     container_name: arkime
     restart: always
     hostname: arkime
@@ -770,7 +770,7 @@ services:
       - "traefik.http.routers.arkime.tls=true"
 
   import:
-    image: v1d1an/arkime:2.7.1-1
+    image: v1d1an/arkime:3.0.0
     container_name: import
     restart: always
     hostname: import
