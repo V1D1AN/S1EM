@@ -1,5 +1,6 @@
 #!/bin/bash
-mv env.sample .env
+rm .env
+cp env.sample .env
 echo "##########################################"
 echo "###### CONFIGURING ACCOUNT ELASTIC #######"
 echo "###### AND KIBANA API KEY          ######"
