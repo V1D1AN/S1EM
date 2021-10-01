@@ -10,7 +10,7 @@ setup.kibana.ssl.enabled: true
 setup.kibana.ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
 setup.kibana.ssl.certificate: "/usr/share/certificates/kibana/kibana.crt"
 setup.kibana.ssl.key: "/usr/share/certificates/kibana/kibana.key"
-
+setup.ilm.enabled: false
 setup.dashboards.enabled: true
 
 output.elasticsearch:
