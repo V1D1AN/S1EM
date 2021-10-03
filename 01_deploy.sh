@@ -41,6 +41,18 @@ sed -i "s/arkime_password/$admin_password/g" .env
 echo
 echo
 echo "##########################################"
+echo "####### CONFIGURING ACCOUNT MWDB #########"
+echo "##########################################"
+echo
+echo
+cd mwdb
+bash ./gen_vars.sh
+mwdb_password=$(cat mwdb-vars.env | grep MWDB_ADMIN_PASSWORD | cut -b 21-)
+sed -i "s/mwdb_password/$mwdb_password/g" karton.ini
+cd -
+echo
+echo
+echo "##########################################"
 echo "#### CONFIGURING MONITORING INTERFACE ####"
 echo "##########################################"
 echo
@@ -118,7 +130,9 @@ echo
 mkdir tmp
 git clone https://github.com/Yara-Rules/rules.git tmp
 rm -fr rules/yara/*
-rm tmp/malware/MALW_AZORULT.yar
+rm -fr tmp/deprecated
+rm -fr tmp/malware
+rm -fr tmp/malware_index.yar
 mv tmp/* rules/yara/
 rm -fr tmp
 cd rules/yara
@@ -126,6 +140,7 @@ bash index_gen.sh
 cd -
 docker restart stoq
 docker restart cortex
+echo
 echo
 echo
 echo "#########################################"

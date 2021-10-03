@@ -13,7 +13,9 @@ echo "##########################################"
 echo
 git clone https://github.com/Yara-Rules/rules.git tmp
 rm -fr rules/yara/*
-rm tmp/malware/MALW_AZORULT.yar
+rm -fr tmp/deprecated
+rm -fr tmp/malware
+rm -fr tmp/malware_index.yar
 mv tmp/* rules/yara/
 rm -fr tmp
 cd rules/yara
