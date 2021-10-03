@@ -3,7 +3,7 @@ alert:
 description: Rule for thehive
 filter:
 - query_string:
-    query: (signal.status:"in-progress" AND agent.type:"filebeat" AND event.module:"suricata")
+    query: (signal.status:"acknowledged" AND agent.type:"filebeat" AND event.module:"suricata")
 index: .siem-signals-default
 category: 
  Detection
