@@ -201,6 +201,7 @@ services:
     image: 'docker.elastic.co/beats/filebeat:7.15.0'
     container_name: filebeat
     hostname: filebeat
+    user: root
     restart: always
     depends_on:
       - es01
@@ -292,7 +293,7 @@ services:
       - ./cortex/application.conf:/etc/cortex/application.conf:ro
       - ./cortex/MISP.json:/opt/Cortex-Analyzers/analyzers/MISP/MISP.json:ro
       - ./cortex/OpenCTI_SearchObservables.json:/opt/Cortex-Analyzers/analyzers/OpenCTI/OpenCTI_SearchObservables.json:ro
-      - ./rules/yara/signature-base:/opt/rules/yara:ro
+      - ./rules/yara:/opt/rules/yara:ro
       - certs:/opt/cortex/certificates:ro
       - ./cortex/cacerts:/usr/local/openjdk-8/jre/lib/security/cacerts
     depends_on:
