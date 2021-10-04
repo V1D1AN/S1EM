@@ -142,6 +142,7 @@ services:
       - es01
     volumes:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+      - ./kibana/node.options:/usr/share/kibana/config/node.options:ro
       - ./kibana/index:/usr/share/kibana/index:ro
       - ./kibana/dashboard:/usr/share/kibana/dashboard:ro
       - certs:/usr/share/certificates:ro
