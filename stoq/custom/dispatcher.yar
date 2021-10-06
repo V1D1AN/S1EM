@@ -96,7 +96,7 @@ rule rtf_file
 rule elf_file
 {
     meta:
-        plugin = "lief,iocextract,hash,hash_ssdeep"
+        plugin = "lief,iocextract,hash,hash_ssdeep,mwdb"
         save = "True"
     condition:
         elf.number_of_sections == 1
@@ -104,7 +104,7 @@ rule elf_file
 rule elf_64_file
 {
     meta:
-        plugin = "lief,iocextract,hash,hash_ssdeep"
+        plugin = "lief,iocextract,hash,hash_ssdeep,mwdb"
         save = "True"
     condition:
         elf.machine == elf.EM_X86_64
@@ -113,7 +113,7 @@ rule elf_64_file
 rule exe_file
 {
     meta:
-        plugin = "lief,iocextract,hash,hash_ssdeep"
+        plugin = "lief,iocextract,hash,hash_ssdeep,mwdb"
         save = "True"
     strings:
         $MZ = "MZ"
@@ -127,7 +127,7 @@ rule exe_file
 rule pdf_file
 {  
     meta:
-        plugin = "iocextract,hash,hash_ssdeep"
+        plugin = "iocextract,hash,hash_ssdeep,mwdb"
         save = "True"
     strings:
         $magic = { 25 50 44 46 }

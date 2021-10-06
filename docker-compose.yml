@@ -255,9 +255,8 @@ services:
       - suricatadata:/var/log/suricata
       - suricatapcap:/var/log/suricata/pcap
 
-  
   stoq:
-    image: v1d1an/stoq:3.0.1
+    image: v1d1an/stoq:3.0.2
     command: run -s yara
     container_name: stoq
     user: root
@@ -268,6 +267,8 @@ services:
       - ./stoq/stoq.cfg:/home/stoq/.stoq/stoq.cfg:ro
       - stoq:/home/stoq/tmp/
       - suricatadata:/files:ro
+    networks:
+      - s1em
 
   
   zeek:
