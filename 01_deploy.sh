@@ -84,8 +84,12 @@ echo "##########################################"
 echo
 chmod u=rx ./arkime/scripts/*.sh
 docker-compose up -d es01 es02 es03 kibana
+while [ "$(docker exec es01 sh -c 'curl -k https://127.0.0.1:9200 -u elastic:$pssword')" == "" ]; do
+  echo "Waiting for Elasticsearch to come online.";
+  sleep 5;
+done
 docker-compose up -d
-sleep 45
+echo
 docker exec -ti cortex keytool -import -alias ca -file /opt/cortex/certificates/ca/ca.crt -keystore /usr/local/openjdk-8/jre/lib/security/cacerts --storepass changeit -noprompt
 echo
 echo
@@ -149,6 +153,6 @@ echo "#########################################"
 echo
 echo "Access url: https://s1em.cyber.local"
 echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime"
-echo "the user admin for MWDB have password $mwdb_password "
+echo "The user admin for MWDB have password $mwdb_password "
 echo "The user for MISP / TheHive / Cortex is not configured"
 echo "The master password of elastic is in \".env\" "
