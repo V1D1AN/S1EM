@@ -149,6 +149,6 @@ echo "#########################################"
 echo
 echo "Access url: https://s1em.cyber.local"
 echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime"
-echo "the user admin for MWDB is $mwdb_password "
+echo "the user admin for MWDB have password $mwdb_password "
 echo "The user for MISP / TheHive / Cortex is not configured"
 echo "The master password of elastic is in \".env\" "
