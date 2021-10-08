@@ -263,7 +263,6 @@ services:
     restart: always
     volumes:
       - ./rules/yara:/rules/yara:ro
-      - ./stoq/custom:/rules/custom:ro
       - ./stoq/stoq.cfg:/home/stoq/.stoq/stoq.cfg:ro
       - stoq:/home/stoq/tmp/
       - suricatadata:/files:ro
