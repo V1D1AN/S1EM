@@ -257,7 +257,7 @@ services:
 
   stoq:
     image: v1d1an/stoq:3.0.3
-    command: run -s yara -A mwdb
+    command: run -a yara hash peinfo iocextract hash_ssdeep lief entropy b64decode -A mwdb
     container_name: stoq
     user: root
     restart: always
