@@ -1,4 +1,3 @@
-
 ![20210518_v1d1an_bg1--white](https://user-images.githubusercontent.com/18678787/119020235-49428680-b99e-11eb-8621-935a62b966e1.png)
 
 # Objectives
@@ -63,14 +62,16 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [x] Integrate Pfelk
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
 - [ ] Integrate Spiderfoot
-- [ ] Add branch for single node elasticsearch
-- [ ] Update to ELK 7.15.0
+- [x] Update to ELK 7.15.0
 - [x] Update to Arkime 3.0.0
+- [ ] Integrate Mwdb
+- [x] Suppress FleetDM
+- [x] Add Clamav
 
 # Special thanks
 En français cette fois. <br />
 Merci à mes amis et collègues qui m´ont inspiré toutes ces années, qui m´ont aidé, et corrigé des bugs.
-Je pense à Kidrek, Juju, mlp1515, Wagga40, Xophidia, StevenDias33, Frak113, et tous ceux qui n´ont pas forcement de compte github. <br />
+Je pense à Kidrek, Juju, mlp1515, Wagga40, Xophidia, StevenDias33, Frak113, HiPizzaa,et tous ceux qui n´ont pas forcement de compte github. <br />
 Merci à vous :)
 
 Liens github: <br />
