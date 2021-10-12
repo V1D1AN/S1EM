@@ -256,14 +256,15 @@ services:
       - suricatapcap:/var/log/suricata/pcap
 
   stoq:
-    image: v1d1an/stoq:3.0.3
-    command: run -a yara hash peinfo iocextract hash_ssdeep lief entropy -A mwdb
+    image: v1d1an/stoq:3.0.4
+    command: run -a yara hash peinfo iocextract hash_ssdeep lief entropy clamav -A mwdb
     container_name: stoq
     user: root
     restart: always
     volumes:
       - ./rules/yara:/rules/yara:ro
       - ./stoq/stoq.cfg:/home/stoq/.stoq/stoq.cfg:ro
+      - ./stoq/clamd.conf:/etc/clamav/clamd.conf:ro
       - stoq:/home/stoq/tmp/
       - suricatadata:/files:ro
     networks:
@@ -852,6 +853,12 @@ services:
       - s1em
     entrypoint: /arkime/bin/import.sh
 
+  clamav:
+    image: clamav/clamav:latest
+    container_name: clamav
+    restart: always
+    networks:
+     - s1em
 
 networks:
    reverse_proxy:
