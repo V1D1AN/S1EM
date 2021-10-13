@@ -68,6 +68,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [ ] Integrate Mwdb
 - [ ] Suppress FleetDM
 - [ ] Add Clamav
+- [ ] Add Capa 
 
 # Special thanks
 En français cette fois. <br />
