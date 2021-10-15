@@ -26,7 +26,7 @@ services:
       
   es01:
     container_name: es01
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
     restart: always
     environment:
       - node.name=es01
@@ -56,7 +56,7 @@ services:
 
   es02:
     container_name: es02
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
     restart: always
     environment:
       - node.name=es02
@@ -81,7 +81,7 @@ services:
 
   es03:
     container_name: es03
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
     restart: always
     environment:
       - node.name=es03
@@ -105,13 +105,13 @@ services:
       - s1em
 
   wait_until_ready:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
     command: /usr/bin/true
     depends_on: {"es01": {"condition": "service_healthy"}}
  
  
   logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.15.0'
+    image: 'docker.elastic.co/logstash/logstash:7.15.1'
     container_name: logstash
     hostname: logstash
     restart: always
@@ -134,7 +134,7 @@ services:
       - "5190:5190/udp"
       
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.15.0'
+    image: 'docker.elastic.co/kibana/kibana:7.15.1'
     container_name: kibana
     hostname: kibana
     restart: always
@@ -156,7 +156,7 @@ services:
       - s1em
 
   auditbeat:
-    image: 'docker.elastic.co/beats/auditbeat:7.15.0'
+    image: 'docker.elastic.co/beats/auditbeat:7.15.1'
     container_name: auditbeat
     hostname: auditbeat
     restart: always
@@ -175,7 +175,7 @@ services:
       - s1em
 
   metricbeat:
-    image: 'docker.elastic.co/beats/metricbeat:7.15.0'
+    image: 'docker.elastic.co/beats/metricbeat:7.15.1'
     container_name: metricbeat
     restart: always
     depends_on:
@@ -199,7 +199,7 @@ services:
       - certs:/usr/share/certificates:ro
 
   filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.15.0'
+    image: 'docker.elastic.co/beats/filebeat:7.15.1'
     container_name: filebeat
     hostname: filebeat
     user: root
