@@ -1,11 +1,11 @@
 {
   "index_patterns": [
-    "winlogbeat-7.15.0-*"
+    "winlogbeat-7.15.1-*"
   ],
   "mappings": {
     "_meta": {
       "beat": "winlogbeat",
-      "version": "7.15.0"
+      "version": "7.15.1"
     },
     "date_detection": false,
     "dynamic_templates": [
@@ -6807,7 +6807,7 @@
     "index": {
       "lifecycle": {
         "name": "winlogbeat",
-        "rollover_alias": "winlogbeat-7.15.0"
+        "rollover_alias": "winlogbeat-7.15.1"
       },
       "mapping": {
         "total_fields": {
