@@ -30,10 +30,13 @@ services:
     restart: always
     environment:
       - node.name=es01
+      - cluster.name=s1em
       - discovery.seed_hosts=es01,es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - network.host=0.0.0.0
+      - bootstrap.memory_lock=true
       - xpack.license.self_generated.type=basic
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -45,6 +48,7 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es01/es01.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es01/es01.key
+
     volumes: ['data01:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro', './elasticsearch/user.json:/usr/share/elasticsearch/config/user.json']
     networks:
       - s1em
@@ -53,6 +57,10 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
 
   es02:
     container_name: es02
@@ -60,10 +68,13 @@ services:
     restart: always
     environment:
       - node.name=es02
+      - cluster.name=s1em
       - discovery.seed_hosts=es01,es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - network.host=0.0.0.0
+      - bootstrap.memory_lock=true
       - xpack.license.self_generated.type=basic
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -75,9 +86,14 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es02/es02.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es02/es02.key
+
     volumes: ['data02:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro']
     networks:
       - s1em
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
 
   es03:
     container_name: es03
@@ -85,10 +101,13 @@ services:
     restart: always
     environment:
       - node.name=es03
+      - cluster.name=s1em
       - discovery.seed_hosts=es01,es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - network.host=0.0.0.0
+      - bootstrap.memory_lock=true
       - xpack.license.self_generated.type=basic
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -100,9 +119,14 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es03/es03.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es03/es03.key
+
     volumes: ['data03:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro']
     networks:
       - s1em
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
 
   wait_until_ready:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
