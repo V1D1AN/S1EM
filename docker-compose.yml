@@ -48,7 +48,6 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es01/es01.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es01/es01.key
-
     volumes: ['data01:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro', './elasticsearch/user.json:/usr/share/elasticsearch/config/user.json']
     networks:
       - s1em
@@ -86,7 +85,6 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es02/es02.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es02/es02.key
-
     volumes: ['data02:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro']
     networks:
       - s1em
@@ -119,7 +117,6 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es03/es03.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es03/es03.key
-
     volumes: ['data03:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro']
     networks:
       - s1em
@@ -141,7 +138,7 @@ services:
     restart: always
     volumes:
       - certs:/usr/share/certificates:ro
-      - stoq:/var/log/stoq:ro
+      - stoq:/var/log/stoq
       - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
@@ -232,13 +229,12 @@ services:
       - es01
     volumes:
       - /var/log:/var/log
-      - syslog-ng-data:/var/log/syslog-ng:ro
-      - suricatadata:/var/log/suricata:ro
-      - traefikdata:/var/log/traefik:ro
-      - zeekdata:/var/log/bro/current:ro
+      - syslog-ng-data:/var/log/syslog-ng
+      - suricatadata:/var/log/suricata
+      - traefikdata:/var/log/traefik
+      - zeekdata:/var/log/bro/current
       - certs:/usr/share/certificates:ro
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - ./filebeat/modules.d/osquery.yml:/usr/share/filebeat/modules.d/osquery.yml:ro
       - ./filebeat/modules.d/system.yml:/usr/share/filebeat/modules.d/system.yml:ro
       - ./filebeat/modules.d/suricata.yml:/usr/share/filebeat/modules.d/suricata.yml:ro
       - ./filebeat/modules.d/threatintel.yml:/usr/share/filebeat/modules.d/threatintel.yml:ro
@@ -290,7 +286,7 @@ services:
       - ./stoq/stoq.cfg:/home/stoq/.stoq/stoq.cfg:ro
       - ./stoq/clamd.conf:/etc/clamav/clamd.conf:ro
       - stoq:/home/stoq/tmp/
-      - suricatadata:/files:ro
+      - suricatadata:/files
     networks:
       - s1em
 
@@ -329,6 +325,8 @@ services:
       - "traefik.http.routers.cortex.rule=PathPrefix(`/cortex`)"
       - "traefik.http.routers.cortex.entryPoints=secure"
       - "traefik.http.routers.cortex.tls=true"
+    environment:
+      - "JAVA_OPTS=-Xms1g -Xmx1g"
     networks:
       - s1em
 
@@ -364,6 +362,8 @@ services:
       - ./thehive/application.conf:/etc/thehive/application.conf:ro
       - thehivedata:/opt/data
       - thehivedata:/opt/index
+    environment:
+      - "JAVA_OPTS=-Xms1g -Xmx1g"
     command: '--no-config --no-config-secret'
     networks:
       - s1em
@@ -620,7 +620,9 @@ services:
       - APP__BASE_PATH=/opencti
       - REDIS__HOSTNAME=redis
       - REDIS__PORT=6379
-      - ELASTICSEARCH__URL=https://elastic:elastic_opencti@es01:9200
+      - ELASTICSEARCH__URL=["https://es01:9200","https://es02:9200","https://es03:9200"]
+      - ELASTICSEARCH__USERNAME=elastic
+      - ELASTICSEARCH__PASSWORD=elastic_opencti
       - ELASTICSEARCH__SSL__CA=/usr/share/certificates/ca/ca.crt
       - ELASTICSEARCH__SSL__KEY=/usr/share/certificates/opencti/opencti.key
       - ELASTICSEARCH__SSL__CERT=/usr/share/certificates/opencti/opencti.crt
@@ -762,13 +764,13 @@ services:
       - MISP_URL=http://misp/misp # Required
       - MISP_KEY=misp_api_key # Required
       - MISP_SSL_VERIFY=False # Required
-      - MISP_INTERVAL=10 # Required, in minutes
+      - MISP_INTERVAL=1440 # Required, in minutes
       - MISP_DATETIME_ATTRIBUTE=timestamp # Required, filter to be used in query for new MISP events
       - MISP_CREATE_REPORTS=True # Required, create report for MISP event
       - MISP_CREATE_INDICATORS=True # Required, create indicators from attributes
       - MISP_CREATE_OBSERVABLES=True # Required, create observables from attributes
       - MISP_REPORT_CLASS=MISP Event # Optional, report_class if creating report for event
-      - MISP_IMPORT_FROM_DATE=2000-01-01 # Optional, import all event from this date
+      - MISP_IMPORT_FROM_DATE=2020-01-01 # Optional, import all event from this date
       - MISP_IMPORT_DISTRIBUTION_LEVELS=0,1,2,3 # Optional, only import events with the given distribution levels
       - MISP_IMPORT_THREAT_LEVELS=1,2,3,4 # Optional only import events with the given threat levels
       - MISP_IMPORT_ONLY_PUBLISHED=True

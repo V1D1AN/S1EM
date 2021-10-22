@@ -3,16 +3,16 @@ alert:
 description: Rule for thehive
 filter:
 - query_string:
-    query: (signal.status:"acknowledged" AND event.module:"stoq")
+    query: (signal.status:"acknowledged" AND event.module:"stoq" AND kibana.alert.rule.tags:"Yara")
 index: .siem-signals-default
 category:
  Detection
  Signal
-name: TheHive_Stoq
+name: TheHive_Stoq_Yara
 priority: 3
 realert:
   minutes: 0
-title: Rule for TheHive Stoq
+title: Rule for TheHive Stoq Yara
 type: any
 
 
@@ -31,7 +31,6 @@ hive_alert_config:
  follow: True
 
 hive_observable_data_mapping:
- - other: "{match[results][workers][yara][matches][rule]}"
  - hash: "{match[results][workers][hash][md5]}"
  - hash: "{match[results][workers][hash][sha1]}"
  - hash: "{match[results][workers][hash][sha256]}"
