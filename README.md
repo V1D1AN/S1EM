@@ -51,7 +51,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [x] Add Cyberchef
 - [ ] Upgrade to elastalert2
 - [x] Upgrade to suricata 6
-- [ ] Upgrade to zeek 4
+- [x] Upgrade to zeek 4
 - [x] Upload SigmaHQ rules automatically into kibana
 - [x] Update Suricata rules automatically
 - [x] Update Yara rules automatically
@@ -64,7 +64,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [ ] Integrate Spiderfoot
 - [x] Update to ELK 7.15.0
 - [x] Update to Arkime 3.0.0
-- [ ] Integrate Mwdb
+- [x] Integrate Mwdb
 - [x] Suppress FleetDM
 - [x] Add Clamav
 - [ ] Add Capa
