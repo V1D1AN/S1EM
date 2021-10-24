@@ -329,6 +329,11 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
 
   stoq:
     image: v1d1an/stoq:3.0.4
@@ -341,7 +346,7 @@ services:
       - ./stoq/stoq.cfg:/home/stoq/.stoq/stoq.cfg:ro
       - ./stoq/clamd.conf:/etc/clamav/clamd.conf:ro
       - stoq:/home/stoq/tmp/
-      - suricatadata:/files
+      - zeekfiles:/files
     logging:
       driver: "json-file"
       options:
@@ -352,7 +357,7 @@ services:
 
   
   zeek:
-    image: blacktop/zeek:elastic-3.2.3
+    image: blacktop/zeek:4.1-elastic
     container_name: zeek
     hostname: zeek
     network_mode: "host"
@@ -365,6 +370,8 @@ services:
     command: -C -i af_packet::network_monitoring local
     volumes:
       - zeekdata:/pcap
+      - zeekfiles:/extract_files
+      - ./zeek/config.zeek:/usr/local/zeek/share/zeek/site/file-extraction/config.zeek:ro
     logging:
       driver: "json-file"
       options:
@@ -1184,6 +1191,8 @@ volumes:
    certs:
     external: false   
    zeekdata:
+    external: false
+   zeekfiles:
     external: false
    suricatadata:
     external: false
