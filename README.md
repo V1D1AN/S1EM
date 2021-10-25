@@ -68,6 +68,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [x] Suppress FleetDM
 - [x] Add Clamav
 - [ ] Add Capa
+- [ ] Add upload files for read pcap/EVTX
 
 # Special thanks
 En français cette fois. <br />
