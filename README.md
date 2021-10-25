@@ -20,12 +20,12 @@ Inside the solution:
 * MISP
 * OpenCTI 
 * Arkime
-* Suricata 6
-* Zeek 3
-* FleetDm
+* Suricata
+* Zeek
 * StoQ
 * Heimdall
 * Traefik
+* Clamav
 
 Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
