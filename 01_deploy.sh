@@ -61,7 +61,7 @@ echo
 echo
 read -r -p "Enter the monitoring interface (ex:ens32):" monitoring_interface
 monitoring_interface=$monitoring_interface
-sed -i "s/network_monitoring/$monitoring_interface/g" docker-compose.yml
+sed -i "s/network_monitoring/$monitoring_interface/g" docker-compose.yml suricata/suricata.yaml
 echo
 echo
 echo "##########################################"
