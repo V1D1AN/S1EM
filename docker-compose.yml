@@ -250,6 +250,7 @@ services:
       - ./metricbeat/modules.d/kibana-xpack.yml:/usr/share/metricbeat/modules.d/kibana-xpack.yml:ro
       - ./metricbeat/modules.d/logstash-xpack.yml:/usr/share/metricbeat/modules.d/logstash-xpack.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
       - /proc:/hostfs/proc:ro
       - /:/hostfs:ro
       - certs:/usr/share/certificates:ro
