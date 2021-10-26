@@ -378,6 +378,57 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  tcpreplay:
+    image: v1d1an/tcpreplay:1.0
+    container_name: tcpreplay
+    restart: always
+    user: root
+    network_mode: "host"
+    privileged: true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      MONITOR: network_monitoring
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    volumes:
+      - upload:/pcap
+
+  file-upload:
+    image: v1d1an/file-upload:1.0
+    container_name: file-upload
+    restart: always
+    user: root
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - upload:/var/www/upload/server/php/chroot/files
+    environment:
+      - SITE_NAME=S1EM
+      - SITE_USERNAME=upload
+      - SITE_PASSWORD=upload
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.upload.rule=PathPrefix(`/upload`)"
+      - "traefik.http.routers.upload.entryPoints=secure"
+      - "traefik.http.routers.upload.tls=true"
+      - "traefik.http.services.upload.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.upload.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.upload-stripprefix.stripprefix.prefixes=/upload"
+      - "traefik.http.routers.upload.middlewares=upload-stripprefix"
+    ports:
+      - "8022:22"
+    networks:
+      - s1em
+
   cortex:
     image: v1d1an/cortex:3.1.1-3
     container_name: cortex
@@ -1223,4 +1274,6 @@ volumes:
    mwdb-postgres:
     external: false
    mwdb-uploads:
+    external: false
+   upload:
     external: false
