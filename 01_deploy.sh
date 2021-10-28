@@ -350,7 +350,7 @@ echo "####### STARTING OTHER DOCKER ###########"
 echo "#########################################"
 echo
 echo
-docker-compose up -d
+docker-compose up -d elastalert cyberchef file-upload syslog-ng tcpreplay clamav
 echo
 echo
 echo "#########################################"
