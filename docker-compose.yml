@@ -53,7 +53,7 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es01/es01.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es01/es01.key
-    volumes: ['data01:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro', './elasticsearch/user.json:/usr/share/elasticsearch/config/user.json']
+    volumes: ['data01:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro']
     logging:
       driver: "json-file"
       options:
@@ -645,6 +645,11 @@ services:
       - postgres
       - redis
       - minio
+      - karton-system
+      - karton-classifier
+      - karton-yaramatcher
+      - karton-asciimagic
+      - karton-mwdb-reporter
     environment:
       UWSGI_PY_AUTORELOAD: 1
       UWSGI_ENABLE_THREADS: 1
@@ -868,6 +873,16 @@ services:
       - es01
       - minio
       - rabbitmq
+      - worker
+      - connector-amitt
+      - connector-cve
+      - connector-export-file-csv
+      - connector-export-file-stix
+      - connector-history
+      - connector-import-file-pdf-observables
+      - connector-import-file-stix
+      - connector-misp
+      - connector-mitre
     restart: always
     volumes:
       - certs:/usr/share/certificates:ro
@@ -881,6 +896,7 @@ services:
 
   worker:
     image: opencti/worker:latest
+    container_name: worker
     environment:
       - OPENCTI_URL=http://opencti:8080/opencti
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}

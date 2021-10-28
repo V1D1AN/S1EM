@@ -8,6 +8,7 @@ echo "##########################################"
 echo  
 password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 kibana_api_key=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
+cortex_api=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 echo "The Kibana api key is : " $kibana_api_key
 echo "The master password Elastic set in .env:" $password
 echo
@@ -19,11 +20,14 @@ echo
 echo "##########################################"
 echo "####### CONFIGURING ADMIN ACCOUNT ########"
 echo "##### FOR KIBANA / OPENCTI / ARKIME ######"
+echo "#####       THEHIVE / CORTEX        ######"
 echo "##########################################"
+echo
 echo
 read -r -p "Enter the admin account (Must be like user@domain.tld):" admin_account
 admin_account=$admin_account
-sed -i "s/kibana_account/$admin_account/g" elasticsearch/user.json
+read -r -p "Enter the organization:" organization
+organization=$organization
 sed -i "s/opencti_account/$admin_account/g" .env
 sed -i "s/arkime_account/$admin_account/g" .env
 echo
@@ -35,7 +39,6 @@ while true; do
     [ "$admin_password" = "$admin_password2" ] && break
     echo "Please try again"
 done
-sed -i "s/kibana_password/$admin_password/g" elasticsearch/user.json
 sed -i "s/opencti_password/$admin_password/g" .env
 sed -i "s/arkime_password/$admin_password/g" .env
 echo
@@ -56,6 +59,7 @@ echo "##########################################"
 echo "#### CONFIGURING MONITORING INTERFACE ####"
 echo "##########################################"
 echo
+echo
 ip a | egrep -A 2 "ens[[:digit:]]{1,3}:|eth[[:digit:]]{1,3}:"
 echo
 echo
@@ -68,6 +72,7 @@ echo "##########################################"
 echo "######### GENERATE CERTIFICATE ###########"
 echo "##########################################"
 echo
+echo
 docker-compose -f create-certs.yml run --rm create_certs
 echo
 echo
@@ -75,22 +80,28 @@ echo "##########################################"
 echo "########## DOCKER DOWNLOADING ############"
 echo "##########################################"
 echo
+echo
 docker-compose pull
 echo
 echo
 echo "##########################################"
-echo "############ DOCKER STARTING #############"
+echo "########## STARTING TRAEFIK ##############"
 echo "##########################################"
 echo
-chmod u=rx ./arkime/scripts/*.sh
-docker-compose up -d es01 es02 es03 kibana
-while [ "$(docker exec es01 sh -c 'curl -k https://127.0.0.1:9200 -u elastic:$pssword')" == "" ]; do
-  echo "Waiting for Elasticsearch to come online.";
-  sleep 5;
-done
-docker-compose up -d
 echo
-docker exec -ti cortex keytool -import -alias ca -file /opt/cortex/certificates/ca/ca.crt -keystore /usr/local/openjdk-8/jre/lib/security/cacerts --storepass changeit -noprompt
+docker-compose up -d traefik
+echo
+echo
+echo "##########################################"
+echo "##### STARTING ELASTICSEARCH/KIBANA ######"
+echo "##########################################"
+echo
+echo
+docker-compose up -d es01 es02 es03 kibana
+while [ "$(docker exec es01 sh -c 'curl -k https://127.0.0.1:9200 -u elastic:$password')" == "" ]; do
+  echo "Waiting for Elasticsearch to come online.";
+  sleep 15;
+done
 echo
 echo
 echo "##########################################"
@@ -99,17 +110,179 @@ echo "##########################################"
 echo
 while [ "$(docker logs kibana | grep -i "server running" | grep -v "NotReady")" == "" ]; do
   echo "Waiting for Kibana to come online.";
-  sleep 5;
+  sleep 15;
 done
 echo "Kibana is online"
 echo
 echo
-docker exec es01 sh -c "curl -k -X POST 'https://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/elasticsearch/config/user.json"
-sleep 10
+docker exec es01 sh -c "curl -k -X POST 'https://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"enabled\": true,\"password\": \"$admin_password\",\"roles\":\"superuser\",\"full_name\": \"$admin_account\"}'"
+echo
+echo
+echo "##########################################"
+echo "############ STARTING MISP ###############"
+echo "##########################################"
+echo
+echo
+docker-compose up -d misp misp-modules
+echo
+echo
+echo "##########################################"
+echo "########### CONFIGURING MISP #############"
+echo "##########################################"
+echo
+echo
+while [ "$(docker logs misp | grep -i "Start Workers...finished" )" == "" ]; do
+  echo "Waiting for MISP to come online.";
+  sleep 15;
+done
+curl -o nul -sk https://127.0.0.1/misp/users/login
+misp_apikey=$(docker exec misp sh -c "mysql -u misp --password=password -D misp -e'select authkey from users;'" | sed "1d")
+sed -i "s|misp_api_key|$misp_apikey|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml docker-compose.yml
+echo
+echo
+echo "##########################################"
+echo "###### ###STARTING BEATS AGENT ###########"
+echo "##########################################"
+echo
+echo
+docker-compose up -d filebeat metricbeat auditbeat
+echo
+echo
+echo "##########################################"
+echo "########### STARTING CORTEX ##############"
+echo "##########################################"
+echo
+echo
+docker-compose up -d cortex
+docker exec -ti cortex keytool -delete -alias ca -keystore /usr/local/openjdk-8/jre/lib/security/cacerts --storepass changeit -noprompt
+docker exec -ti cortex keytool -import -alias ca -file /opt/cortex/certificates/ca/ca.crt -keystore /usr/local/openjdk-8/jre/lib/security/cacerts --storepass changeit -noprompt
+docker-compose restart cortex
+echo
+echo
+echo "##########################################"
+echo "######### DEPLOY CORTEX USER #############"
+echo "##########################################"
+echo
+echo
+while [ "$(docker exec cortex sh -c 'curl http://127.0.0.1:9001')" == "" ]; do
+  echo "Waiting for Cortex to come online.";
+  sleep 15;
+done
+curl -sk -L -XPOST "https://127.0.0.1/cortex/api/maintenance/migrate"
+curl -sk -L -XPOST "https://127.0.0.1/cortex/api/user" -H 'Content-Type: application/json' -d "{\"login\" : \"admin@cortex.local\",\"name\" : \"admin@cortex.local\",\"roles\" : [\"superadmin\"],\"preferences\" : \"{}\",\"password\" : \"secret\", \"key\": \"$cortex_api\"}"
+curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization" -d "{  \"name\": \"$organization\",\"description\": \"SOC team\",\"status\": \"Active\"}"
+curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user" -d "{\"name\": \"$admin_account\",\"roles\": [\"read\",\"analyze\",\"orgadmin\"],\"organization\": \"$organization\",\"login\": \"$admin_account\"}"
+curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user/$admin_account/password/set" -d "{ \"password\": \"$admin_password\" }"
+cortex_apikey=$(curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user/$admin_account/key/renew")
+echo
+echo
+echo "##########################################"
+echo "######### CONFIGURING THEHIVE ############"
+echo "##########################################"
+echo
+echo
+sed -i "s|cortex_api_key|$cortex_apikey|g" thehive/application.conf
+echo
+echo
+echo "##########################################"
+echo "########### STARTING THEHIVE #############"
+echo "##########################################"
+echo
+echo
+docker-compose up -d thehive
+echo
+echo
+echo "##########################################"
+echo "######## DEPLOY THEHIVE USER #############"
+echo "##########################################"
+echo
+echo
+while [ "$(docker exec thehive sh -c 'curl http://127.0.0.1:9000')" == "" ]; do
+  echo "Waiting for TheHive to come online.";
+  sleep 15;
+done
+curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v0/organisation" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"description\": \"SOC team\",\"name\": \"$organization\"}"
+curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"login\": \"$admin_account\",\"name\": \"admin\",\"organisation\": \"$organization\",\"profile\": \"org-admin\",\"email\": \"$admin_account\",\"password\": \"$admin_password\"}"
+thehive_apikey=$(curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user/$admin_account/key/renew" -u admin@thehive.local:secret)
+echo
+echo
+echo "##########################################"
+echo "######## CONFIGURING ELASTALERT ##########"
+echo "##########################################"
+echo
+echo
+sed -i "s|thehive_api_key|$thehive_apikey|g" elastalert/elastalert.yaml
+echo
+echo
+echo "##########################################"
+echo "############ STARTING MWDB ###############"
+echo "##########################################"
+echo
+echo
+docker-compose up -d mwdb mwdb-web
+echo
+echo
+echo "##########################################"
+echo "########### CONFIGURING MWDB #############"
+echo "##########################################"
+echo
+echo
+while [ "$(curl 'http://127.0.0.1:8080' | grep "Malware Database")" == "" ]; do
+  echo "Waiting for Mwdb to come online.";
+  sleep 15;
+done
+sleep 15
+mwdb_admin_token=$(curl -X POST "http://127.0.0.1:8080/api/auth/login" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"login\":\"admin\",\"password\":\"$mwdb_password\"}" | sed -n 's/.*"token": "\([^ ]\+\)".*/\1/p')
+mwdb_apikey=$(curl -X POST -H "Authorization: Bearer $mwdb_admin_token" -H 'accept: application/json' -H "Content-Type: application/json" "http://127.0.0.1:8080/api/user/admin/api_key" -d "{ \"name\": \"mwdb\"}" | sed -n 's/.*"token": "\([^ ]\+\)".*/\1/p')
+echo
+echo
+echo "##########################################"
+echo "########### CONFIGURING STOQ #############"
+echo "##########################################"
+echo
+echo
+sed -i "s|mwdb_api_key|$mwdb_apikey|g" stoq/stoq.cfg
+echo
+echo
+echo "##########################################"
+echo "############# STARTING STOQ ##############"
+echo "##########################################"
+echo
+echo
+docker-compose up -d stoq
+echo
+echo
+echo "##########################################"
+echo "########### STARTING HEIMDALL ############"
+echo "##########################################"
+echo
+docker-compose up -d heimdall
+echo
+echo
+echo "##########################################"
+echo "########## DEPLOY KIBANA INDEX ###########"
+echo "##########################################"
+echo
+echo
 for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -k -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 sleep 10
 for dashboard in $(find kibana/dashboard/* -type f); do docker exec kibana sh -c "curl -k -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$dashboard"; done
 sleep 10
+echo
+echo
+echo "##########################################"
+echo "########## STARTING LOGSTASH #############"
+echo "##########################################"
+echo
+echo
+docker-compose up -d logstash
+echo
+echo
+echo "##########################################"
+echo "########## STARTING LOGSTASH #############"
+echo "##########################################"
+echo
+echo
 docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_component_template/pfelk-settings?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-settings"
 docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_component_template/pfelk-mappings-ecs?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-mappings-ecs"
 docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_ilm/policy/pfelk-ilm?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-ilm"
@@ -120,8 +293,26 @@ docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_index_template/pf
 echo
 echo
 echo "##########################################"
+echo "########### STARTING ARKIME ##############"
+echo "##########################################"
+echo
+echo
+chmod u=rx ./arkime/scripts/*.sh
+docker-compose up -d arkime import
+echo
+echo
+echo "##########################################"
+echo "######## STARTING SURICATA/ZEEK ##########"
+echo "##########################################"
+echo
+echo
+docker-compose up -d suricata zeek
+echo
+echo
+echo "##########################################"
 echo "######## UPDATE SURICATA RULES ###########"
 echo "##########################################"
+echo
 echo
 docker exec -ti suricata suricata-update update-sources
 docker exec -ti suricata suricata-update --no-test
@@ -146,13 +337,28 @@ docker restart stoq
 docker restart cortex
 echo
 echo
+echo "#########################################"
+echo "########## STARTING OPENCTI #############"
+echo "#########################################"
+echo
+echo
+docker-compose up -d opencti
+echo
+echo
+echo "#########################################"
+echo "####### STARTING OTHER DOCKER ###########"
+echo "#########################################"
+echo
+echo
+docker-compose up -d
+echo
 echo
 echo "#########################################"
 echo "############ DEPLOY FINISH ##############"
 echo "#########################################"
 echo
 echo "Access url: https://s1em.cyber.local"
-echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime"
+echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime / TheHive / Cortex"
 echo "The user admin for MWDB have password $mwdb_password "
-echo "The user for MISP / TheHive / Cortex is not configured"
+echo "The user for MISP"
 echo "The master password of elastic is in \".env\" "
