@@ -119,6 +119,14 @@ docker exec es01 sh -c "curl -k -X POST 'https://127.0.0.1:9200/_security/user/$
 echo
 echo
 echo "##########################################"
+echo "########## STARTING DATABASES ############"
+echo "##########################################"
+echo
+echo
+docker-compose up -d db postgres
+echo
+echo
+echo "##########################################"
 echo "############ STARTING MISP ###############"
 echo "##########################################"
 echo
