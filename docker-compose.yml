@@ -901,8 +901,6 @@ services:
       - OPENCTI_URL=http://opencti:8080/opencti
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
       - WORKER_LOG_LEVEL=info
-    depends_on:
-      - opencti
     restart: always
     logging:
       driver: "json-file"
