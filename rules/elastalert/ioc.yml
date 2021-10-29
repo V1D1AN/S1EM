@@ -3,16 +3,16 @@ alert:
 description: Rule for thehive
 filter:
 - query_string:
-    query: (signal.status:"acknowledged" AND agent.type:"winlogbeat")
+    query: (signal.status:"acknowledged" AND kibana.alert.rule.tags:"Ioc")
 index: .siem-signals-default
 category:
  Detection
  Signal
-name: TheHive_Winlogbeat
+name: TheHive_Ioc
 priority: 3
 realert:
   minutes: 0
-title: Rule for TheHive Winlogbeat
+title: Rule for TheHive Ioc
 type: any
 
 
@@ -25,7 +25,7 @@ hive_alert_config:
  source: '{match[host][name]}'
  description: "`Rule description :` \n\n {match[signal][rule][description]} \n\n `Rule Query :` \n\n {match[signal][rule][query]} \n\n `Event Original :` \n\n '{match[message]} \n\n `Kibana link:` \n\n https://s1em.cyber.local/kibana/app/kibana#/discover?_g=(filters:!())&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'.siem-signals-default',key:_id,negate:!f,params:(query:'{match[_id]}'),type:phrase,value:'{match[_id]}'),query:(match:(_id:(query:'{match[_id]}',type:phrase))))),index:'.siem-signals-default',interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))"
  severity: 3
- tags: ['Signal', 'Detection', 'Winlogbeat']
+ tags: ['Signal', 'Detection', 'Ioc']
  tlp: 2
  status: 'New'
  follow: True
@@ -39,4 +39,3 @@ hive_observable_data_mapping:
  - ip: "{match[source][ip]}"
  - ip: "{match[destination][ip]}"
  - filename: "{match[process][executable]}"
-

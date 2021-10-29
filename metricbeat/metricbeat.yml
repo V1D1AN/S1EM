@@ -12,6 +12,19 @@ setup.kibana.ssl.certificate: "/usr/share/certificates/kibana/kibana.crt"
 setup.kibana.ssl.key: "/usr/share/certificates/kibana/kibana.key"
 setup.ilm.enabled: false
 setup.dashboards.enabled: true
+setup.template.overwrite: true
+setup.template.settings:
+  index:
+    mapping:
+      total_fields:
+        limit: 8192
+
+monitoring:
+  enabled: true
+  elasticsearch:
+    hosts: ["https://es01:9200","https://es02:9200","https://es03:9200"]
+    username: "elastic"
+    password: "changeme"
 
 output.elasticsearch:
    hosts: ["https://es01:9200","https://es02:9200","https://es03:9200"]

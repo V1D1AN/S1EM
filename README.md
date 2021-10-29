@@ -1,4 +1,3 @@
-
 ![20210518_v1d1an_bg1--white](https://user-images.githubusercontent.com/18678787/119020235-49428680-b99e-11eb-8621-935a62b966e1.png)
 
 # Objectives
@@ -21,12 +20,12 @@ Inside the solution:
 * MISP
 * OpenCTI 
 * Arkime
-* Suricata 6
-* Zeek 3
-* FleetDm
+* Suricata
+* Zeek
 * StoQ
 * Heimdall
 * Traefik
+* Clamav
 
 Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
@@ -52,7 +51,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [x] Add Cyberchef
 - [ ] Upgrade to elastalert2
 - [x] Upgrade to suricata 6
-- [ ] Upgrade to zeek 4
+- [x] Upgrade to zeek 4
 - [x] Upload SigmaHQ rules automatically into kibana
 - [x] Update Suricata rules automatically
 - [x] Update Yara rules automatically
@@ -63,12 +62,14 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [x] Integrate Pfelk
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
 - [ ] Integrate Spiderfoot
-- [ ] Update to ELK 7.15.0
+- [x] Update to ELK 7.15.1
 - [x] Update to Arkime 3.0.0
-- [ ] Integrate Mwdb
-- [ ] Suppress FleetDM
-- [ ] Add Clamav
-- [ ] Add Capa 
+- [x] Integrate Mwdb
+- [x] Suppress FleetDM
+- [x] Add Clamav
+- [ ] Add Capa
+- [ ] Add upload files for read pcap/EVTX
+
 
 # Special thanks
 En français cette fois. <br />

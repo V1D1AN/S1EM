@@ -7,8 +7,6 @@ processors:
   - add_docker_metadata: ~
 
 
-setup.template.overwrite: true
-
 setup.kibana.host: "https://kibana:5601/kibana"
 setup.kibana.ssl.enabled: true
 setup.kibana.ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
@@ -16,7 +14,19 @@ setup.kibana.ssl.certificate: "/usr/share/certificates/kibana/kibana.crt"
 setup.kibana.ssl.key: "/usr/share/certificates/kibana/kibana.key"
 setup.ilm.enabled: false
 setup.dashboards.enabled: true
+setup.template.overwrite: true
+setup.template.settings:
+  index:
+    mapping:
+      total_fields:
+        limit: 8192
 
+monitoring:
+  enabled: true
+  elasticsearch:
+    hosts: ["https://es01:9200","https://es02:9200","https://es03:9200"]
+    username: "elastic"
+    password: "changeme"
 
 output.elasticsearch:
   hosts: ["https://es01:9200","https://es02:9200","https://es03:9200"]

@@ -13,8 +13,9 @@ elasticsearch.ssl.certificateAuthorities: "/usr/share/certificates/ca/ca.crt"
 server.ssl.enabled: true
 server.ssl.certificate: "/usr/share/certificates/kibana/kibana.crt"
 server.ssl.key:  "/usr/share/certificates/kibana/kibana.key"
-xpack.task_manager.poll_interval: "10000"
+xpack.task_manager.poll_interval: "20000"
 xpack.task_manager.max_attempts: "10"
+xpack.task_manager.ephemeral_tasks.enabled: true
 telemetry.enabled: false
 newsfeed.enabled: false
 monitoring.kibana.collection.enabled: true
