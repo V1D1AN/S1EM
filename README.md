@@ -70,6 +70,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [ ] Add Capa
 - [ ] Add upload files for read pcap/EVTX
 
+
 # Special thanks
 En français cette fois. <br />
 Merci à mes amis et collègues qui m´ont inspiré toutes ces années, qui m´ont aidé, et corrigé des bugs.
