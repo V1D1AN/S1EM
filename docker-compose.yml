@@ -337,7 +337,7 @@ services:
 
 
   stoq:
-    image: v1d1an/stoq:3.0.4
+    image: v1d1an/stoq:3.0.5
     command: run -a yara hash peinfo iocextract hash_ssdeep lief entropy clamav -A mwdb
     container_name: stoq
     user: root
