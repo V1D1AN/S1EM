@@ -89,6 +89,7 @@ https://traefik.io/ <br />
 https://docs.linuxserver.io/images/docker-heimdall <br />
 https://github.com/cisagov/Malcolm <br />
 https://github.com/blueimp/jQuery-File-Upload <br />
+https://gchq.github.io/CyberChef/ <br />
 https://www.clamav.net/ <br />
 https://www.syslog-ng.com/ <br />
 
