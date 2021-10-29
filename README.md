@@ -70,6 +70,25 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [ ] Add Capa
 - [x] Add upload files for read Pcap
 
+# Related project
+
+https://www.elastic.co <br />
+https://github.com/TheHive-Project/Docker-Templates <br />
+https://github.com/jasonish/docker-suricata <br />
+https://github.com/blacktop/docker-zeek <br />
+https://github.com/rskntroot/arkime <br />
+https://github.com/coolacid/docker-misp <br />
+https://github.com/PUNCH-Cyber/stoq <br />
+https://github.com/jertel/elastalert-docker <br />
+https://github.com/OpenCTI-Platform/docker <br />
+https://traefik.io/ <br />
+https://docs.linuxserver.io/images/docker-heimdall <br />
+https://github.com/cisagov/Malcolm <br />
+https://github.com/blueimp/jQuery-File-Upload <br />
+https://www.clamav.net/ <br />
+https://www.syslog-ng.com/ <br />
+
+
 
 # Special thanks
 En français cette fois. <br />
