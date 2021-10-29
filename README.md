@@ -23,6 +23,7 @@ Inside the solution:
 * Suricata
 * Zeek
 * StoQ
+* Mwdb
 * Heimdall
 * Traefik
 * Clamav
@@ -81,6 +82,9 @@ https://github.com/coolacid/docker-misp <br />
 https://github.com/PUNCH-Cyber/stoq <br />
 https://github.com/jertel/elastalert-docker <br />
 https://github.com/OpenCTI-Platform/docker <br />
+https://github.com/CERT-Polska/mwdb-core <br />
+https://github.com/SigmaHQ/sigma <br />
+https://github.com/Yara-Rules/rules <br />
 https://traefik.io/ <br />
 https://docs.linuxserver.io/images/docker-heimdall <br />
 https://github.com/cisagov/Malcolm <br />
