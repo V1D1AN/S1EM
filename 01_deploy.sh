@@ -345,6 +345,18 @@ docker restart stoq
 docker restart cortex
 echo
 echo
+echo "##########################################"
+echo "######### INSTALL SIGMA RULES ############"
+echo "##########################################"
+echo
+echo
+curl -k -XPOST -u elastic:$password "https://127.0.0.1/kibana/s/default/api/detection_engine/index" -H "kbn-xsrf: true"
+docker image rm -f sigma:1.0
+docker container prune -f
+docker-compose -f sigma.yml build
+docker-compose -f sigma.yml up -d
+echo
+echo
 echo "#########################################"
 echo "########## STARTING OPENCTI #############"
 echo "#########################################"
