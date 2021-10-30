@@ -22,7 +22,7 @@ auditbeat.modules:
     - process
     - socket
     - user
-  period: 10s
+  period: 30s
   state.period: 12h
   socket.include_localhost: false
   user.detect_password_changes: true
@@ -40,6 +40,12 @@ setup.kibana.ssl.certificate: "/usr/share/certificates/kibana/kibana.crt"
 setup.kibana.ssl.key: "/usr/share/certificates/kibana/kibana.key"
 setup.ilm.enabled: false
 setup.dashboards.enabled: true
+setup.template.settings:
+  index:
+    refresh_interval: 30s
+    mapping:
+      total_fields:
+        limit: 8192
 
 monitoring:
   enabled: true

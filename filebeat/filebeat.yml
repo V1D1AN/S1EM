@@ -17,6 +17,7 @@ setup.dashboards.enabled: true
 setup.template.overwrite: true
 setup.template.settings:
   index:
+    refresh_interval: 30s
     mapping:
       total_fields:
         limit: 8192
