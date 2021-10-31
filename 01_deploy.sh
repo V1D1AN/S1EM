@@ -1,5 +1,4 @@
 #!/bin/bash
-rm .env
 cp env.sample .env
 echo "##########################################"
 echo "###### CONFIGURING ACCOUNT ELASTIC #######"
