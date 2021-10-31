@@ -143,7 +143,7 @@ while [ "$(docker logs misp | grep -i "Start Workers...finished" )" == "" ]; do
   echo "Waiting for MISP to come online.";
   sleep 15;
 done
-curl -o nul -sk https://127.0.0.1/misp/users/login
+curl -sk https://127.0.0.1/misp/users/login > /dev/null
 misp_apikey=$(docker exec misp sh -c "mysql -u misp --password=password -D misp -e'select authkey from users;'" | sed "1d")
 sed -i "s|misp_api_key|$misp_apikey|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml docker-compose.yml
 echo
