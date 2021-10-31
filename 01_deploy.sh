@@ -98,7 +98,7 @@ echo "##########################################"
 echo
 echo
 docker-compose up -d es01 es02 es03 kibana
-while [ "$(docker exec es01 sh -c 'curl -k https://127.0.0.1:9200 -u elastic:$password')" == "" ]; do
+while [ "$(docker exec es01 sh -c 'curl -sk https://127.0.0.1:9200 -u elastic:$password')" == "" ]; do
   echo "Waiting for Elasticsearch to come online.";
   sleep 15;
 done
@@ -115,7 +115,7 @@ done
 echo "Kibana is online"
 echo
 echo
-docker exec es01 sh -c "curl -k -X POST 'https://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"enabled\": true,\"password\": \"$admin_password\",\"roles\":\"superuser\",\"full_name\": \"$admin_account\"}'"
+docker exec es01 sh -c "curl -sk -X POST 'https://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"enabled\": true,\"password\": \"$admin_password\",\"roles\":\"superuser\",\"full_name\": \"$admin_account\"}'"
 echo
 echo
 echo "##########################################"
@@ -139,11 +139,10 @@ echo "########### CONFIGURING MISP #############"
 echo "##########################################"
 echo
 echo
-while [ "$(docker logs misp | grep -i "Start Workers...finished" )" == "" ]; do
+while [ "$( curl -sk 'https://127.0.0.1/misp/users/login' | grep "MISP" )" == "" ]; do
   echo "Waiting for MISP to come online.";
   sleep 15;
 done
-curl -o nul -sk https://127.0.0.1/misp/users/login
 misp_apikey=$(docker exec misp sh -c "mysql -u misp --password=password -D misp -e'select authkey from users;'" | sed "1d")
 sed -i "s|misp_api_key|$misp_apikey|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml docker-compose.yml
 echo
@@ -172,7 +171,7 @@ echo "######### DEPLOY CORTEX USER #############"
 echo "##########################################"
 echo
 echo
-while [ "$(docker exec cortex sh -c 'curl http://127.0.0.1:9001')" == "" ]; do
+while [ "$(docker exec cortex sh -c 'curl -s http://127.0.0.1:9001')" == "" ]; do
   echo "Waiting for Cortex to come online.";
   sleep 15;
 done
@@ -205,7 +204,7 @@ echo "######## DEPLOY THEHIVE USER #############"
 echo "##########################################"
 echo
 echo
-while [ "$(docker exec thehive sh -c 'curl http://127.0.0.1:9000')" == "" ]; do
+while [ "$(docker exec thehive sh -c 'curl -s http://127.0.0.1:9000')" == "" ]; do
   echo "Waiting for TheHive to come online.";
   sleep 15;
 done
@@ -235,7 +234,7 @@ echo "########### CONFIGURING MWDB #############"
 echo "##########################################"
 echo
 echo
-while [ "$(curl 'http://127.0.0.1:8080' | grep "Malware Database")" == "" ]; do
+while [ "$(curl -s 'http://127.0.0.1:8080' | grep "Malware Database")" == "" ]; do
   echo "Waiting for Mwdb to come online.";
   sleep 15;
 done
@@ -272,9 +271,9 @@ echo "########## DEPLOY KIBANA INDEX ###########"
 echo "##########################################"
 echo
 echo
-for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -k -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
+for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -sk -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
 sleep 10
-for dashboard in $(find kibana/dashboard/* -type f); do docker exec kibana sh -c "curl -k -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$dashboard"; done
+for dashboard in $(find kibana/dashboard/* -type f); do docker exec kibana sh -c "curl -sk -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$dashboard"; done
 sleep 10
 echo
 echo
@@ -291,13 +290,13 @@ echo "########## STARTING LOGSTASH #############"
 echo "##########################################"
 echo
 echo
-docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_component_template/pfelk-settings?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-settings"
-docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_component_template/pfelk-mappings-ecs?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-mappings-ecs"
-docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_ilm/policy/pfelk-ilm?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-ilm"
-docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_index_template/pfelk?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk"
-docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_index_template/pfelk-dhcp?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-dhcp"
-docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_index_template/pfelk-haproxy?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-haproxy"
-docker exec logstash sh -c "curl -k -X PUT 'https://es01:9200/_index_template/pfelk-suricata?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-suricata"
+docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_component_template/pfelk-settings?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-settings"
+docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_component_template/pfelk-mappings-ecs?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-mappings-ecs"
+docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_ilm/policy/pfelk-ilm?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-ilm"
+docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_index_template/pfelk?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk"
+docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_index_template/pfelk-dhcp?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-dhcp"
+docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_index_template/pfelk-haproxy?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-haproxy"
+docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_index_template/pfelk-suricata?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-suricata"
 echo
 echo
 echo "##########################################"
@@ -350,7 +349,7 @@ echo "######### INSTALL SIGMA RULES ############"
 echo "##########################################"
 echo
 echo
-curl -k -XPOST -u elastic:$password "https://127.0.0.1/kibana/s/default/api/detection_engine/index" -H "kbn-xsrf: true"
+curl -sk -XPOST -u elastic:$password "https://127.0.0.1/kibana/s/default/api/detection_engine/index" -H "kbn-xsrf: true"
 docker image rm -f sigma:1.0
 docker container prune -f
 docker-compose -f sigma.yml build
