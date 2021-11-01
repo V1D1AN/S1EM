@@ -1238,6 +1238,11 @@ services:
         max-size: "10m"
         max-file: "3"
     restart: always
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/clamdcheck.sh || exit 1"]
+      timeout: 30s
+      interval: 1m
+      retries: 3
     networks:
      - s1em
 
