@@ -3,8 +3,8 @@ $config = array (
   'debug' => 0,
   'MISP' => 
   array (
-    'baseurl' => 'https://s1em.cyber.local/misp',
-    'external_baseurl' => 'https://s1em.cyber.local/misp',
+    'baseurl' => 'https://s1em_hostname/misp',
+    'external_baseurl' => 'https://s1em_hostname/misp',
     'live' => true,
     'language' => 'eng',
     'footermidleft' => '',

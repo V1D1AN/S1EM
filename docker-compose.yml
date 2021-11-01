@@ -568,7 +568,7 @@ services:
   misp:
     image: coolacid/misp-docker:core-latest
     container_name: misp
-    hostname: s1em.cyber.local
+    hostname: s1em_hostname
     restart: always
     depends_on:
       - redis
@@ -584,7 +584,7 @@ services:
       - "traefik.http.middlewares.misp-stripprefix.stripprefix.prefixes=/misp"
       - "traefik.http.routers.misp.middlewares=misp-stripprefix"
     environment:
-      - "HOSTNAME=https://s1em.cyber.local/misp"
+      - "HOSTNAME=https://s1em_hostname/misp"
       - "REDIS_FQDN=redis"
       - "INIT=true"             # Initialze MISP, things includes, attempting to import SQL and the Files DIR
       - "CRON_USER_ID=1"        # The MISP user ID to run cron jobs as

@@ -43,6 +43,16 @@ sed -i "s/arkime_password/$admin_password/g" .env
 echo
 echo
 echo "##########################################"
+echo "####### CONFIGURING HOSTNAME S1EM ########"
+echo "##########################################"
+echo
+echo
+read -r -p "Enter the hostname of the solution S1EM (ex: s1em.cyber.local):" s1em_hostname
+s1em_hostname=$s1em_hostname
+sed -i "s/s1em_hostname/$s1em_hostname/g" docker-compose.yml heimdall/www/heimdall.sql misp/config.php
+echo
+echo
+echo "##########################################"
 echo "####### CONFIGURING ACCOUNT MWDB #########"
 echo "##########################################"
 echo
@@ -89,6 +99,16 @@ echo "##########################################"
 echo
 echo
 docker-compose up -d traefik
+echo
+echo
+echo "##########################################"
+echo "########### STARTING HEIMDALL ############"
+echo "##########################################"
+echo
+docker-compose up -d heimdall
+docker exec -ti heimdall apk update
+docker exec -ti heimdall apk add sqlite
+docker exec -ti heimdall sh -c "cat /config/www/heimdall.sql | sqlite3 /config/www/app.sqlite"
 echo
 echo
 echo "##########################################"
@@ -259,13 +279,6 @@ docker-compose up -d stoq
 echo
 echo
 echo "##########################################"
-echo "########### STARTING HEIMDALL ############"
-echo "##########################################"
-echo
-docker-compose up -d heimdall
-echo
-echo
-echo "##########################################"
 echo "########## DEPLOY KIBANA INDEX ###########"
 echo "##########################################"
 echo
@@ -375,7 +388,7 @@ echo "#########################################"
 echo "############ DEPLOY FINISH ##############"
 echo "#########################################"
 echo
-echo "Access url: https://s1em.cyber.local"
+echo "Access url: https://$s1em_hostname"
 echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime / TheHive / Cortex"
 echo "The user admin for MWDB have password $mwdb_password "
 echo "The user for MISP"
