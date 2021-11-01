@@ -1,0 +1,16 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "items" ("id" integer not null primary key autoincrement, "title" varchar not null, "colour" varchar null, "icon" varchar null, "url" varchar not null, "description" text null, "pinned" tinyint(1) not null default '0', "order" integer not null default '0', "deleted_at" datetime null, "created_at" datetime null, "updated_at" datetime null, "type" integer not null default '0', "user_id" integer not null default '1', "class" varchar null);
+INSERT INTO items VALUES(0,'app.dashboard',NULL,NULL,'',NULL,0,0,NULL,'2021-05-17 16:49:45','2021-05-17 16:49:45',1,0,NULL);
+INSERT INTO items VALUES(1,'Traefik','#FFF','icons/traefik.png','https://s1em_hostname/dashboard/','{"enabled":true,"override_url":null,"fields":"E","ignore_tls":"0","username":null,"password":null}',1,0,NULL,'2021-05-17 18:02:38','2021-05-17 18:14:06',0,1,'\App\SupportedApps\Traefik\Traefik');
+INSERT INTO items VALUES(2,'Kibana','#fafbfc','icons/kibana.png','https://s1em_hostname/kibana',NULL,1,0,NULL,'2021-05-17 18:03:19','2021-05-17 18:03:19',0,1,'\App\SupportedApps\Kibana\Kibana');
+INSERT INTO items VALUES(3,'Misp','#FFF','icons/amnWNohGfeljktabrBMBVncmIxFdTnK2R7kuNA4a.jpeg','https://s1em_hostname/misp',NULL,1,0,NULL,'2021-05-17 18:04:35','2021-05-17 19:06:38',0,1,NULL);
+INSERT INTO items VALUES(4,'OpenCTI','#FFF','icons/RXoT0bz56UWfZUkMelhd7W5Go28SYyIcUb3TLhWQ.png','https://s1em_hostname/opencti',NULL,1,0,NULL,'2021-05-17 18:05:39','2021-05-17 19:06:55',0,1,NULL);
+INSERT INTO items VALUES(5,'TheHive','#FFF','icons/KT4hoyBOcx42PxKVL45TfzjF0lKUUiQIMc8u3L7G.jpeg','https://s1em_hostname/thehive',NULL,1,0,NULL,'2021-05-17 18:06:42','2021-05-17 19:07:20',0,1,NULL);
+INSERT INTO items VALUES(6,'Cortex','#FFF','icons/GJoDYvoeTruZA6ZTSKJUfB4IbhuLhmtj3mnYNJg9.jpeg','https://s1em_hostname/cortex',NULL,1,0,NULL,'2021-05-17 18:08:48','2021-05-17 19:05:38',0,1,NULL);
+INSERT INTO items VALUES(7,'Cyberchef','#FFF','icons/swFDCgPsOgfodYikEYznU1v72inXy53aUmi82umO.png','https://s1em_hostname/cyberchef/',NULL,1,0,NULL,'2021-05-17 18:12:30','2021-05-17 19:06:05',0,1,NULL);
+INSERT INTO items VALUES(8,'Arkime','#fafbfc','icons/A98Pn2D8bGG7giudio4r5216P0O26aWjnKwJ026d.jpeg','https://s1em_hostname/arkime/',NULL,1,0,NULL,'2021-05-29 15:03:45','2021-05-29 15:03:45',0,1,NULL);
+INSERT INTO items VALUES(9,'Start Me','#FFF','icons/j5UHp5mmszw60e8Rrj84foI5kFn3EDkXOPxLSmBc.svg','https://start.me/p/6r66da/cybersecurity',NULL,1,0,NULL,'2021-09-28 18:28:06','2021-09-28 19:10:37',0,1,'\App\SupportedApps\Statping\Statping');
+INSERT INTO items VALUES(10,'Mwdb','#FFF','icons/Uh80PBlAFzIzPPAPNGoVsLbEXsN8WDYg8n8E9WQU.png','http://s1em_hostname:8080',NULL,1,0,NULL,'2021-10-03 18:51:44','2021-10-03 18:51:44',0,1,NULL);
+INSERT INTO items VALUES(11,'Upload','#fafbfc','icons/archivebox.png','https://s1em_hostname/upload/',NULL,1,0,NULL,'2021-10-26 06:39:19','2021-10-26 19:25:37',0,1,NULL);
+COMMIT;
