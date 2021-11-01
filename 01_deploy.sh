@@ -107,7 +107,7 @@ echo "##########################################"
 echo
 docker-compose up -d heimdall
 docker exec -ti heimdall apk update
-docker exec -ti heimdall apk add sqlite3
+docker exec -ti heimdall apk add sqlite
 docker exec -ti heimdall sh -c "cat /config/www/heimdall.sql | sqlite3 /config/www/app.sqlite"
 echo
 echo
