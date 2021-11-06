@@ -232,6 +232,7 @@ services:
         max-file: "3"
     networks:
       - s1em
+    cpus: 0.1
 
   metricbeat:
     image: 'docker.elastic.co/beats/metricbeat:7.15.1'
@@ -261,7 +262,8 @@ services:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"  
+        max-file: "3"
+    cpus: 0.1        
 
   filebeat:
     image: 'docker.elastic.co/beats/filebeat:7.15.1'
