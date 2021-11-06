@@ -8,7 +8,7 @@
             "limit": "10000"
           }
         },
-        "refresh_interval": "5s"
+        "refresh_interval": "30s"
       }
     },
     "mappings": {

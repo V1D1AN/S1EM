@@ -7333,7 +7333,7 @@
           "fields.*"
         ]
       },
-      "refresh_interval": "5s"
+      "refresh_interval": "30s"
     }
   }
 }

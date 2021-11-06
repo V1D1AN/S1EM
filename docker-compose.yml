@@ -30,8 +30,8 @@ services:
       - s1em
       
   es01:
-    container_name: es01
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+    container_name: es01
     restart: always
     environment:
       - node.name=es01
@@ -70,10 +70,11 @@ services:
       memlock:
         soft: -1
         hard: -1
+    cpus: 0.5
 
   es02:
-    container_name: es02
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+    container_name: es02
     restart: always
     environment:
       - node.name=es02
@@ -107,10 +108,11 @@ services:
       memlock:
         soft: -1
         hard: -1
+    cpus: 0.5
 
   es03:
-    container_name: es03
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+    container_name: es03
     restart: always
     environment:
       - node.name=es03
@@ -144,6 +146,7 @@ services:
       memlock:
         soft: -1
         hard: -1
+    cpus: 0.5
 
   wait_until_ready:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
