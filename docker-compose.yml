@@ -148,12 +148,6 @@ services:
         hard: -1
     cpus: 0.5
 
-  wait_until_ready:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
-    command: /usr/bin/true
-    depends_on: {"es01": {"condition": "service_healthy"}}
- 
- 
   logstash:
     image: 'docker.elastic.co/logstash/logstash:7.15.1'
     container_name: logstash
