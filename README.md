@@ -1,4 +1,9 @@
 ![20210518_v1d1an_bg1--white](https://user-images.githubusercontent.com/18678787/119020235-49428680-b99e-11eb-8621-935a62b966e1.png)
+<div>
+  <p align="center">
+    <a href="https://discord.gg/6Q8aQGYE" target"_blank"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg?sanitize=true" alt="Discord"></a    
+  </p>
+</div>
 
 # Objectives
 Today, cyber attacks are more numerous and cause damage in companies. Nevertheless, many software products exist to detect cyber threats. The S1EM solution is based on the principle of bringing together the best products in their field, free of charge, and making them quickly interoperable.
