@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: arkime
+  name: Arkime
+  hosts: ["arkime"]
+  ports: [8005]
+  schedule: '@every 30s'

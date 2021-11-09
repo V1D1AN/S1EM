@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: mysql
+  name: Mysql
+  hosts: ["db"]
+  ports: [3306]
+  schedule: '@every 30s'

@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: mwdb
+  name: Mwdb
+  hosts: ["mwdb"]
+  ports: [8080]
+  schedule: '@every 30s'

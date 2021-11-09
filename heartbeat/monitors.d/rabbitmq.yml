@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: rabbitmq
+  name: Rabbitmq
+  hosts: ["rabbitmq"]
+  ports: [5672]
+  schedule: '@every 30s'

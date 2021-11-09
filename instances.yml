@@ -38,6 +38,6 @@ instances:
   - name: opencti
     dns:
        - opencti
-  - name: fleet
+  - name: heartbeat
     dns:
-       - fleet
+       - heartbeat

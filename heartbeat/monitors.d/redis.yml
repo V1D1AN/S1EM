@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: redis
+  name: Redis
+  hosts: ["redis"]
+  ports: [6379]
+  schedule: '@every 30s'

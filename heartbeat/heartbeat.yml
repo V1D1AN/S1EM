@@ -1,0 +1,33 @@
+heartbeat.config.monitors:
+  path: /usr/share/heartbeat/monitors.d/*.yml
+  reload.enabled: true
+  reload.period: 10s
+
+processors:
+  - add_docker_metadata: ~
+  - add_host_metadata: ~
+
+setup.template.overwrite: true
+setup.ilm.enabled: false
+setup.template.settings:
+  index:
+    refresh_interval: 30s
+    mapping:
+      total_fields:
+        limit: 8192
+
+monitoring:
+  enabled: true
+  elasticsearch:
+    hosts: ["https://es01:9200","https://es02:9200","https://es03:9200"]
+    username: "elastic"
+    password: "changeme"
+
+output.elasticsearch:
+  hosts: ["https://es01:9200","https://es02:9200","https://es03:9200"]
+  username: "elastic"
+  password: "changeme"
+  ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
+  ssl.certificate: "/usr/share/certificates/heartbeat/heartbeat.crt"
+  ssl.key: "/usr/share/certificates/heartbeat/heartbeat.key"
+

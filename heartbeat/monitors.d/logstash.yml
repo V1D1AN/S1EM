@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: logstash
+  name: Logstash
+  hosts: ["logstash"]
+  ports: [9600]
+  schedule: '@every 30s'

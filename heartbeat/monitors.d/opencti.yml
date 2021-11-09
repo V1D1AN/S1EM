@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: opencti
+  name: Opencti
+  hosts: ["opencti"]
+  ports: [8080]
+  schedule: '@every 30s'

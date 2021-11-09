@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: misp-modules
+  name: Misp modules
+  hosts: ["misp-modules"]
+  ports: [6666]
+  schedule: '@every 30s'

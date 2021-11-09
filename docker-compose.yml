@@ -228,6 +228,24 @@ services:
       - s1em
     cpus: 0.1
 
+  heartbeat:
+    image: 'docker.elastic.co/beats/heartbeat:7.15.1'
+    container_name: heartbeat
+    cpus: 0.1
+    restart: always
+    hostname: ${HOSTNAME}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - ./heartbeat/heartbeat.yml:/usr/share/heartbeat/heartbeat.yml:ro
+      - ./heartbeat/monitors.d:/usr/share/heartbeat/monitors.d:ro
+      - certs:/usr/share/certificates:ro
+    networks:
+      - s1em
+
   metricbeat:
     image: 'docker.elastic.co/beats/metricbeat:7.15.1'
     container_name: metricbeat

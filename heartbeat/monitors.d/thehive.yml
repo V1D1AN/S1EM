@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: thehive
+  name: TheHive
+  hosts: ["thehive"]
+  ports: [9000]
+  schedule: '@every 30s'

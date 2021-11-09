@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: cyberchef
+  name: Cyberchef
+  hosts: ["cyberchef"]
+  ports: [8000]
+  schedule: '@every 30s'

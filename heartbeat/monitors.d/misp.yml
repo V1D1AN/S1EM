@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: misp
+  name: Misp
+  hosts: ["misp"]
+  ports: [80]
+  schedule: '@every 30s'

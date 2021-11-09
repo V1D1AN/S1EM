@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: upload
+  name: File upload
+  hosts: ["file-upload"]
+  ports: [80]
+  schedule: '@every 30s'

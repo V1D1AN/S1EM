@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: cortex
+  name: Cortex
+  hosts: ["cortex"]
+  ports: [9001]
+  schedule: '@every 30s'

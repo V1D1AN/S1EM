@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: postgres
+  name: Postgres
+  hosts: ["postgres"]
+  ports: [5432]
+  schedule: '@every 30s'

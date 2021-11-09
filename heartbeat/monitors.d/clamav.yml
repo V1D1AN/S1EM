@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: clamav
+  name: Clamav
+  hosts: ["clamav"]
+  ports: [3310]
+  schedule: '@every 30s'
