@@ -8,8 +8,8 @@ ADD sigma/backend.yml sigma/tools/backend.yml
 ADD rules/elastic/* sigma/tools/
 WORKDIR sigma/tools
 RUN python3 setup.py install
-RUN ./sigmac -t es-rule --filter condition!=near -I -c config/generic/sysmon.yml -c config/generic/powershell.yml -c config/winlogbeat-modules-enabled.yml --backend-config backend.yml --backend-option custom_tag="Windows" -r ../rules/windows -o windows-rules.ndjson
-RUN ./sigmac -t es-rule-eql --filter condition=near -I -c config/generic/sysmon.yml -c config/winlogbeat-modules-enabled.yml --backend-config backend.yml --backend-option custom_tag="Windows,EQL" -r ../rules/windows -o eql-rules.ndjson
+RUN ./sigmac -t es-rule --filter condition!=near,status!=deprecated -I -c config/generic/sysmon.yml -c config/generic/powershell.yml -c config/winlogbeat-modules-enabled.yml --backend-config backend.yml --backend-option custom_tag="Windows" -r ../rules/windows -o windows-rules.ndjson
+RUN ./sigmac -t es-rule-eql --filter condition=near,status!=deprecated -I -c config/generic/sysmon.yml -c config/winlogbeat-modules-enabled.yml --backend-config backend.yml --backend-option custom_tag="Windows,EQL" -r ../rules/windows -o eql-rules.ndjson
 RUN ./sigmac -t es-rule -I -c config/ecs-zeek-elastic-beats-implementation.yml --backend-config backend.yml --backend-option custom_tag="Zeek" -r ../rules/network/zeek -o zeek-rules.ndjson
 RUN ./sigmac -t es-rule -I -c config/ecs-auditbeat-modules-enabled.yml --backend-config backend.yml --backend-option custom_tag="Linux" -r ../rules/linux/auditd -o auditbeat-rules.ndjson
 RUN sed -i 's/"enabled": true/"enabled": false/g' *.ndjson
