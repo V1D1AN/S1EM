@@ -1,7 +1,7 @@
 - type: tcp
   enabled: true
   id: minio
-  name: Minion
+  name: Minio
   hosts: ["minio"]
   ports: [9000]
   schedule: '@every 30s'
