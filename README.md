@@ -19,6 +19,7 @@ Inside the solution:
 * Filebeat
 * Logstash
 * Metricbeat
+* Heartbeat
 * Auditbeat
 * Syslog-ng
 * Elastalert
