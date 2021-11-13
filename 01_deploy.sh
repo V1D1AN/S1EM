@@ -298,7 +298,7 @@ docker-compose up -d logstash
 echo
 echo
 echo "##########################################"
-echo "########## STARTING LOGSTASH #############"
+echo "######### CONFIGURING LOGSTASH ###########"
 echo "##########################################"
 echo
 echo

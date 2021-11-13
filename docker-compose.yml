@@ -30,7 +30,7 @@ services:
       - s1em
       
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
     container_name: es01
     restart: always
     environment:
@@ -73,7 +73,7 @@ services:
     cpus: 0.5
 
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
     container_name: es02
     restart: always
     environment:
@@ -111,7 +111,7 @@ services:
     cpus: 0.5
 
   es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
     container_name: es03
     restart: always
     environment:
@@ -149,7 +149,7 @@ services:
     cpus: 0.5
 
   logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.15.1'
+    image: 'docker.elastic.co/logstash/logstash:7.15.2'
     container_name: logstash
     hostname: logstash
     restart: always
@@ -177,7 +177,7 @@ services:
       - "5190:5190/udp"
       
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.15.1'
+    image: 'docker.elastic.co/kibana/kibana:7.15.2'
     container_name: kibana
     hostname: kibana
     restart: always
@@ -204,7 +204,7 @@ services:
       - s1em
 
   auditbeat:
-    image: 'docker.elastic.co/beats/auditbeat:7.15.1'
+    image: 'docker.elastic.co/beats/auditbeat:7.15.2'
     container_name: auditbeat
     hostname: auditbeat
     restart: always
@@ -229,7 +229,7 @@ services:
     cpus: 0.1
 
   heartbeat:
-    image: 'docker.elastic.co/beats/heartbeat:7.15.1'
+    image: 'docker.elastic.co/beats/heartbeat:7.15.2'
     container_name: heartbeat
     cpus: 0.1
     restart: always
@@ -247,7 +247,7 @@ services:
       - s1em
 
   metricbeat:
-    image: 'docker.elastic.co/beats/metricbeat:7.15.1'
+    image: 'docker.elastic.co/beats/metricbeat:7.15.2'
     container_name: metricbeat
     restart: always
     depends_on:
@@ -278,7 +278,7 @@ services:
     cpus: 0.1        
 
   filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.15.1'
+    image: 'docker.elastic.co/beats/filebeat:7.15.2'
     container_name: filebeat
     hostname: filebeat
     user: root
