@@ -136,7 +136,11 @@ echo
 echo
 docker exec es01 sh -c "curl -sk -X POST 'https://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"enabled\": true,\"password\": \"$admin_password\",\"roles\":\"superuser\",\"full_name\": \"$admin_account\"}'"
 echo
+echo "##########################################"
+echo "##### STARTING RabbitMQ Redis Minio ######"
+echo "##########################################"
 echo
+docker-compose up -d rabbitmq redis minio
 echo "##########################################"
 echo "########## STARTING DATABASES ############"
 echo "##########################################"
