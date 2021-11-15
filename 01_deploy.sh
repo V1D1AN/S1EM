@@ -140,7 +140,10 @@ echo "##########################################"
 echo "##### STARTING RabbitMQ Redis Minio ######"
 echo "##########################################"
 echo
+echo
 docker-compose up -d rabbitmq redis minio
+echo
+echo
 echo "##########################################"
 echo "########## STARTING DATABASES ############"
 echo "##########################################"
