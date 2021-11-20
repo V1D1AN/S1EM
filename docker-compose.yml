@@ -70,7 +70,7 @@ services:
       memlock:
         soft: -1
         hard: -1
-    cpus: 1.0
+    cpus: 2.0
 
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
@@ -108,7 +108,7 @@ services:
       memlock:
         soft: -1
         hard: -1
-    cpus: 1.0
+    cpus: 2.0
 
   es03:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
@@ -146,7 +146,7 @@ services:
       memlock:
         soft: -1
         hard: -1
-    cpus: 1.0
+    cpus: 2.0
 
   logstash:
     image: 'docker.elastic.co/logstash/logstash:7.15.2'
@@ -616,10 +616,12 @@ services:
       - "MISP_MODULES_FQDN=http://misp-modules" # Set the MISP Modules FQDN, used for Enrichment_services_url/Import_services_url/Export_services_url
       - "WORKERS=4"
     volumes:
-      - "./misp/config.php:/var/www/MISP/app/Config/config.php"
-      - "misp:/var/www/MISP/app/tmp/logs/"
-      - "misp:/var/www/MISP/app/files"
-      - "misp:/etc/nginx/certs"
+      - ./misp/config.php:/var/www/MISP/app/Config/config.php:rw
+      - misp:/var/www/MISP/app/tmp/logs
+      - misp:/var/www/MISP/app/files
+      - misp:/etc/nginx/certs
+      - misp_tmp:/tmp
+
     logging:
       driver: "json-file"
       options:
@@ -1302,6 +1304,8 @@ volumes:
    mysql:
     external: false
    misp:
+    external: false
+   misp_tmp:
     external: false
    stoq:
     external: false
