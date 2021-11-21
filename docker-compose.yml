@@ -70,7 +70,6 @@ services:
       memlock:
         soft: -1
         hard: -1
-    cpus: 2.0
 
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
@@ -108,7 +107,6 @@ services:
       memlock:
         soft: -1
         hard: -1
-    cpus: 2.0
 
   es03:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
@@ -146,7 +144,6 @@ services:
       memlock:
         soft: -1
         hard: -1
-    cpus: 2.0
 
   logstash:
     image: 'docker.elastic.co/logstash/logstash:7.15.2'
@@ -227,12 +224,10 @@ services:
         max-file: "3"
     networks:
       - s1em
-    cpus: 0.1
 
   heartbeat:
     image: 'docker.elastic.co/beats/heartbeat:7.15.2'
     container_name: heartbeat
-    cpus: 0.1
     restart: always
     hostname: ${HOSTNAME}
     logging:
@@ -275,8 +270,7 @@ services:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"
-    cpus: 0.1        
+        max-file: "3"        
 
   filebeat:
     image: 'docker.elastic.co/beats/filebeat:7.15.2'
