@@ -87,6 +87,7 @@ https://github.com/jasonish/docker-suricata <br />
 https://github.com/blacktop/docker-zeek <br />
 https://github.com/rskntroot/arkime <br />
 https://github.com/coolacid/docker-misp <br />
+https://github.com/watsoninfosec/ElasticXDR<br />
 https://github.com/PUNCH-Cyber/stoq <br />
 https://github.com/jertel/elastalert-docker <br />
 https://github.com/OpenCTI-Platform/docker <br />

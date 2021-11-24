@@ -451,6 +451,7 @@ services:
       - ./cortex/application.conf:/etc/cortex/application.conf:ro
       - ./cortex/MISP.json:/opt/Cortex-Analyzers/analyzers/MISP/MISP.json:ro
       - ./cortex/OpenCTI_SearchObservables.json:/opt/Cortex-Analyzers/analyzers/OpenCTI/OpenCTI_SearchObservables.json:ro
+      - ./cortex/OTXQuery.json:/opt/Cortex-Analyzers/analyzers/OTXQuery/OTXQuery.json:ro
       - ./rules/yara:/opt/rules/yara:ro
       - certs:/opt/cortex/certificates:ro
       - ./cortex/cacerts:/usr/local/openjdk-8/jre/lib/security/cacerts
@@ -897,6 +898,7 @@ services:
       - connector-import-file-stix
       - connector-misp
       - connector-mitre
+      - connector-alienvault
     restart: always
     volumes:
       - certs:/usr/share/certificates:ro
@@ -1108,6 +1110,42 @@ services:
       - CVE_NVD_DATA_FEED=https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-recent.json.gz
       - CVE_HISTORY_DATA_FEED=https://nvd.nist.gov/feeds/json/cve/1.1/
       - CVE_INTERVAL=7 # In days, must be strictly greater than 1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  connector-alienvault:
+    image: opencti/connector-alienvault:latest
+    container_name: connector-alienvault
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_ALIENVAULT_ID}
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=AlienVault
+      - CONNECTOR_SCOPE=alienvault
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_UPDATE_EXISTING_DATA=false
+      - CONNECTOR_LOG_LEVEL=info
+      - ALIENVAULT_BASE_URL=https://otx.alienvault.com
+      - ALIENVAULT_API_KEY=766ba1df3ab54db9c0fcbf62ef048c3a04c260e8ca65b6c25346084b7b4719ad
+      - ALIENVAULT_TLP=White
+      - ALIENVAULT_CREATE_OBSERVABLES=true
+      - ALIENVAULT_CREATE_INDICATORS=true
+      - ALIENVAULT_PULSE_START_TIMESTAMP=2021-05-01T00:00:00                  # BEWARE! Could be a lot of pulses!
+      - ALIENVAULT_REPORT_TYPE=threat-report
+      - ALIENVAULT_REPORT_STATUS=New
+      - ALIENVAULT_GUESS_MALWARE=false                                        # Use tags to guess malware.
+      - ALIENVAULT_GUESS_CVE=false                                            # Use tags to guess CVE.
+      - ALIENVAULT_EXCLUDED_PULSE_INDICATOR_TYPES=FileHash-MD5,FileHash-SHA1  # Excluded Pulse indicator types.
+      - ALIENVAULT_ENABLE_RELATIONSHIPS=true                                  # Enable/Disable relationship creation between SDOs.
+      - ALIENVAULT_ENABLE_ATTACK_PATTERNS_INDICATES=true                      # Enable/Disable "indicates" relationships between indicators and attack patterns
+      - ALIENVAULT_INTERVAL_SEC=1800
     logging:
       driver: "json-file"
       options:

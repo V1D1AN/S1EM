@@ -29,10 +29,10 @@
     var.interval: 10m
 
   otx:
-    enabled: false
+    enabled: true
     var.input: httpjson
     var.url: https://otx.alienvault.com/api/v1/indicators/export
-    var.api_token: changeme
+    var.api_token: 766ba1df3ab54db9c0fcbf62ef048c3a04c260e8ca65b6c25346084b7b4719ad
     var.first_interval: 24h
     var.lookback_range: 2h
     var.interval: 60m
