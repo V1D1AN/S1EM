@@ -452,6 +452,8 @@ services:
       - ./cortex/MISP.json:/opt/Cortex-Analyzers/analyzers/MISP/MISP.json:ro
       - ./cortex/OpenCTI_SearchObservables.json:/opt/Cortex-Analyzers/analyzers/OpenCTI/OpenCTI_SearchObservables.json:ro
       - ./cortex/OTXQuery.json:/opt/Cortex-Analyzers/analyzers/OTXQuery/OTXQuery.json:ro
+      - ./cortex/Elasticsearch_IP.json:/opt/Cortex-Analyzers/analyzers/Elasticsearch/Elasticsearch_IP.json:ro
+      - ./cortex/Elasticsearch_Hash.json:/opt/Cortex-Analyzers/analyzers/Elasticsearch/Elasticsearch_Hash.json:ro
       - ./rules/yara:/opt/rules/yara:ro
       - certs:/opt/cortex/certificates:ro
       - ./cortex/cacerts:/usr/local/openjdk-8/jre/lib/security/cacerts
