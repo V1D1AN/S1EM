@@ -1010,19 +1010,22 @@ services:
     networks:
       - s1em
 
-  connector-import-file-pdf-observables:
-    image: opencti/connector-import-file-pdf-observables:latest
-    container_name: connector-import-file-pdf
+  connector-import-document:
+    image: opencti/connector-import-document:latest
+    container_name: connector-import-document
     environment:
       - OPENCTI_URL=http://opencti:8080/opencti
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
-      - CONNECTOR_ID=${CONNECTOR_IMPORT_FILE_PDF_OBSERVABLES_ID} # Valid UUIDv4
+      - CONNECTOR_ID=${CONNECTOR_IMPORT_DOCUMENT_ID} # Valid UUIDv4
       - CONNECTOR_TYPE=INTERNAL_IMPORT_FILE
-      - CONNECTOR_NAME=ImportFilePdfObservables
-      - CONNECTOR_SCOPE=application/pdf
-      - CONNECTOR_CONFIDENCE_LEVEL=3
+      - CONNECTOR_NAME=ImportDocument
+      - CONNECTOR_VALIDATE_BEFORE_IMPORT=true # Validate any bundle before import
+      - CONNECTOR_SCOPE=application/pdf,text/plain,text/html
+      - CONNECTOR_AUTO=true # Enable/disable auto-import of file
+      - CONNECTOR_ONLY_CONTEXTUAL=false # Only extract data related to an entity (a report, a threat actor, etc.)
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
       - CONNECTOR_LOG_LEVEL=info
-      - PDF_OBSERVABLES_CREATE_INDICATOR=False
+      - IMPORT_DOCUMENT_CREATE_INDICATOR=true
     logging:
       driver: "json-file"
       options:
