@@ -393,7 +393,7 @@ echo "####### STARTING OTHER DOCKER ###########"
 echo "#########################################"
 echo
 echo
-docker-compose up -d elastalert cyberchef file-upload syslog-ng tcpreplay clamav heartbeat
+docker-compose up -d elastalert cyberchef file-upload syslog-ng tcpreplay clamav heartbeat watchtower
 echo
 echo
 echo "#########################################"

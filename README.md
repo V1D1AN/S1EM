@@ -35,6 +35,7 @@ Inside the solution:
 * Heimdall
 * Traefik
 * Clamav
+* Watchtower
 
 Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
@@ -67,10 +68,8 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [x] Elasticsearch multi-nodes with ssl
 - [x] Integrate Arkime
 - [ ] SSO
-- [ ] Integrate Att@ck Navigator
 - [x] Integrate Pfelk
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
-- [ ] Integrate Spiderfoot
 - [x] Update to ELK 7.15.1
 - [x] Update to Arkime 3.0.0
 - [x] Integrate Mwdb

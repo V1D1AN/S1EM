@@ -901,6 +901,7 @@ services:
       - connector-misp
       - connector-mitre
       - connector-alienvault
+      - connector-opencti
     restart: always
     volumes:
       - certs:/usr/share/certificates:ro
@@ -1182,6 +1183,32 @@ services:
     networks:
       - s1em
 
+  connector-opencti:
+    image: opencti/connector-opencti:latest
+    container_name: connector-opencti
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_IPINFO_ID}
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=OpenCTI
+      - CONNECTOR_SCOPE=marking-definition,identity,location
+      - CONNECTOR_CONFIDENCE_LEVEL=90 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_UPDATE_EXISTING_DATA=true
+      - CONNECTOR_RUN_AND_TERMINATE=false
+      - CONNECTOR_LOG_LEVEL=info
+      - CONFIG_SECTORS_FILE_URL=https://raw.githubusercontent.com/OpenCTI-Platform/datasets/master/data/sectors.json
+      - CONFIG_GEOGRAPHY_FILE_URL=https://raw.githubusercontent.com/OpenCTI-Platform/datasets/master/data/geography.json
+      - CONFIG_INTERVAL=7 # In days, must be strictly greater than 1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
   cyberchef:
     image: mpepping/cyberchef:latest
     container_name: cyberchef
@@ -1297,6 +1324,19 @@ services:
       timeout: 30s
       interval: 1m
       retries: 3
+    networks:
+     - s1em
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
      - s1em
 
