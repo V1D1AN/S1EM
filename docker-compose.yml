@@ -875,9 +875,6 @@ services:
       - RABBITMQ__USERNAME=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ__PASSWORD=${RABBITMQ_DEFAULT_PASS}
       - PROVIDERS__LOCAL__STRATEGY=LocalStrategy
-      - SMTP__HOSTNAME=${SMTP_HOSTNAME}
-      - SMTP__PORT=465
-      - SMTP__USE_SSL=true
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.opencti.rule=PathPrefix(`/opencti`)"
