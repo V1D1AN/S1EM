@@ -1319,6 +1319,8 @@ services:
         max-size: "10m"
         max-file: "3"
     restart: always
+    environment:
+      - CLAMAV_NO_MILTERD=true
     healthcheck:
       test: ["CMD", "/usr/local/bin/clamdcheck.sh || exit 1"]
       timeout: 30s
