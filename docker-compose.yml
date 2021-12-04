@@ -1337,6 +1337,8 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    environment:
+      - WATCHTOWER_CLEANUP
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
