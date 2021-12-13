@@ -13,7 +13,6 @@ echo "The master password Elastic set in .env:" $password
 echo
 sed -i "s/kibana_api_key/$kibana_api_key/g" kibana/kibana.yml
 sed -i "s/changeme/$password/g" .env cortex/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/stoq/300_output_stoq.conf logstash/pipeline/pfelk/300_output_pfelk.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elsticsearch_IP.json cortex/Elasticsearch_Hash.json
-sed -i "s/elastic_opencti/$password/g" docker-compose.yml
 echo
 echo
 echo "##########################################"
@@ -181,7 +180,7 @@ while [ "$( curl -sk 'https://127.0.0.1/misp/users/login' | grep "MISP" )" == ""
   sleep 15;
 done
 misp_apikey=$(docker exec misp sh -c "mysql -u misp --password=password -D misp -e'select authkey from users;'" | sed "1d")
-sed -i "s|misp_api_key|$misp_apikey|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml docker-compose.yml
+sed -i "s|misp_api_key|$misp_apikey|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml .env
 echo
 echo
 echo "##########################################"

@@ -30,7 +30,7 @@ services:
       - s1em
       
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
     container_name: es01
     restart: always
     environment:
@@ -72,7 +72,7 @@ services:
         hard: -1
 
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
     container_name: es02
     restart: always
     environment:
@@ -109,7 +109,7 @@ services:
         hard: -1
 
   es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
     container_name: es03
     restart: always
     environment:
@@ -146,7 +146,7 @@ services:
         hard: -1
 
   logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.15.2'
+    image: 'docker.elastic.co/logstash/logstash:7.16.1'
     container_name: logstash
     hostname: logstash
     restart: always
@@ -175,7 +175,7 @@ services:
       - "5190:5190/udp"
       
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.15.2'
+    image: 'docker.elastic.co/kibana/kibana:7.16.1'
     container_name: kibana
     hostname: kibana
     restart: always
@@ -202,7 +202,7 @@ services:
       - s1em
 
   auditbeat:
-    image: 'docker.elastic.co/beats/auditbeat:7.15.2'
+    image: 'docker.elastic.co/beats/auditbeat:7.16.1'
     container_name: auditbeat
     hostname: auditbeat
     restart: always
@@ -226,7 +226,7 @@ services:
       - s1em
 
   heartbeat:
-    image: 'docker.elastic.co/beats/heartbeat:7.15.2'
+    image: 'docker.elastic.co/beats/heartbeat:7.16.1'
     container_name: heartbeat
     restart: always
     hostname: ${HOSTNAME}
@@ -243,7 +243,7 @@ services:
       - s1em
 
   metricbeat:
-    image: 'docker.elastic.co/beats/metricbeat:7.15.2'
+    image: 'docker.elastic.co/beats/metricbeat:7.16.1'
     container_name: metricbeat
     restart: always
     depends_on:
@@ -273,7 +273,7 @@ services:
         max-file: "3"        
 
   filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.15.2'
+    image: 'docker.elastic.co/beats/filebeat:7.16.1'
     container_name: filebeat
     hostname: filebeat
     user: root
@@ -857,7 +857,7 @@ services:
       - REDIS__PORT=6379
       - ELASTICSEARCH__URL=["https://es01:9200","https://es02:9200","https://es03:9200"]
       - ELASTICSEARCH__USERNAME=elastic
-      - ELASTICSEARCH__PASSWORD=elastic_opencti
+      - ELASTICSEARCH__PASSWORD=${ELASTIC_PASSWORD}
       - ELASTICSEARCH__SSL__CA=/usr/share/certificates/ca/ca.crt
       - ELASTICSEARCH__SSL__KEY=/usr/share/certificates/opencti/opencti.key
       - ELASTICSEARCH__SSL__CERT=/usr/share/certificates/opencti/opencti.crt
@@ -1048,7 +1048,7 @@ services:
       - CONNECTOR_UPDATE_EXISTING_DATA=false
       - CONNECTOR_LOG_LEVEL=info
       - MISP_URL=http://misp/misp # Required
-      - MISP_KEY=misp_api_key # Required
+      - MISP_KEY=${MISP_KEY} # Required
       - MISP_SSL_VERIFY=False # Required
       - MISP_INTERVAL=1440 # Required, in minutes
       - MISP_DATETIME_ATTRIBUTE=timestamp # Required, filter to be used in query for new MISP events
@@ -1135,7 +1135,7 @@ services:
       - CONNECTOR_UPDATE_EXISTING_DATA=false
       - CONNECTOR_LOG_LEVEL=info
       - ALIENVAULT_BASE_URL=https://otx.alienvault.com
-      - ALIENVAULT_API_KEY=766ba1df3ab54db9c0fcbf62ef048c3a04c260e8ca65b6c25346084b7b4719ad
+      - ALIENVAULT_API_KEY=${ALIENVAULT_API_KEY}
       - ALIENVAULT_TLP=White
       - ALIENVAULT_CREATE_OBSERVABLES=true
       - ALIENVAULT_CREATE_INDICATORS=true
