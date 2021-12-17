@@ -216,6 +216,7 @@ services:
       - es01
     volumes:
       - ./auditbeat/auditbeat.yml:/usr/share/auditbeat/auditbeat.yml:ro
+      - ./auditbeat/ilm.json:/usr/share/auditbeat/ilm.json:ro
       - certs:/usr/share/certificates:ro
     logging:
       driver: "json-file"
@@ -237,6 +238,7 @@ services:
         max-file: "3"
     volumes:
       - ./heartbeat/heartbeat.yml:/usr/share/heartbeat/heartbeat.yml:ro
+      - ./heartbeat/ilm.json:/usr/share/heartbeat/ilm.json:ro
       - ./heartbeat/monitors.d:/usr/share/heartbeat/monitors.d:ro
       - certs:/usr/share/certificates:ro
     networks:
@@ -255,6 +257,7 @@ services:
       - s1em
     volumes:
       - ./metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - ./metricbeat/ilm.json:/usr/share/metricbeat/ilm.json:ro
       - ./metricbeat/modules.d/docker.yml:/usr/share/metricbeat/modules.d/docker.yml:ro
       - ./metricbeat/modules.d/redis.yml:/usr/share/metricbeat/modules.d/redis.yml:ro
       - ./metricbeat/modules.d/rabbitmq.yml:/usr/share/metricbeat/modules.d/rabbitmq.yml:ro
@@ -288,6 +291,7 @@ services:
       - zeekdata:/var/log/bro/current
       - certs:/usr/share/certificates:ro
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./filebeat/ilm.json:/usr/share/filebeat/ilm.json:ro
       - ./filebeat/modules.d/system.yml:/usr/share/filebeat/modules.d/system.yml:ro
       - ./filebeat/modules.d/suricata.yml:/usr/share/filebeat/modules.d/suricata.yml:ro
       - ./filebeat/modules.d/threatintel.yml:/usr/share/filebeat/modules.d/threatintel.yml:ro
@@ -545,8 +549,10 @@ services:
     hostname: redis
     container_name: redis
     restart: always
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     volumes:
       - redis:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     logging:
       driver: "json-file"
       options:
@@ -554,6 +560,7 @@ services:
         max-file: "3"
     networks:
       - s1em
+
 
   db:
     image: mysql:latest
@@ -1318,6 +1325,8 @@ services:
         max-size: "10m"
         max-file: "3"
     restart: always
+    volumes:
+      - clamav:/var/lib/clamav
     environment:
       - CLAMAV_NO_MILTERD=true
     healthcheck:
@@ -1395,4 +1404,6 @@ volumes:
    mwdb-uploads:
     external: false
    upload:
+    external: false
+   clamav:
     external: false

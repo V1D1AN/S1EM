@@ -12,7 +12,12 @@ setup.kibana.ssl.enabled: true
 setup.kibana.ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
 setup.kibana.ssl.certificate: "/usr/share/certificates/kibana/kibana.crt"
 setup.kibana.ssl.key: "/usr/share/certificates/kibana/kibana.key"
-setup.ilm.enabled: false
+setup.ilm.enabled: true
+setup.ilm.policy_name: "ILM"
+setup.ilm.policy_file: "/usr/share/filebeat/ilm.json"
+setup.ilm.check_exists: true
+setup.ilm_pattern: "{now/d}-000001"
+setup.ilm_rollover_alias: "%{[@metadata][beat]}-%{[@metadata][version]}"
 setup.dashboards.enabled: true
 setup.template.overwrite: true
 setup.template.settings:

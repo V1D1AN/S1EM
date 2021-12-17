@@ -8,7 +8,11 @@ processors:
   - add_host_metadata: ~
 
 setup.template.overwrite: true
-setup.ilm.enabled: false
+setup.ilm.enabled: true
+setup.ilm.policy_name: "ILM"
+setup.ilm.policy_file: "/usr/share/heartbeat/ilm.json"
+setup.ilm_pattern: "{now/d}-000001"
+setup.ilm_rollover_alias: "%{[@metadata][beat]}-%{[@metadata][version]}"
 setup.template.settings:
   index:
     refresh_interval: 30s
