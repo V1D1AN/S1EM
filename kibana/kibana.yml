@@ -20,5 +20,6 @@ telemetry.enabled: false
 newsfeed.enabled: false
 monitoring.kibana.collection.enabled: true
 elasticsearch.requestTimeout: 180000
+elasticsearch.shardTimeout: 180000
 
 
