@@ -1195,7 +1195,7 @@ services:
     environment:
       - OPENCTI_URL=http://opencti:8080/opencti
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
-      - CONNECTOR_ID=${CONNECTOR_IPINFO_ID}
+      - CONNECTOR_ID=${CONNECTOR_OPENCTI_ID}
       - CONNECTOR_TYPE=EXTERNAL_IMPORT
       - CONNECTOR_NAME=OpenCTI
       - CONNECTOR_SCOPE=marking-definition,identity,location
