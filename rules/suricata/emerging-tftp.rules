@@ -74,7 +74,7 @@ alert udp $HOME_NET any -> [$EXTERNAL_NET,!255.255.255.255] 69 (msg:"ET TFTP Out
 
 alert udp $HOME_NET any -> [$EXTERNAL_NET,!255.255.255.255] 69 (msg:"ET TFTP Outbound TFTP Write Request"; content:"|00 02|"; depth:2; reference:url,doc.emergingthreats.net/2008116; classtype:policy-violation; sid:2008116; rev:4; metadata:created_at 2010_07_30, updated_at 2017_01_25;)
 
-alert udp $HOME_NET any -> $EXTERNAL_NET 69 (msg:"ET TFTP Outbound TFTP Data Transfer with Cisco config"; content:"|00 03|"; depth:2; content:"|0a 21 20|version|20|"; distance:2; within:12; classtype:policy-violation; sid:2015857; rev:5; metadata:created_at 2012_10_31, former_category TFTP, updated_at 2017_07_19;)
+alert udp $HOME_NET any -> $EXTERNAL_NET 69 (msg:"ET TFTP Outbound TFTP Data Transfer with Cisco config"; content:"|00 03|"; depth:2; content:"|0a 21 20|version|20|"; distance:2; within:12; classtype:policy-violation; sid:2015857; rev:5; metadata:created_at 2012_11_01, former_category TFTP, updated_at 2017_07_19;)
 
 alert udp $HOME_NET any -> $EXTERNAL_NET 69 (msg:"ET TFTP Outbound TFTP Data Transfer With Cisco Config 2"; content:"|00 03|"; depth:2; content:"NVRAM config last update"; distance:0; classtype:policy-violation; sid:2024481; rev:2; metadata:affected_product Cisco_ASA, affected_product Cisco_PIX, affected_product CISCO_Catalyst, attack_target Networking_Equipment, created_at 2017_07_19, deployment Perimeter, former_category TFTP, performance_impact Moderate, signature_severity Major, updated_at 2017_07_19;)
 

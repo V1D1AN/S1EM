@@ -38,7 +38,7 @@
 
 # This Ruleset is EmergingThreats Open optimized for suricata-5.0-enhanced.
 
-#alert tcp $EXTERNAL_NET any -> $HOME_NET 25 (msg:"ET SMTP Potential Exim HeaderX with run exploit attempt"; flow:established,to_server; content:"|0d 0a|HeaderX|3a 20|"; nocase; content:"run{"; distance:0; reference:url,www.exim.org/lurker/message/20101207.215955.bb32d4f2.en.html; reference:url,eclists.org/fulldisclosure/2010/Dec/221; classtype:attempted-admin; sid:2012054; rev:3; metadata:created_at 2010_12_14, updated_at 2010_12_14;)
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 25 (msg:"ET SMTP Potential Exim HeaderX with run exploit attempt"; flow:established,to_server; content:"|0d 0a|HeaderX|3a 20|"; nocase; content:"run{"; distance:0; reference:url,www.exim.org/lurker/message/20101207.215955.bb32d4f2.en.html; reference:url,eclists.org/fulldisclosure/2010/Dec/221; classtype:attempted-admin; sid:2012054; rev:3; metadata:created_at 2010_12_15, updated_at 2010_12_15;)
 
 #alert tcp $EXTERNAL_NET any -> $SMTP_SERVERS 25 (msg:"ET SMTP IBM Lotus Domino iCalendar Email Address Stack Buffer Overflow Attempt"; flow:to_server,established; content:"|0d 0a|ORGANIZER"; content:"mailto|3a|"; nocase; within:50; isdataat:2000,relative; content:!"|0a|"; within:2000; reference:url,www.exploit-db.com/exploits/15005/; reference:cve,2010-3407; classtype:attempted-user; sid:2012135; rev:3; metadata:created_at 2011_01_05, updated_at 2011_01_05;)
 
@@ -70,7 +70,7 @@ alert tcp $EXTERNAL_NET any -> $SMTP_SERVERS 25 (msg:"GPL SMTP RCPT TO overflow"
 
 alert tcp $EXTERNAL_NET any -> $SMTP_SERVERS 25 (msg:"GPL SMTP EXPN overflow attempt"; flow:to_server,established; content:"EXPN"; nocase; isdataat:255,relative; content:!"|0a|"; within:255; pcre:"/^EXPN[^\n]{255}/smi"; reference:bugtraq,6991; reference:bugtraq,7230; reference:cve,2002-1337; reference:cve,2003-0161; classtype:attempted-admin; sid:2102259; rev:9; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
 
-alert smtp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET SMTP EXE - ZIP file with .pif filename inside"; flow:established; content:"|0D 0A 0D 0A|UmFyI"; pcre:"/^[A-Za-z0-9\/\+\x0D\x0A]+?(LnBpZ|5waW|ucGlm)/R"; classtype:bad-unknown; sid:2018144; rev:2; metadata:created_at 2014_02_14, updated_at 2014_02_14;)
+alert smtp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET SMTP EXE - ZIP file with .pif filename inside"; flow:established; content:"|0D 0A 0D 0A|UmFyI"; pcre:"/^[A-Za-z0-9\/\+\x0D\x0A]+?(LnBpZ|5waW|ucGlm)/R"; classtype:bad-unknown; sid:2018144; rev:2; metadata:created_at 2014_02_15, updated_at 2014_02_15;)
 
 alert tcp $EXTERNAL_NET 25 -> $HOME_NET any (msg:"ET SMTP Sorbs.net Block Message"; flow:established,from_server; content:"sorbs.net"; classtype:not-suspicious; sid:2012985; rev:2; metadata:created_at 2011_06_10, updated_at 2011_06_10;)
 
@@ -82,5 +82,5 @@ alert smtp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET SMTP Abuseat.org Block Me
 
 alert smtp $EXTERNAL_NET any -> $HOME_NET any (msg:"ET SMTP Spamcop.net Block Message"; flow:established,from_server; content:"spamcop.net"; classtype:not-suspicious; sid:2012983; rev:3; metadata:created_at 2011_06_10, updated_at 2011_06_10;)
 
-alert smtp any any -> any any (msg:"ET SMTP Possible ComputerCop Log Transmitted via SMTP"; flow:to_server,established; content:"Subject|3a 20|CCOP|20|"; nocase; fast_pattern; reference:url,www.eff.org/deeplinks/2014/09/computercop-dangerous-internet-safety-software-hundreds-police-agencies; classtype:trojan-activity; sid:2019340; rev:3; metadata:created_at 2014_10_02, former_category CURRENT_EVENTS, updated_at 2019_10_07;)
+alert smtp any any -> any any (msg:"ET SMTP Possible ComputerCop Log Transmitted via SMTP"; flow:to_server,established; content:"Subject|3a 20|CCOP|20|"; nocase; fast_pattern; reference:url,www.eff.org/deeplinks/2014/09/computercop-dangerous-internet-safety-software-hundreds-police-agencies; classtype:trojan-activity; sid:2019340; rev:3; metadata:created_at 2014_10_02, former_category CURRENT_EVENTS, updated_at 2019_10_08;)
 

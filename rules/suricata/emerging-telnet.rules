@@ -52,9 +52,9 @@ alert tcp $EXTERNAL_NET any -> $HOME_NET [23,2323,3323,4323] (msg:"ET TELNET bus
 
 alert tcp $EXTERNAL_NET any -> $HOME_NET [23,2323,3323,4323] (msg:"ET TELNET busybox MEMES Hackers - Possible Brute Force Attack"; flow:to_server,established; content:"MEMES"; flowbits:isset,ET.telnet.busybox; threshold: type limit, count 1, track by_src, seconds 30; reference:url,lists.emergingthreats.net/pipermail/emerging-sigs/2016-August/027524.html; classtype:attempted-admin; sid:2023901; rev:1; metadata:affected_product Linux, attack_target Networking_Equipment, created_at 2017_02_14, deployment Perimeter, malware_family Mirai, performance_impact Moderate, signature_severity Major, updated_at 2017_02_14;)
 
-alert tcp $TELNET_SERVERS 23 -> $EXTERNAL_NET any (msg:"GPL TELNET Telnet Root not on console"; flow:from_server,established; content:"not on system console"; fast_pattern; nocase; reference:arachnids,365; classtype:bad-unknown; sid:2100717; rev:10; metadata:created_at 2010_09_23, updated_at 2019_10_07;)
+alert tcp $TELNET_SERVERS 23 -> $EXTERNAL_NET any (msg:"GPL TELNET Telnet Root not on console"; flow:from_server,established; content:"not on system console"; fast_pattern; nocase; reference:arachnids,365; classtype:bad-unknown; sid:2100717; rev:10; metadata:created_at 2010_09_23, updated_at 2019_10_08;)
 
-alert tcp $TELNET_SERVERS 23 -> $EXTERNAL_NET any (msg:"GPL TELNET root login"; flow:from_server,established; content:"login|3a 20|root"; fast_pattern; classtype:suspicious-login; sid:2100719; rev:9; metadata:created_at 2010_09_23, updated_at 2019_10_07;)
+alert tcp $TELNET_SERVERS 23 -> $EXTERNAL_NET any (msg:"GPL TELNET root login"; flow:from_server,established; content:"login|3a 20|root"; fast_pattern; classtype:suspicious-login; sid:2100719; rev:9; metadata:created_at 2010_09_23, updated_at 2019_10_08;)
 
-alert tcp $HOME_NET 23 -> $EXTERNAL_NET any (msg:"GPL TELNET Bad Login"; flow:from_server,established; content:"Login incorrect"; nocase; fast_pattern; classtype:bad-unknown; sid:2101251; rev:10; metadata:created_at 2010_09_23, updated_at 2019_10_07;)
+alert tcp $HOME_NET 23 -> $EXTERNAL_NET any (msg:"GPL TELNET Bad Login"; flow:from_server,established; content:"Login incorrect"; nocase; fast_pattern; classtype:bad-unknown; sid:2101251; rev:10; metadata:created_at 2010_09_23, updated_at 2019_10_08;)
 

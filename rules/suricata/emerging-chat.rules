@@ -164,9 +164,9 @@ alert tcp $EXTERNAL_NET 5050 -> $HOME_NET any (msg:"GPL CHAT Yahoo IM conference
 
 #alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET CHAT MSN IM Poll via HTTP"; flow: established,to_server; content:"/gateway/gateway.dll?Action=poll&SessionID="; http_uri; nocase; threshold: type limit, track by_src, count 10, seconds 3600; reference:url,doc.emergingthreats.net/2001682; classtype:policy-violation; sid:2001682; rev:10; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
 
-alert tcp any any -> any 6666:7000 (msg:"ET CHAT IRC USER Likely bot with 0 0 colon checkin"; flow:to_server,established; content:"USER|20|"; nocase; content:" 0 0 |3a|"; within:40; content:"|0a|"; within:40; flowbits:set,is_proto_irc; classtype:misc-activity; sid:2025066; rev:1; metadata:created_at 2013_07_12, former_category CHAT, updated_at 2017_11_28;)
+alert tcp any any -> any 6666:7000 (msg:"ET CHAT IRC USER Likely bot with 0 0 colon checkin"; flow:to_server,established; content:"USER|20|"; nocase; content:" 0 0 |3a|"; within:40; content:"|0a|"; within:40; flowbits:set,is_proto_irc; classtype:misc-activity; sid:2025066; rev:1; metadata:created_at 2013_07_13, former_category CHAT, updated_at 2017_11_28;)
 
-alert tcp any any -> any !6666:7000 (msg:"ET CHAT IRC USER Off-port Likely bot with 0 0 colon checkin"; flow:to_server,established; content:"USER|20|"; nocase; content:" 0 0 |3a|"; within:40; content:"|0a|"; within:40; flowbits:set,is_proto_irc; classtype:misc-activity; sid:2025067; rev:1; metadata:created_at 2013_07_12, former_category CHAT, updated_at 2017_11_28;)
+alert tcp any any -> any !6666:7000 (msg:"ET CHAT IRC USER Off-port Likely bot with 0 0 colon checkin"; flow:to_server,established; content:"USER|20|"; nocase; content:" 0 0 |3a|"; within:40; content:"|0a|"; within:40; flowbits:set,is_proto_irc; classtype:misc-activity; sid:2025067; rev:1; metadata:created_at 2013_07_13, former_category CHAT, updated_at 2017_11_28;)
 
 alert tcp $EXTERNAL_NET 8074 -> $HOME_NET any (msg:"ET CHAT GaduGadu Chat Server Login OK Packet"; flowbits:isset,ET.gadu.loginsent; flow:established,from_server; content:"|03 00 00 00|"; depth:4; byte_jump:4,0,relative,little,post_offset -1; isdataat:!2,relative; flowbits:set,ET.gadu.loggedin; reference:url,piotr.trzcionkowski.pl/default.asp?load=/programy/pppgg_protokol.html; reference:url,doc.emergingthreats.net/2008299; classtype:policy-violation; sid:2008299; rev:4; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
 
@@ -192,8 +192,6 @@ alert tcp $EXTERNAL_NET 5222 -> $HOME_NET any (msg:"GPL CHAT Jabber/Google Talk 
 
 alert tcp $EXTERNAL_NET 8074 -> $HOME_NET any (msg:"ET CHAT GaduGadu Chat Server Welcome Packet"; flow:established,from_server; dsize:12; content:"|01 00 00 00|"; depth:4; flowbits:set,ET.gadu.welcome; reference:url,piotr.trzcionkowski.pl/default.asp?load=/programy/pppgg_protokol.html; reference:url,doc.emergingthreats.net/2008297; classtype:policy-violation; sid:2008297; rev:5; metadata:created_at 2010_07_30, former_category CHAT, updated_at 2017_12_11;)
 
-alert tcp $HOME_NET any -> $EXTERNAL_NET 6666:7000 (msg:"GPL CHAT IRC Channel join"; flow:to_server,established; content:"JOIN |3a 20||23|"; fast_pattern; nocase; flowbits:set,is_proto_irc; classtype:policy-violation; sid:2101729; rev:11; metadata:created_at 2010_09_23, updated_at 2019_10_07;)
-
 alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"GPL CHAT ICQ access"; flow:to_server,established; http.header; content:"User-Agent|3A|ICQ"; classtype:policy-violation; sid:2100541; rev:14; metadata:created_at 2010_09_23, updated_at 2020_04_20;)
 
 alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET CHAT Skype User-Agent detected"; flow:to_server,established; http.user_agent; content:"Skype"; reference:url,doc.emergingthreats.net/2002157; classtype:policy-violation; sid:2002157; rev:12; metadata:created_at 2010_07_30, updated_at 2020_04_22;)
@@ -212,9 +210,11 @@ alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET CHAT Skype VOIP Checking 
 
 alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET CHAT Facebook Chat (send message)"; flow:established,to_server; http.method; content:"POST"; http.uri; content:"/ajax/chat/send.php"; http.header; content:"facebook.com"; reference:url,doc.emergingthreats.net/2010784; classtype:policy-violation; sid:2010784; rev:6; metadata:created_at 2010_07_30, updated_at 2020_09_11;)
 
-alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET CHAT Yahoo IM Client Install"; flow: to_server,established; http.uri; content:"/ycontent/stats.php?version="; nocase; content:"EVENT=InstallBegin"; nocase; reference:url,doc.emergingthreats.net/2002659; classtype:policy-violation; sid:2002659; rev:8; metadata:created_at 2010_07_30, updated_at 2020_09_13;)
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET CHAT Yahoo IM Client Install"; flow: to_server,established; http.uri; content:"/ycontent/stats.php?version="; nocase; content:"EVENT=InstallBegin"; nocase; reference:url,doc.emergingthreats.net/2002659; classtype:policy-violation; sid:2002659; rev:8; metadata:created_at 2010_07_30, updated_at 2020_09_14;)
 
 #alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET CHAT Facebook Chat (settings)"; flow:established,to_server; http.method; content:"POST"; http.uri; content:"/ajax/chat/settings.php"; http.header; content:"facebook.com|0d 0a|"; reference:url,doc.emergingthreats.net/2010786; classtype:policy-violation; sid:2010786; rev:7; metadata:created_at 2010_07_30, updated_at 2020_11_19;)
 
 alert http $HOME_NET any <> $EXTERNAL_NET any (msg:"ET CHAT General MSN Chat Activity"; flow:established; http.header; content:"Content-Type|3A|"; content:"application/x-msn-messenger"; reference:url,www.hypothetic.org/docs/msn/general/http_examples.php; reference:url,doc.emergingthreats.net/2009375; classtype:policy-violation; sid:2009375; rev:9; metadata:created_at 2010_07_30, updated_at 2020_12_03;)
+
+alert tcp $HOME_NET any -> $EXTERNAL_NET 6666:7000 (msg:"GPL CHAT IRC Channel join"; flow:to_server,established; content:"JOIN|20 3a 20 23|"; fast_pattern; nocase; flowbits:set,is_proto_irc; classtype:policy-violation; sid:2101729; rev:12; metadata:created_at 2010_09_23, updated_at 2021_07_07;)
 

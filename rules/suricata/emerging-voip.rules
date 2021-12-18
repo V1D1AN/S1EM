@@ -58,9 +58,9 @@ alert udp $HOME_NET 5060 -> $EXTERNAL_NET any (msg:"ET VOIP Multiple Unauthorize
 
 #alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP Asterisk Register with no URI or Version DOS Attempt"; content:"REGISTER|0d 0a|"; nocase; depth:10; content:!"SIP/"; distance:0; reference:url,labs.musecurity.com/advisories/MU-200703-01.txt; reference:url,tools.ietf.org/html/rfc3261; reference:url,doc.emergingthreats.net/2003474; classtype:attempted-dos; sid:2003474; rev:6; metadata:created_at 2010_07_30, updated_at 2010_07_30;)
 
-alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP Modified Sipvicious Asterisk PBX User-Agent"; content:"|0d 0a|User-Agent|3A| Asterisk PBX"; nocase; threshold: type limit, count 1, seconds 60, track by_src; reference:url,blog.sipvicious.org/2010/11/distributed-sip-scanning-during.html; classtype:attempted-recon; sid:2012296; rev:2; metadata:created_at 2011_02_06, updated_at 2011_02_06;)
+alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP Modified Sipvicious Asterisk PBX User-Agent"; content:"|0d 0a|User-Agent|3A| Asterisk PBX"; nocase; threshold: type limit, count 1, seconds 60, track by_src; reference:url,blog.sipvicious.org/2010/11/distributed-sip-scanning-during.html; classtype:attempted-recon; sid:2012296; rev:2; metadata:created_at 2011_02_07, updated_at 2011_02_07;)
 
-alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP Possible Inbound VOIP Scan/Misuse With User-Agent Zoiper"; content:"|0d 0a|User-Agent|3A| Zoiper"; nocase; threshold: type limit, count 1, seconds 60, track by_src; reference:url,blog.sipvicious.org/2010/12/11-million-euro-loss-in-voip-fraud-and.html; classtype:attempted-recon; sid:2012297; rev:2; metadata:created_at 2011_02_06, updated_at 2011_02_06;)
+alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP Possible Inbound VOIP Scan/Misuse With User-Agent Zoiper"; content:"|0d 0a|User-Agent|3A| Zoiper"; nocase; threshold: type limit, count 1, seconds 60, track by_src; reference:url,blog.sipvicious.org/2010/12/11-million-euro-loss-in-voip-fraud-and.html; classtype:attempted-recon; sid:2012297; rev:2; metadata:created_at 2011_02_07, updated_at 2011_02_07;)
 
 alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"ET VOIP Possible Modified Sipvicious OPTIONS Scan"; content:"OPTIONS "; depth:8; content:"ccxllrlflgig|22|<sip|3A|100"; nocase; distance:0; reference:url,code.google.com/p/sipvicious/; reference:url,blog.sipvicious.org/; classtype:attempted-recon; sid:2011422; rev:2; metadata:created_at 2010_09_28, updated_at 2010_09_28;)
 
@@ -72,11 +72,11 @@ alert udp $EXTERNAL_NET any -> $HOME_NET 5060 (msg:"GPL VOIP EXPLOIT SIP UDP Sof
 
 alert ip any 5060 -> any any (msg:"GPL VOIP SIP 401 Unauthorized Flood"; content:"SIP/2.0 401 Unauthorized"; depth:24; threshold: type both, track by_dst, count 100, seconds 60; classtype:attempted-dos; sid:2100162; rev:5; metadata:created_at 2010_09_23, updated_at 2010_09_23;)
 
-alert tcp $EXTERNAL_NET any -> $HOME_NET 1720 (msg:"ET VOIP Possible Misuse Call from MERA RTU"; flow:to_server,established; content:"|22 c0 09 00 7a b7 07|MERA RTU|08|"; classtype:misc-attack; sid:2022022; rev:1; metadata:created_at 2015_11_02, updated_at 2015_11_02;)
+alert tcp $EXTERNAL_NET any -> $HOME_NET 1720 (msg:"ET VOIP Possible Misuse Call from MERA RTU"; flow:to_server,established; content:"|22 c0 09 00 7a b7 07|MERA RTU|08|"; classtype:misc-attack; sid:2022022; rev:1; metadata:created_at 2015_11_03, updated_at 2015_11_03;)
 
-#alert tcp $EXTERNAL_NET any -> $HOME_NET 1720 (msg:"ET VOIP Q.931 Call Setup - Inbound"; flow:to_server,established; content:"|08|"; offset:4; depth:1; content:"|05 04|"; distance:3; within:2; classtype:misc-activity; sid:2022023; rev:1; metadata:created_at 2015_11_02, updated_at 2015_11_02;)
+#alert tcp $EXTERNAL_NET any -> $HOME_NET 1720 (msg:"ET VOIP Q.931 Call Setup - Inbound"; flow:to_server,established; content:"|08|"; offset:4; depth:1; content:"|05 04|"; distance:3; within:2; classtype:misc-activity; sid:2022023; rev:1; metadata:created_at 2015_11_03, updated_at 2015_11_03;)
 
-alert tcp $EXTERNAL_NET any -> $HOME_NET 1720 (msg:"ET VOIP H.323 in Q.931 Call Setup - Inbound"; flow:to_server,established; content:"|08|"; offset:4; depth:1; byte_jump:1,0,relative; content:"|05 04|"; within:2; byte_jump:1,0,relative; content:"|70|"; byte_jump:1,0,relative; content:"|7E|"; within:1; byte_test:1,!&,0x0F,3,relative; isdataat:31; classtype:misc-activity; sid:2022024; rev:1; metadata:created_at 2015_11_02, updated_at 2015_11_02;)
+alert tcp $EXTERNAL_NET any -> $HOME_NET 1720 (msg:"ET VOIP H.323 in Q.931 Call Setup - Inbound"; flow:to_server,established; content:"|08|"; offset:4; depth:1; byte_jump:1,0,relative; content:"|05 04|"; within:2; byte_jump:1,0,relative; content:"|70|"; byte_jump:1,0,relative; content:"|7E|"; within:1; byte_test:1,!&,0x0F,3,relative; isdataat:31; classtype:misc-activity; sid:2022024; rev:1; metadata:created_at 2015_11_03, updated_at 2015_11_03;)
 
 alert tcp $EXTERNAL_NET any -> $HOME_NET 1720 (msg:"ET VOIP Possible Misuse Call from Cisco ooh323"; flow:to_server,established; content:"|28 06|cisco|00|"; offset:14; depth:8; content:"|b8 00 00 27 05|ooh323|06|"; within:60; reference:url,videonationsltd.co.uk/2015/04/h-323-cisco-spam-calls/; classtype:misc-attack; sid:2021066; rev:2; metadata:created_at 2015_05_07, updated_at 2020_08_19;)
 
