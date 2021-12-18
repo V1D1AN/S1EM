@@ -48,7 +48,7 @@ echo
 echo
 read -r -p "Enter the hostname of the solution S1EM (ex: s1em.cyber.local):" s1em_hostname
 s1em_hostname=$s1em_hostname
-sed -i "s/s1em_hostname/$s1em_hostname/g" docker-compose.yml heimdall/www/heimdall.sql misp/config.php
+sed -i "s/s1em_hostname/$s1em_hostname/g" docker-compose.yml heimdall/www/heimdall.sql misp/config.php .env
 echo
 echo
 echo "##########################################"
