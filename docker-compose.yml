@@ -899,7 +899,7 @@ services:
       - connector-export-file-csv
       - connector-export-file-stix
       - connector-history
-      - connector-import-file-document
+      - connector-import-document
       - connector-import-file-stix
       - connector-misp
       - connector-mitre
