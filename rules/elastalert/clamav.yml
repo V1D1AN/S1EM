@@ -23,7 +23,7 @@ hive_alert_config:
  title: '{match[signal][rule][name]}'
  type: '{match[event.module]}'
  source: '{match[host.name]}'
- description: "`File :` \n\n {match[results][payload_meta][extra_data][filename]} \n\n `Detection Yara:` \n\n {match[signal][rule][name]} \n\n `Kibana link:` \n\n https://s1em.cyber.local/kibana/app/kibana#/discover?_g=(filters:!())&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'.siem-signals-default',key:_id,negate:!f,params:(query:'{match[_id]}'),type:phrase,value:'{match[_id]}'),query:(match:(_id:(query:'{match[_id]}',type:phrase))))),index:'.siem-signals-default',interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))"
+ description: "`File :` \n\n {match[results][payload_meta][extra_data][filename]} \n\n `Detection Yara:` \n\n {match[signal][rule][name]} \n\n `Kibana link:` \n\n https://s1em_hostname/kibana/app/kibana#/discover?_g=(filters:!())&_a=(columns:!(_source),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'.siem-signals-default',key:_id,negate:!f,params:(query:'{match[_id]}'),type:phrase,value:'{match[_id]}'),query:(match:(_id:(query:'{match[_id]}',type:phrase))))),index:'.siem-signals-default',interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))"
  severity: 3
  tags: ['Signal', 'Detection', 'Clamav']
  tlp: 2
