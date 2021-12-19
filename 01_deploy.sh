@@ -78,7 +78,7 @@ sed -i "s/network_monitoring/$monitoring_interface/g" docker-compose.yml suricat
 # set service path
 serviceConfigurationFile="/usr/lib/systemd/system/S1EM-promiscuous.service"
 cp ./S1EM-promiscuous.service ${serviceConfigurationFile}
-chmod 600 /usr/lib/systemd/system/S1EM-promiscuous.service
+chmod 600 ${serviceConfigurationFile}
 # set monitoring_interface name in service_configuration_file
 sed -i "s;<monitoring_interface>;${monitoring_interface};" ${serviceConfigurationFile}
 # reload systemd to implement new service
