@@ -1,0 +1,13 @@
+[Unit]
+Description=Bring up network interfaces in promiscuous mode upon boot
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/ip link set dev <monitoring_interface> promisc on
+ExecStop=/usr/sbin/ip link set dev <monitoring_interface> promisc off
+TimeoutStartSec=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
