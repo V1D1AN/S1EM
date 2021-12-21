@@ -513,7 +513,6 @@ services:
     volumes:
       - ./thehive/application.conf:/etc/thehive/application.conf:ro
       - thehivedata:/opt/data
-      - thehivedata:/opt/index
     logging:
       driver: "json-file"
       options:
