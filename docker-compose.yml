@@ -672,6 +672,7 @@ services:
       - karton-yaramatcher
       - karton-asciimagic
       - karton-mwdb-reporter
+      - karton-archive-extractor
     environment:
       UWSGI_PY_AUTORELOAD: 1
       UWSGI_ENABLE_THREADS: 1
