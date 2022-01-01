@@ -786,6 +786,23 @@ services:
     restart: always
     networks:
       - s1em
+      
+  karton-archive-extractor:
+    image: certpl/karton-archive-extractor:6c9fd2581a3261c18bc1b0fc3c692231a48fabf9
+    container_name: karton-archive-extractor
+    depends_on:
+      - redis
+      - minio
+    volumes:
+      - "./mwdb/karton.ini:/etc/karton/karton.ini"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
 
   karton-mwdb-reporter:
     image: certpl/karton-mwdb-reporter:a4a5a2ece14073e3a25a38bd5f1b0fa14ba725d3
