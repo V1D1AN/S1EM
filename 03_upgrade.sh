@@ -2,6 +2,10 @@ echo "##########################################"
 echo "######         UPGRADING S1EM      #######"
 echo "##########################################"
 echo  
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
 git stash save "pre-upgrade S1EM configuration changes"
 git pull --rebase
 docker-compose pull
