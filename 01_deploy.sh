@@ -1,4 +1,8 @@
 #!/bin/bash
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
 cp env.sample .env
 echo "##########################################"
 echo "###### CONFIGURING ACCOUNT ELASTIC #######"
