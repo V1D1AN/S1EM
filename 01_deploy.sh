@@ -125,7 +125,7 @@ echo
 echo
 docker exec -ti traefik apk add apache2-utils
 traefik_account=$(docker exec -ti traefik sh -c "htpasswd -nb $admin_account $admin_password")
-sed -i "s/traefik_account/$traefik_account/g" .env
+echo "TRAEFIK_ADMIN=$traefik_account" | tee -a .env
 docker-compose restart traefik
 echo
 echo
