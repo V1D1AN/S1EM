@@ -4,10 +4,10 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/sbin/ip link set dev <monitoring_interface> promisc on
-ExecStart=/usr/sbin/ip link set dev <monitoring_interface> up
-ExecStop=/usr/sbin/ip link set dev <monitoring_interface> promisc off
-ExecStop=/usr/sbin/ip link set dev <monitoring_interface> down
+ExecStart=ip link set dev <monitoring_interface> promisc on
+ExecStart=ip link set dev <monitoring_interface> up
+ExecStop=ip link set dev <monitoring_interface> promisc off
+ExecStop=ip link set dev <monitoring_interface> down
 TimeoutStartSec=0
 RemainAfterExit=yes
 
