@@ -7,6 +7,7 @@ services:
     ports:
       - "443:443"
     volumes:
+      - ./traefik/userfile:/etc/traefik/userfile:ro
       - ./traefik/traefik.toml:/etc/traefik/traefik.toml:ro
       - ./traefik/dyn.toml:/etc/traefik/dyn.toml:ro
       - /var/run/docker.sock:/var/run/docker.sock
@@ -23,7 +24,7 @@ services:
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.middlewares=auth"
       - "traefik.http.routers.dashboard.entryPoints=secure"
-      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_ADMIN}"
+      - "traefik.http.middlewares.auth.basicauth.usersfile=/etc/traefik/userfile"
       - "traefik.http.routers.dashboard.tls=true"
     networks:
       - reverse_proxy
