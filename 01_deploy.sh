@@ -115,6 +115,7 @@ echo "########## STARTING TRAEFIK ##############"
 echo "##########################################"
 echo
 echo
+touch ./traefik/userfile
 docker-compose up -d traefik
 echo
 echo
@@ -125,7 +126,7 @@ echo
 echo
 docker exec -ti traefik apk add apache2-utils
 traefik_account=$(docker exec -ti traefik sh -c "htpasswd -nb $admin_account $admin_password")
-sed -i "s/traefik_account/$traefik_account/g" .env
+echo ${traefik_account} | tee ./traefik/userfile
 docker-compose restart traefik
 echo
 echo
