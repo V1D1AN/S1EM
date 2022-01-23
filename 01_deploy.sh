@@ -131,13 +131,19 @@ docker-compose restart traefik
 echo
 echo
 echo "##########################################"
-echo "########### STARTING HEIMDALL ############"
+echo "########### STARTING ORGANIZR ############"
 echo "##########################################"
 echo
-docker-compose up -d heimdall
-docker exec -ti heimdall apk update
-docker exec -ti heimdall apk add sqlite
-docker exec -ti heimdall sh -c "cat /config/www/heimdall.sql | sqlite3 /config/www/app.sqlite"
+mkdir -p ./organizr
+docker-compose up -d organizr
+# to be tested
+while [ ! -d "./organizr/www/" ]; do sleep 1; done
+cd ./organizr; tar xvzf ../organizr.backup.tar.gz; cd ../
+organizr_admin_account=$admin_account
+organizr_admin_password=`echo ${admin_password} | openssl passwd -1 -stdin`
+sqlite3 organizr/www/db/organizr.db "update users set password='${organizr_admin_password}' where users.username='test';"
+sqlite3 organizr/www/db/organizr.db "update users set email='${organizr_admin_account}' where users.username='test';"
+sqlite3 organizr/www/db/organizr.db "update users set username='${organizr_admin_account}' where users.username='test';"
 echo
 echo
 echo "##########################################"

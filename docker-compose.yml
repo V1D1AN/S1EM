@@ -1254,27 +1254,27 @@ services:
     expose:
       - "8000"
 
-  heimdall:
-    image: ghcr.io/linuxserver/heimdall
-    container_name: heimdall
+  organizr:
+    container_name: organizr
+    hostname: organizr
+    image: organizr/organizr:latest
     restart: always
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=UTC
-      - HEIMDALL_PERSIST=NO
-    volumes:
-      - ./heimdall/www:/config/www
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.heimdall.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.heimdall.entryPoints=secure"
-      - "traefik.http.routers.heimdall.tls=true"
+        - "traefik.enable=true"
+        - "traefik.http.routers.organizr.rule=PathPrefix(`/`)"
+        - "traefik.http.routers.organizr.entryPoints=secure"
+        - "traefik.http.routers.organizr.tls=true"
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
+    volumes:
+        - ./organizr:/config
     networks:
       - s1em
     expose:
