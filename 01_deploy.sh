@@ -142,9 +142,11 @@ while [ ! -d "./organizr/www/" ]; do sleep 1; done
 cd ./organizr; tar xvzf ../organizr.backup.tar.gz; cd ../
 organizr_admin_account=$admin_account
 organizr_admin_password=`echo ${admin_password} | openssl passwd -1 -stdin`
-sqlite3 organizr/www/db/organizr.db "update users set password='${organizr_admin_password}' where users.username='test';"
-sqlite3 organizr/www/db/organizr.db "update users set email='${organizr_admin_account}' where users.username='test';"
-sqlite3 organizr/www/db/organizr.db "update users set username='${organizr_admin_account}' where users.username='test';"
+docker exec -ti organizr apk update
+docker exec -ti organizr apk add sqlite
+docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set password=\"${organizr_admin_password}\" where users.username=\"test\";'"
+docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set email=\"${organizr_admin_account}\" where users.username=\"test\";'"
+docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set username=\"${organizr_admin_account}\" where users.username=\"test\";'"
 echo
 echo
 echo "##########################################"
