@@ -56,27 +56,16 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
 # Roadmap
 
-- [x] Integrate heimdall
+- [ ] Change docker Postgres and Mysql for multi databases
+- [ ] Add Spiderfoot
+- [ ] Add SOAR n8n
+- [ ] Add OpenCVE
+- [ ] Suppress heimdall for Organizr 
 - [ ] The complete documentation
-- [x] Add Cyberchef
 - [ ] Upgrade to elastalert2
-- [x] Upgrade to suricata 6
-- [x] Upgrade to zeek 4
-- [x] Upload SigmaHQ rules automatically into kibana
-- [x] Update Suricata rules automatically
-- [x] Update Yara rules automatically
-- [x] Elasticsearch multi-nodes with ssl
-- [x] Integrate Arkime
 - [ ] SSO
-- [x] Integrate Pfelk
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
-- [x] Update to ELK 7.15.1
-- [x] Update to Arkime 3.0.0
-- [x] Integrate Mwdb
-- [x] Suppress FleetDM
-- [x] Add Clamav
 - [ ] Add Capa
-- [x] Add upload files for read Pcap
 
 # Related project
 
