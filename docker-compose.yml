@@ -21,7 +21,6 @@ services:
     labels:
       - "traefik.enable=true"
     networks:
-      - reverse_proxy
       - s1em
       
   es01:
@@ -1365,8 +1364,6 @@ services:
      - s1em
 
 networks:
-   reverse_proxy:
-    driver: bridge
    s1em:
     driver: bridge
     
