@@ -15,8 +15,8 @@ cortex_api=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 echo "The Kibana api key is : " $kibana_api_key
 echo "The master password Elastic set in .env:" $password
 echo
-sed -i "s/kibana_api_key/$kibana_api_key/g" kibana/kibana.yml
-sed -i "s/changeme/$password/g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/stoq/300_output_stoq.conf logstash/pipeline/pfelk/300_output_pfelk.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
+sed -i "s|kibana_api_key|$kibana_api_key|g" kibana/kibana.yml
+sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/stoq/300_output_stoq.conf logstash/pipeline/pfelk/300_output_pfelk.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
 echo
 echo
 echo "##########################################"
@@ -30,8 +30,8 @@ read -r -p "Enter the admin account (Must be like user@domain.tld):" admin_accou
 admin_account=$admin_account
 read -r -p "Enter the organization:" organization
 organization=$organization
-sed -i "s/opencti_account/$admin_account/g" .env
-sed -i "s/arkime_account/$admin_account/g" .env
+sed -i "s|opencti_account|$admin_account|g" .env
+sed -i "s|arkime_account|$admin_account|g" .env
 echo
 while true; do
     read -s -p "Password (Must be a password with at least 6 characters): " admin_password
@@ -41,8 +41,8 @@ while true; do
     [ "$admin_password" = "$admin_password2" ] && break
     echo "Please try again"
 done
-sed -i "s/opencti_password/$admin_password/g" .env
-sed -i "s/arkime_password/$admin_password/g" .env
+sed -i "s|opencti_password|$admin_password|g" .env
+sed -i "s|arkime_password|$admin_password|g" .env
 echo
 echo
 echo "##########################################"
@@ -53,7 +53,7 @@ echo
 read -r -p "Enter the hostname of the solution S1EM (ex: s1em.cyber.local):" s1em_hostname
 s1em_hostname=$s1em_hostname
 sed -i "s;^\[default\];\[default\]\niframe=https://$s1em_hostname;" arkime/config.ini
-sed -i "s/s1em_hostname/$s1em_hostname/g" docker-compose.yml heimdall/www/heimdall.sql misp/config.php rules/elastalert/*.yml .env
+sed -i "s|s1em_hostname|$s1em_hostname|g" docker-compose.yml heimdall/www/heimdall.sql misp/config.php rules/elastalert/*.yml .env
 echo
 echo
 echo "##########################################"
@@ -64,8 +64,10 @@ echo
 cd mwdb
 bash ./gen_vars.sh
 mwdb_password=$(cat mwdb-vars.env | grep MWDB_ADMIN_PASSWORD | cut -b 21-)
-sed -i "s/mwdb_password/$mwdb_password/g" karton.ini
+sed -i "s|mwdb_password|$mwdb_password|g" karton.ini
 cd -
+mwdb_postgres=$(sed -n "3p" mwdb/postgres-vars.env | cut -c19-)
+sed -i "s|mwdb_postgres|$mwdb_postgres|g" postgres/databases.sh
 echo
 echo
 echo "##########################################"
@@ -78,7 +80,7 @@ echo
 echo
 read -r -p "Enter the monitoring interface (ex:ens32):" monitoring_interface
 monitoring_interface=$monitoring_interface
-sed -i "s/network_monitoring/$monitoring_interface/g" docker-compose.yml suricata/suricata.yaml
+sed -i "s|network_monitoring|$monitoring_interface|g" docker-compose.yml suricata/suricata.yaml
 ########### Set Service to enable Promiscuous mode on monitoring interface on boot
 # set service path
 serviceConfigurationFile="/usr/lib/systemd/system/S1EM-promiscuous.service"

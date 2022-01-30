@@ -697,9 +697,11 @@ services:
     image: postgres
     container_name: postgres
     restart: always
-    env_file:
-      - mwdb/postgres-vars.env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
       - mwdb-postgres:/var/lib/postgresql/data
     logging:
       driver: "json-file"
