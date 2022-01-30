@@ -52,6 +52,7 @@ echo
 echo
 read -r -p "Enter the hostname of the solution S1EM (ex: s1em.cyber.local):" s1em_hostname
 s1em_hostname=$s1em_hostname
+sed -i "s;^\[default\];\[default\]\niframe=https://$s1em_hostname;" arkime/config.ini
 sed -i "s/s1em_hostname/$s1em_hostname/g" docker-compose.yml heimdall/www/heimdall.sql misp/config.php rules/elastalert/*.yml .env
 echo
 echo
@@ -131,13 +132,21 @@ docker-compose restart traefik
 echo
 echo
 echo "##########################################"
-echo "########### STARTING HEIMDALL ############"
+echo "########### STARTING ORGANIZR ############"
 echo "##########################################"
 echo
-docker-compose up -d heimdall
-docker exec -ti heimdall apk update
-docker exec -ti heimdall apk add sqlite
-docker exec -ti heimdall sh -c "cat /config/www/heimdall.sql | sqlite3 /config/www/app.sqlite"
+mkdir -p ./organizr
+docker-compose up -d organizr
+# to be tested
+while [ ! -d "./organizr/www/" ]; do sleep 1; done
+cd ./organizr; tar xvzf ../organizr.backup.tar.gz; cd ../
+organizr_admin_account=$admin_account
+organizr_admin_password=`echo ${admin_password} | openssl passwd -1 -stdin`
+docker exec -ti organizr apk update
+docker exec -ti organizr apk add sqlite
+docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set password=\"${organizr_admin_password}\" where users.username=\"test\";'"
+docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set email=\"${organizr_admin_account}\" where users.username=\"test\";'"
+docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set username=\"${organizr_admin_account}\" where users.username=\"test\";'"
 echo
 echo
 echo "##########################################"
