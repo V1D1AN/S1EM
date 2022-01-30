@@ -566,11 +566,9 @@ services:
     cap_add:
       - SYS_NICE
     environment:
-      - "MYSQL_USER=misp"
-      - "MYSQL_PASSWORD=password"
       - "MYSQL_ROOT_PASSWORD=password"
-      - "MYSQL_DATABASE=misp"
     volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
       - mysql:/var/lib/mysql
     logging:
       driver: "json-file"
