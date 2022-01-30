@@ -22,7 +22,7 @@
   filePath = "/tmp/access.log"
 
 [api]
-  dashboard = true
+  dashboard = false
   debug = false
 
 [entryPoints]

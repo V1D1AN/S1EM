@@ -20,12 +20,6 @@ services:
         max-file: "3"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=PathPrefix(`/traefik/api`) || PathPrefix(`/traefik/dashboard`)"
-      - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.dashboard.middlewares=auth"
-      - "traefik.http.routers.dashboard.entryPoints=secure"
-      - "traefik.http.middlewares.auth.basicauth.usersfile=/etc/traefik/userfile"
-      - "traefik.http.routers.dashboard.tls=true"
     networks:
       - reverse_proxy
       - s1em
@@ -605,7 +599,7 @@ services:
       - "traefik.http.middlewares.misp-stripprefix.stripprefix.prefixes=/misp"
       - "traefik.http.routers.misp.middlewares=misp-stripprefix"
     environment:
-      - "HOSTNAME=https://s1em_hostname/misp"
+      - "HOSTNAME=https://${HOSTNAME}/misp"
       - "REDIS_FQDN=redis"
       - "INIT=true"             # Initialze MISP, things includes, attempting to import SQL and the Files DIR
       - "CRON_USER_ID=1"        # The MISP user ID to run cron jobs as
@@ -615,7 +609,7 @@ services:
       - "MYSQL_USER=misp"
       - "MYSQL_PASSWORD=password"
       - "MYSQL_DATABASE=misp"
-      - "SECURESSL=true" # Enable higher security SSL in nginx
+      - "SECURESSL=false" # Enable higher security SSL in nginx
       - "MISP_MODULES_FQDN=http://misp-modules" # Set the MISP Modules FQDN, used for Enrichment_services_url/Import_services_url/Export_services_url
       - "WORKERS=4"
     volumes:
@@ -1072,7 +1066,7 @@ services:
       - CONNECTOR_CONFIDENCE_LEVEL=3
       - CONNECTOR_UPDATE_EXISTING_DATA=false
       - CONNECTOR_LOG_LEVEL=info
-      - MISP_URL=http://misp/misp # Required
+      - MISP_URL=https://${HOSTNAME}/misp # Required
       - MISP_KEY=${MISP_KEY} # Required
       - MISP_SSL_VERIFY=False # Required
       - MISP_INTERVAL=1440 # Required, in minutes

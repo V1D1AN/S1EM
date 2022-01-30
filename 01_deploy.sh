@@ -116,30 +116,18 @@ echo "########## STARTING TRAEFIK ##############"
 echo "##########################################"
 echo
 echo
-touch ./traefik/userfile
 docker-compose up -d traefik
-echo
-echo
-echo "##########################################"
-echo "######### CONFIGURING TRAEFIK ############"
-echo "##########################################"
-echo
-echo
-docker exec -ti traefik apk add apache2-utils
-traefik_account=$(docker exec -ti traefik sh -c "htpasswd -nb $admin_account $admin_password")
-echo ${traefik_account} | tee ./traefik/userfile
-docker-compose restart traefik
 echo
 echo
 echo "##########################################"
 echo "########### STARTING ORGANIZR ############"
 echo "##########################################"
 echo
-mkdir -p ./organizr
+echo
 docker-compose up -d organizr
 # to be tested
 while [ ! -d "./organizr/www/" ]; do sleep 1; done
-cd ./organizr; tar xvzf ../organizr.backup.tar.gz; cd ../
+cd organizr; tar xvzf organizr.backup.tar.gz; cd ..
 organizr_admin_account=$admin_account
 organizr_admin_password=`echo ${admin_password} | openssl passwd -1 -stdin`
 docker exec -ti organizr apk update
@@ -441,5 +429,4 @@ echo
 echo "Access url: https://$s1em_hostname"
 echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime / TheHive / Cortex"
 echo "The user admin for MWDB have password $mwdb_password "
-echo "The user for MISP"
 echo "The master password of elastic is in \".env\" "
