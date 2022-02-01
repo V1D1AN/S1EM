@@ -137,6 +137,8 @@ docker exec -ti organizr apk add sqlite
 docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set password=\"${organizr_admin_password}\" where users.username=\"test\";'"
 docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set email=\"${organizr_admin_account}\" where users.username=\"test\";'"
 docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set username=\"${organizr_admin_account}\" where users.username=\"test\";'"
+docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update tabs set url=\"http://${s1em_hostname}:8080\" where tabs.id=19;'"
+docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update tabs set url_local=\"http://${s1em_hostname}:8080\" where tabs.id=19;'"
 echo
 echo
 echo "##########################################"
