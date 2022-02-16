@@ -24,14 +24,16 @@ services:
       - s1em
       
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     container_name: es01
     restart: always
     environment:
       - node.name=es01
       - cluster.name=s1em
-      - discovery.seed_hosts=es01,es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
+      - node.master=true
+      - node.ingest=false
+      - node.data=false
+      - cluster.initial_master_nodes=es01
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - network.host=0.0.0.0
@@ -66,14 +68,16 @@ services:
         hard: -1
 
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     container_name: es02
     restart: always
     environment:
       - node.name=es02
       - cluster.name=s1em
-      - discovery.seed_hosts=es01,es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
+      - node.master=false
+      - node.data=true
+      - cluster.initial_master_nodes=es01
+      - discovery.seed_hosts=es01
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - network.host=0.0.0.0
@@ -103,14 +107,16 @@ services:
         hard: -1
 
   es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     container_name: es03
     restart: always
     environment:
       - node.name=es03
       - cluster.name=s1em
-      - discovery.seed_hosts=es01,es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
+      - node.master=false
+      - node.data=true
+      - cluster.initial_master_nodes=es01
+      - discovery.seed_hosts=es01
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - network.host=0.0.0.0
@@ -140,7 +146,7 @@ services:
         hard: -1
 
   logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.16.1'
+    image: 'docker.elastic.co/logstash/logstash:7.17.0'
     container_name: logstash
     hostname: logstash
     restart: always
@@ -169,7 +175,7 @@ services:
       - "5190:5190/udp"
       
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.16.1'
+    image: 'docker.elastic.co/kibana/kibana:7.17.0'
     container_name: kibana
     hostname: kibana
     restart: always
@@ -196,7 +202,7 @@ services:
       - s1em
 
   auditbeat:
-    image: 'docker.elastic.co/beats/auditbeat:7.16.1'
+    image: 'docker.elastic.co/beats/auditbeat:7.17.0'
     container_name: auditbeat
     hostname: auditbeat
     restart: always
@@ -221,7 +227,7 @@ services:
       - s1em
 
   heartbeat:
-    image: 'docker.elastic.co/beats/heartbeat:7.16.1'
+    image: 'docker.elastic.co/beats/heartbeat:7.17.0'
     container_name: heartbeat
     restart: always
     hostname: ${HOSTNAME}
@@ -239,7 +245,7 @@ services:
       - s1em
 
   metricbeat:
-    image: 'docker.elastic.co/beats/metricbeat:7.16.1'
+    image: 'docker.elastic.co/beats/metricbeat:7.17.0'
     container_name: metricbeat
     restart: always
     depends_on:
@@ -270,7 +276,7 @@ services:
         max-file: "3"        
 
   filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.16.1'
+    image: 'docker.elastic.co/beats/filebeat:7.17.0'
     container_name: filebeat
     hostname: filebeat
     user: root
