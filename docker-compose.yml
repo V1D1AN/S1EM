@@ -145,22 +145,28 @@ services:
         soft: -1
         hard: -1
 
-  logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.17.0'
-    container_name: logstash
-    hostname: logstash
-    restart: always
+  filebeat:
+    image: 'docker.elastic.co/beats/filebeat:7.17.0'
+    container_name: filebeat
+    hostname: filebeat
     user: root
+    restart: always
+    depends_on:
+      - es01
     volumes:
+      - /var/log:/var/log
+      - syslog-ng-data:/var/log/syslog-ng
+      - suricatadata:/var/log/suricata
+      - traefikdata:/var/log/traefik
+      - zeekdata:/var/log/bro/current
       - certs:/usr/share/certificates:ro
-      - stoq:/var/log/stoq
-      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
-      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
-      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
-      - ./logstash/templates:/usr/share/logstash/templates:ro
-      - ./logstash/patterns:/usr/share/logstash/patterns:ro
-      - ./logstash/databases:/usr/share/logstash/databases:ro
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./filebeat/ilm.json:/usr/share/filebeat/ilm.json:ro
+      - ./filebeat/modules.d/system.yml:/usr/share/filebeat/modules.d/system.yml:ro
+      - ./filebeat/modules.d/suricata.yml:/usr/share/filebeat/modules.d/suricata.yml:ro
+      - ./filebeat/modules.d/threatintel.yml:/usr/share/filebeat/modules.d/threatintel.yml:ro
+      - ./filebeat/modules.d/traefik.yml:/usr/share/filebeat/modules.d/traefik.yml:ro
+      - ./filebeat/modules.d/zeek.yml:/usr/share/filebeat/modules.d/zeek.yml:ro
     logging:
       driver: "json-file"
       options:
@@ -168,11 +174,6 @@ services:
         max-file: "3"
     networks:
       - s1em
-    ports:
-      - "5044:5044"
-      - "5140:5140/udp"
-      - "5040:5040"
-      - "5190:5190/udp"
       
   kibana:
     image: 'docker.elastic.co/kibana/kibana:7.17.0'
@@ -275,28 +276,22 @@ services:
         max-size: "10m"
         max-file: "3"        
 
-  filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.17.0'
-    container_name: filebeat
-    hostname: filebeat
-    user: root
+  logstash:
+    image: 'docker.elastic.co/logstash/logstash:7.17.0'
+    container_name: logstash
+    hostname: logstash
     restart: always
-    depends_on:
-      - es01
+    user: root
     volumes:
-      - /var/log:/var/log
-      - syslog-ng-data:/var/log/syslog-ng
-      - suricatadata:/var/log/suricata
-      - traefikdata:/var/log/traefik
-      - zeekdata:/var/log/bro/current
       - certs:/usr/share/certificates:ro
-      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - ./filebeat/ilm.json:/usr/share/filebeat/ilm.json:ro
-      - ./filebeat/modules.d/system.yml:/usr/share/filebeat/modules.d/system.yml:ro
-      - ./filebeat/modules.d/suricata.yml:/usr/share/filebeat/modules.d/suricata.yml:ro
-      - ./filebeat/modules.d/threatintel.yml:/usr/share/filebeat/modules.d/threatintel.yml:ro
-      - ./filebeat/modules.d/traefik.yml:/usr/share/filebeat/modules.d/traefik.yml:ro
-      - ./filebeat/modules.d/zeek.yml:/usr/share/filebeat/modules.d/zeek.yml:ro
+      - stoq:/var/log/stoq
+      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./logstash/templates:/usr/share/logstash/templates:ro
+      - ./logstash/patterns:/usr/share/logstash/patterns:ro
+      - ./logstash/databases:/usr/share/logstash/databases:ro
     logging:
       driver: "json-file"
       options:
@@ -304,6 +299,11 @@ services:
         max-file: "3"
     networks:
       - s1em
+    ports:
+      - "5044:5044"
+      - "5140:5140/udp"
+      - "5040:5040"
+      - "5190:5190/udp"
       
   syslog-ng:
     image: 'balabit/syslog-ng:latest'
