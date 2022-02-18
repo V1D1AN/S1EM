@@ -56,6 +56,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
 # Roadmap
 
+- [ ] Upgrade to ELK 8.0
 - [ ] Change docker Postgres and Mysql for multi databases
 - [ ] Add Spiderfoot
 - [ ] Add SOAR n8n
