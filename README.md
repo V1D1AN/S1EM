@@ -59,7 +59,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [ ] Upgrade to ELK 8.0
 - [ ] Change docker Postgres and Mysql for multi databases
 - [ ] Add Spiderfoot
-- [ ] Add SOAR n8n
+- [ ] Add SOAR n8n or shuffle
 - [ ] Add OpenCVE
 - [ ] Suppress heimdall for Organizr 
 - [ ] The complete documentation
