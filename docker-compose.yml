@@ -1443,6 +1443,80 @@ services:
     networks:
       - s1em
 
+  shuffle-frontend:
+    image: ghcr.io/frikky/shuffle-frontend:latest
+    container_name: shuffle-frontend
+    hostname: shuffle-frontend
+    ports:
+      - "3443:443"
+    networks:
+      - s1em
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - BACKEND_HOSTNAME=shuffle-backend
+    restart: unless-stopped
+    depends_on:
+      - shuffle-backend
+
+  shuffle-backend:
+    image: ghcr.io/frikky/shuffle-backend:latest
+    container_name: shuffle-backend
+    hostname: ${BACKEND_HOSTNAME}
+    networks:
+      - s1em
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - shuffle-apps:/shuffle-apps
+      - shuffle-files:/shuffle-files
+      - certs:$CERTS_DIR
+    env_file: .env
+    expose:
+      - "5001"
+    environment:
+      - SHUFFLE_APP_HOTLOAD_FOLDER=/shuffle-apps
+      - SHUFFLE_FILE_LOCATION=/shuffle-files
+    restart: always
+
+  shuffle-orborus:
+    image: ghcr.io/frikky/shuffle-orborus:latest
+    container_name: shuffle-orborus
+    hostname: shuffle-orborus
+    networks:
+      - s1em
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - SHUFFLE_WORKER_VERSION=latest
+      - ORG_ID=${ORG_ID}
+      - ENVIRONMENT_NAME=${ENVIRONMENT_NAME}
+      - BASE_URL=http://shuffle-backend:5001
+      - DOCKER_API_VERSION=1.40
+      - SHUFFLE_BASE_IMAGE_NAME=${SHUFFLE_BASE_IMAGE_NAME}
+      - SHUFFLE_BASE_IMAGE_REGISTRY=${SHUFFLE_BASE_IMAGE_REGISTRY}
+      - SHUFFLE_BASE_IMAGE_TAG_SUFFIX=${SHUFFLE_BASE_IMAGE_TAG_SUFFIX}
+      - HTTP_PROXY=${HTTP_PROXY}
+      - HTTPS_PROXY=${HTTPS_PROXY}
+      - SHUFFLE_PASS_WORKER_PROXY=${SHUFFLE_PASS_WORKER_PROXY}
+      - SHUFFLE_PASS_APP_PROXY=${SHUFFLE_PASS_APP_PROXY}
+      - SHUFFLE_SWARM_NETWORK_NAME=shuffle_swarm_executions
+      - SHUFFLE_SCALE_REPLICAS=1
+      - SHUFFLE_SWARM_CONFIG=runn
+    restart: always
+
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
@@ -1516,4 +1590,8 @@ volumes:
    spiderfoot:
     external: false
    codimd:
+    external: false
+   shuffle-app:
+    external: false
+   shuffle-files:
     external: false
