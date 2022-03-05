@@ -21,6 +21,7 @@ Inside the solution:
 * Metricbeat
 * Heartbeat
 * Auditbeat
+* Shuffle
 * Syslog-ng
 * Elastalert
 * TheHive
@@ -35,6 +36,7 @@ Inside the solution:
 * Heimdall
 * Traefik
 * Clamav
+* Codimd
 * Watchtower
 
 Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
@@ -56,11 +58,12 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
 # Roadmap
 
-- [ ] Change docker Postgres and Mysql for multi databases
-- [ ] Add Spiderfoot
-- [ ] Add SOAR n8n
+- [x] Change docker Postgres and Mysql for multi databases
+- [x] Add Spiderfoot
+- [x] Add SOAR shuffle
 - [ ] Add OpenCVE
-- [ ] Suppress heimdall for Organizr 
+- [x] Add Codimd
+- [x] Suppress heimdall for Organizr 
 - [ ] The complete documentation
 - [ ] Upgrade to elastalert2
 - [ ] SSO
