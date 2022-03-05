@@ -27,15 +27,8 @@ setup.template.settings:
       total_fields:
         limit: 8192
 
-monitoring:
-  enabled: true
-  elasticsearch:
-    hosts: ["https://es01:9200","https://es02:9200","https://es03:9200"]
-    username: "elastic"
-    password: "changeme"
-
 output.elasticsearch:
-  hosts: ["https://es01:9200","https://es02:9200","https://es03:9200"]
+  hosts: ["https://es01:9200"]
   username: "elastic"
   password: "changeme"
   ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"

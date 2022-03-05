@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: cassandra
+  name: Cassandra
+  hosts: ["cassandra"]
+  ports: [7000]
+  schedule: '@every 30s'

@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: spiderfoot
+  name: Spiderfoot
+  hosts: ["spiderfoot"]
+  ports: [8080]
+  schedule: '@every 30s'

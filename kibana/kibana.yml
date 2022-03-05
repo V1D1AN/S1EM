@@ -2,13 +2,14 @@ server.port: 5601
 server.host: "0.0.0.0"
 server.basePath: "/kibana"
 server.rewriteBasePath: true
-elasticsearch.hosts: ["https://es01:9200","https://es02:9200","https://es03:9200"]
+elasticsearch.hosts: ["https://es01:9200"]
 elasticsearch.username: elastic
 elasticsearch.password: changeme
-xpack.security.enabled: true
 xpack.fleet.agents.tlsCheckDisabled: true
+xpack.security.encryptionKey: 'kibana_api_key'
+xpack.reporting.encryptionKey: 'kibana_api_key'
 xpack.encryptedSavedObjects.encryptionKey: 'kibana_api_key'
-kibana.autocompleteTerminateAfter: 10000000
+data.autocomplete.valueSuggestions.terminateAfter: 10000000
 elasticsearch.ssl.certificateAuthorities: "/usr/share/certificates/ca/ca.crt"
 server.ssl.enabled: true
 server.ssl.certificate: "/usr/share/certificates/kibana/kibana.crt"
@@ -21,5 +22,6 @@ newsfeed.enabled: false
 monitoring.kibana.collection.enabled: true
 elasticsearch.requestTimeout: 180000
 elasticsearch.shardTimeout: 180000
+monitoring.ui.enabled: true
 
 

@@ -26,7 +26,7 @@
       "type": "string",
       "multi": true,
       "required": true,
-      "defaultValue": [ "filebeat-*","winlogbeat-*","auditbeat-*" ]
+      "defaultValue": [ "filebeat-*","winlogbeat-*","logs-*","auditbeat-*" ]
     },
     {
       "name": "ip",
