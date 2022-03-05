@@ -7,6 +7,9 @@ processors:
   - add_docker_metadata: ~
   - add_host_metadata: ~
 
+http.enabled: true
+http.host: 0.0.0.0
+monitoring.enabled: false
 setup.template.overwrite: true
 setup.ilm.enabled: true
 setup.ilm.policy_name: "ILM"

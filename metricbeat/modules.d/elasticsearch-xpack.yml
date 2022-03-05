@@ -4,7 +4,7 @@
 - module: elasticsearch
   xpack.enabled: true
   period: 60s
-  hosts: ["https://es01:9200","https://es02:9200","https://es03:9200"]
+  hosts: ["https://es01:9200"]
   username: "elastic"
   password: "changeme"
   ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"

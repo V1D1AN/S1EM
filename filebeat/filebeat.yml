@@ -6,7 +6,9 @@ filebeat.config:
 processors:
   - add_docker_metadata: ~
 
-
+http.enabled: true
+http.host: 0.0.0.0
+monitoring.enabled: false
 setup.kibana.host: "https://kibana:5601/kibana"
 setup.kibana.ssl.enabled: true
 setup.kibana.ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
