@@ -1591,7 +1591,7 @@ volumes:
     external: false
    codimd:
     external: false
-   shuffle-app:
+   shuffle-apps:
     external: false
    shuffle-files:
     external: false
