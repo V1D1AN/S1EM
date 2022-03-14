@@ -28,9 +28,9 @@ services:
           unzip config/certs/certs.zip -d config/certs;
         fi;
         echo "Setting file permissions"
-        chown -R root:root config/certs;
-        find . -type d -exec chmod 750 \{\} \;;
-        find . -type f -exec chmod 640 \{\} \;;
+        chown -R 1000:0 config/certs;
+        find . -type d -exec chmod 755 \{\} \;;
+        find . -type f -exec chmod 644 \{\} \;;
         echo "Waiting for Elasticsearch availability";
         until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
         echo "Setting kibana_system password";
@@ -1320,7 +1320,7 @@ services:
       - "443"
 
   arkime:
-    image: v1d1an/arkime:3.0.0
+    image: v1d1an/arkime:3.4.0
     container_name: arkime
     restart: always
     hostname: arkime
@@ -1331,6 +1331,7 @@ services:
     volumes:
       - ./arkime/scripts:/arkime/bin:ro
       - ./arkime/config.ini:/data/moloch/etc/config.ini.sample:ro
+      - suricatapcap:/import:ro
       - arkimelog:/arkime/log
       - certs:/data/moloch/etc/certs:ro
     logging:
@@ -1340,37 +1341,12 @@ services:
         max-file: "3"
     networks:
       - s1em
-    entrypoint: /arkime/bin/viewer.sh
+    entrypoint: /bin/sh -c "/arkime/bin/import.sh & /arkime/bin/viewer.sh"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.arkime.rule=PathPrefix(`/arkime`)"
       - "traefik.http.routers.arkime.entryPoints=secure"
       - "traefik.http.routers.arkime.tls=true"
-
-  import:
-    image: v1d1an/arkime:3.0.0
-    container_name: import
-    restart: always
-    hostname: import
-    depends_on:
-      - es01
-      - arkime
-    env_file:
-      - .env
-    volumes:
-      - ./arkime/scripts:/arkime/bin:ro
-      - arkimelog:/arkime/log
-      - suricatapcap:/import:ro
-      - ./arkime/config.ini:/arkime/etc/config.ini:ro
-      - certs:/data/moloch/etc/certs:ro
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    networks:
-      - s1em
-    entrypoint: /arkime/bin/import.sh
 
   clamav:
     image: clamav/clamav:latest
