@@ -1292,32 +1292,32 @@ services:
     expose:
       - "8000"
 
-  organizr:
-    container_name: organizr
-    hostname: organizr
-    image: organizr/organizr:latest
+  homer:
+    container_name: homer
+    hostname: homer
+    image: b4bz/homer:latest
     restart: always
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=UTC
     labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.organizr.rule=PathPrefix(`/`)"
-        - "traefik.http.routers.organizr.entryPoints=secure"
-        - "traefik.http.routers.organizr.tls=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.homer.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.homer.entryPoints=secure"
+      - "traefik.http.routers.homer.tls=true"
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
     volumes:
-        - ./organizr:/config
+        - ./homer:/www/assets
     networks:
       - s1em
     expose:
-      - "80"
-      - "443"
+      - "8080"
+
 
   arkime:
     image: v1d1an/arkime:3.4.0
@@ -1488,9 +1488,6 @@ services:
       - HTTPS_PROXY=${HTTPS_PROXY}
       - SHUFFLE_PASS_WORKER_PROXY=${SHUFFLE_PASS_WORKER_PROXY}
       - SHUFFLE_PASS_APP_PROXY=${SHUFFLE_PASS_APP_PROXY}
-      - SHUFFLE_SWARM_NETWORK_NAME=shuffle_swarm_executions
-      - SHUFFLE_SCALE_REPLICAS=1
-      - SHUFFLE_SWARM_CONFIG=runn
     restart: always
 
   watchtower:

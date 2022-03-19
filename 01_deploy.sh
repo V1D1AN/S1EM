@@ -58,8 +58,7 @@ echo
 echo
 read -r -p "Enter the hostname of the solution S1EM (ex: s1em.cyber.local):" s1em_hostname
 s1em_hostname=$s1em_hostname
-sed -i "s;^\[default\];\[default\]\niframe=https://$s1em_hostname;" arkime/config.ini
-sed -i "s|s1em_hostname|$s1em_hostname|g" docker-compose.yml thehive/application.conf misp/config.php rules/elastalert/*.yml .env
+sed -i "s|s1em_hostname|$s1em_hostname|g" docker-compose.yml thehive/application.conf misp/config.php rules/elastalert/*.yml homer/config.yml .env
 echo
 echo
 echo "##########################################"
@@ -128,23 +127,11 @@ docker-compose up -d traefik
 echo
 echo
 echo "##########################################"
-echo "########### STARTING ORGANIZR ############"
+echo "############# STARTING HOMER #############"
 echo "##########################################"
 echo
 echo
-docker-compose up -d organizr
-# to be tested
-while [ ! -d "./organizr/www/" ]; do sleep 1; done
-cd organizr; tar xvzf organizr.backup.tar.gz; cd ..
-organizr_admin_account=$admin_account
-organizr_admin_password=`echo ${admin_password} | openssl passwd -1 -stdin`
-docker exec -ti organizr apk update
-docker exec -ti organizr apk add sqlite
-docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set password=\"${organizr_admin_password}\" where users.username=\"test\";'"
-docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set email=\"${organizr_admin_account}\" where users.username=\"test\";'"
-docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update users set username=\"${organizr_admin_account}\" where users.username=\"test\";'"
-docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update tabs set url=\"http://${s1em_hostname}:8080\" where tabs.id=19;'"
-docker exec -ti organizr sh -c "sqlite3 /config/www/db/organizr.db 'update tabs set url_local=\"http://${s1em_hostname}:8080\" where tabs.id=19;'"
+docker-compose up -d homer
 echo
 echo
 echo "##########################################"
