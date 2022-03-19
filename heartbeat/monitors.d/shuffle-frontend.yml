@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: shuffle-frontend
+  name: Shuffle Frontend
+  hosts: ["shuffle-frontend"]
+  ports: [443]
+  schedule: '@every 30s'

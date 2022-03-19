@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: shuffle-backend
+  name: Shuffle Backend
+  hosts: ["shuffle-backend"]
+  ports: [5001]
+  schedule: '@every 30s'

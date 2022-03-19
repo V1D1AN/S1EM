@@ -1,5 +1,47 @@
 version: "2.2"
 services:
+  certificates:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    container_name: certificates
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - ./instances.yml:/usr/share/elasticsearch/config/certs/instances.yml
+    user: "0"
+    networks:
+      - s1em
+    command: >
+        bash -c '
+        if [ x${ELASTIC_PASSWORD} == x ]; then
+          echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
+          exit 1;
+        elif [ x${KIBANA_PASSWORD} == x ]; then
+          echo "Set the KIBANA_PASSWORD environment variable in the .env file";
+          exit 1;
+        fi;
+        if [ ! -f certs/ca.zip ]; then
+          echo "Creating CA";
+          bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
+          unzip config/certs/ca.zip -d config/certs;
+        fi;
+        if [ ! -f certs/certs.zip ]; then
+          bin/elasticsearch-certutil cert --silent --pem -out config/certs/certs.zip --in config/certs/instances.yml --ca-cert config/certs/ca/ca.crt --ca-key config/certs/ca/ca.key;
+          unzip config/certs/certs.zip -d config/certs;
+        fi;
+        echo "Setting file permissions"
+        chown -R 1000:0 config/certs;
+        find . -type d -exec chmod 755 \{\} \;;
+        find . -type f -exec chmod 644 \{\} \;;
+        echo "Waiting for Elasticsearch availability";
+        until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
+        echo "Setting kibana_system password";
+        until curl -s -X POST --cacert config/certs/ca/ca.crt -u elastic:${ELASTIC_PASSWORD} -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+        echo "All done!";'
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 120
+
   traefik:
     image: traefik:2.4
     container_name: traefik
@@ -20,25 +62,18 @@ services:
         max-file: "3"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
-      - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.dashboard.middlewares=auth"
-      - "traefik.http.routers.dashboard.entryPoints=secure"
-      - "traefik.http.middlewares.auth.basicauth.usersfile=/etc/traefik/userfile"
-      - "traefik.http.routers.dashboard.tls=true"
     networks:
-      - reverse_proxy
       - s1em
       
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     container_name: es01
     restart: always
     environment:
       - node.name=es01
       - cluster.name=s1em
-      - discovery.seed_hosts=es01,es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
+      - node.roles=master
+      - cluster.initial_master_nodes=es01
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - network.host=0.0.0.0
@@ -73,14 +108,15 @@ services:
         hard: -1
 
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     container_name: es02
     restart: always
     environment:
       - node.name=es02
       - cluster.name=s1em
-      - discovery.seed_hosts=es01,es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
+      - node.roles=data,ingest
+      - cluster.initial_master_nodes=es01
+      - discovery.seed_hosts=es01
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - network.host=0.0.0.0
@@ -110,14 +146,15 @@ services:
         hard: -1
 
   es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     container_name: es03
     restart: always
     environment:
       - node.name=es03
       - cluster.name=s1em
-      - discovery.seed_hosts=es01,es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
+      - node.roles=data,ingest
+      - cluster.initial_master_nodes=es01
+      - discovery.seed_hosts=es01
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - network.host=0.0.0.0
@@ -146,22 +183,28 @@ services:
         soft: -1
         hard: -1
 
-  logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.16.1'
-    container_name: logstash
-    hostname: logstash
-    restart: always
+  filebeat:
+    image: 'docker.elastic.co/beats/filebeat:7.17.0'
+    container_name: filebeat
+    hostname: filebeat
     user: root
+    restart: always
+    depends_on:
+      - es01
     volumes:
+      - /var/log:/var/log
+      - syslog-ng-data:/var/log/syslog-ng
+      - suricatadata:/var/log/suricata
+      - traefikdata:/var/log/traefik
+      - zeekdata:/var/log/bro/current
       - certs:/usr/share/certificates:ro
-      - stoq:/var/log/stoq
-      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
-      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
-      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
-      - ./logstash/templates:/usr/share/logstash/templates:ro
-      - ./logstash/patterns:/usr/share/logstash/patterns:ro
-      - ./logstash/databases:/usr/share/logstash/databases:ro
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./filebeat/ilm.json:/usr/share/filebeat/ilm.json:ro
+      - ./filebeat/modules.d/system.yml:/usr/share/filebeat/modules.d/system.yml:ro
+      - ./filebeat/modules.d/suricata.yml:/usr/share/filebeat/modules.d/suricata.yml:ro
+      - ./filebeat/modules.d/threatintel.yml:/usr/share/filebeat/modules.d/threatintel.yml:ro
+      - ./filebeat/modules.d/traefik.yml:/usr/share/filebeat/modules.d/traefik.yml:ro
+      - ./filebeat/modules.d/zeek.yml:/usr/share/filebeat/modules.d/zeek.yml:ro
     logging:
       driver: "json-file"
       options:
@@ -169,14 +212,9 @@ services:
         max-file: "3"
     networks:
       - s1em
-    ports:
-      - "5044:5044"
-      - "5140:5140/udp"
-      - "5040:5040"
-      - "5190:5190/udp"
       
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.16.1'
+    image: 'docker.elastic.co/kibana/kibana:7.17.0'
     container_name: kibana
     hostname: kibana
     restart: always
@@ -187,6 +225,7 @@ services:
       - ./kibana/node.options:/usr/share/kibana/config/node.options:ro
       - ./kibana/index:/usr/share/kibana/index:ro
       - ./kibana/dashboard:/usr/share/kibana/dashboard:ro
+      - kibanadata:/usr/share/kibana/data
       - certs:/usr/share/certificates:ro
     logging:
       driver: "json-file"
@@ -203,7 +242,7 @@ services:
       - s1em
 
   auditbeat:
-    image: 'docker.elastic.co/beats/auditbeat:7.16.1'
+    image: 'docker.elastic.co/beats/auditbeat:7.17.0'
     container_name: auditbeat
     hostname: auditbeat
     restart: always
@@ -228,7 +267,7 @@ services:
       - s1em
 
   heartbeat:
-    image: 'docker.elastic.co/beats/heartbeat:7.16.1'
+    image: 'docker.elastic.co/beats/heartbeat:7.17.0'
     container_name: heartbeat
     restart: always
     hostname: ${HOSTNAME}
@@ -246,7 +285,7 @@ services:
       - s1em
 
   metricbeat:
-    image: 'docker.elastic.co/beats/metricbeat:7.16.1'
+    image: 'docker.elastic.co/beats/metricbeat:7.17.0'
     container_name: metricbeat
     restart: always
     depends_on:
@@ -276,28 +315,22 @@ services:
         max-size: "10m"
         max-file: "3"        
 
-  filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.16.1'
-    container_name: filebeat
-    hostname: filebeat
-    user: root
+  logstash:
+    image: 'docker.elastic.co/logstash/logstash:7.17.0'
+    container_name: logstash
+    hostname: logstash
     restart: always
-    depends_on:
-      - es01
+    user: root
     volumes:
-      - /var/log:/var/log
-      - syslog-ng-data:/var/log/syslog-ng
-      - suricatadata:/var/log/suricata
-      - traefikdata:/var/log/traefik
-      - zeekdata:/var/log/bro/current
       - certs:/usr/share/certificates:ro
-      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - ./filebeat/ilm.json:/usr/share/filebeat/ilm.json:ro
-      - ./filebeat/modules.d/system.yml:/usr/share/filebeat/modules.d/system.yml:ro
-      - ./filebeat/modules.d/suricata.yml:/usr/share/filebeat/modules.d/suricata.yml:ro
-      - ./filebeat/modules.d/threatintel.yml:/usr/share/filebeat/modules.d/threatintel.yml:ro
-      - ./filebeat/modules.d/traefik.yml:/usr/share/filebeat/modules.d/traefik.yml:ro
-      - ./filebeat/modules.d/zeek.yml:/usr/share/filebeat/modules.d/zeek.yml:ro
+      - stoq:/var/log/stoq
+      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./logstash/templates:/usr/share/logstash/templates:ro
+      - ./logstash/patterns:/usr/share/logstash/patterns:ro
+      - ./logstash/databases:/usr/share/logstash/databases:ro
     logging:
       driver: "json-file"
       options:
@@ -305,6 +338,11 @@ services:
         max-file: "3"
     networks:
       - s1em
+    ports:
+      - "5044:5044"
+      - "5140:5140/udp"
+      - "5040:5040"
+      - "5190:5190/udp"
       
   syslog-ng:
     image: 'balabit/syslog-ng:latest'
@@ -572,11 +610,9 @@ services:
     cap_add:
       - SYS_NICE
     environment:
-      - "MYSQL_USER=misp"
-      - "MYSQL_PASSWORD=password"
       - "MYSQL_ROOT_PASSWORD=password"
-      - "MYSQL_DATABASE=misp"
     volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
       - mysql:/var/lib/mysql
     logging:
       driver: "json-file"
@@ -605,7 +641,7 @@ services:
       - "traefik.http.middlewares.misp-stripprefix.stripprefix.prefixes=/misp"
       - "traefik.http.routers.misp.middlewares=misp-stripprefix"
     environment:
-      - "HOSTNAME=https://s1em_hostname/misp"
+      - "HOSTNAME=https://${HOSTNAME}/misp"
       - "REDIS_FQDN=redis"
       - "INIT=true"             # Initialze MISP, things includes, attempting to import SQL and the Files DIR
       - "CRON_USER_ID=1"        # The MISP user ID to run cron jobs as
@@ -613,9 +649,9 @@ services:
       - "DISIPV6=true" # Disable IPV6 in nginx
       - "MYSQL_HOST=db"
       - "MYSQL_USER=misp"
-      - "MYSQL_PASSWORD=password"
+      - "MYSQL_PASSWORD=misppass"
       - "MYSQL_DATABASE=misp"
-      - "SECURESSL=true" # Enable higher security SSL in nginx
+      - "SECURESSL=false" # Enable higher security SSL in nginx
       - "MISP_MODULES_FQDN=http://misp-modules" # Set the MISP Modules FQDN, used for Enrichment_services_url/Import_services_url/Export_services_url
       - "WORKERS=4"
     volumes:
@@ -705,9 +741,11 @@ services:
     image: postgres
     container_name: postgres
     restart: always
-    env_file:
-      - mwdb/postgres-vars.env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
       - mwdb-postgres:/var/lib/postgresql/data
     logging:
       driver: "json-file"
@@ -880,7 +918,7 @@ services:
       - APP__BASE_PATH=/opencti
       - REDIS__HOSTNAME=redis
       - REDIS__PORT=6379
-      - ELASTICSEARCH__URL=["https://es01:9200","https://es02:9200","https://es03:9200"]
+      - ELASTICSEARCH__URL=["https://es01:9200"]
       - ELASTICSEARCH__USERNAME=elastic
       - ELASTICSEARCH__PASSWORD=${ELASTIC_PASSWORD}
       - ELASTICSEARCH__SSL__CA=/usr/share/certificates/ca/ca.crt
@@ -1072,7 +1110,7 @@ services:
       - CONNECTOR_CONFIDENCE_LEVEL=3
       - CONNECTOR_UPDATE_EXISTING_DATA=false
       - CONNECTOR_LOG_LEVEL=info
-      - MISP_URL=http://misp/misp # Required
+      - MISP_URL=https://${HOSTNAME}/misp # Required
       - MISP_KEY=${MISP_KEY} # Required
       - MISP_SSL_VERIFY=False # Required
       - MISP_INTERVAL=1440 # Required, in minutes
@@ -1254,35 +1292,35 @@ services:
     expose:
       - "8000"
 
-  heimdall:
-    image: ghcr.io/linuxserver/heimdall
-    container_name: heimdall
+  homer:
+    container_name: homer
+    hostname: homer
+    image: b4bz/homer:latest
     restart: always
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=UTC
-      - HEIMDALL_PERSIST=NO
-    volumes:
-      - ./heimdall/www:/config/www
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.heimdall.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.heimdall.entryPoints=secure"
-      - "traefik.http.routers.heimdall.tls=true"
+      - "traefik.http.routers.homer.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.homer.entryPoints=secure"
+      - "traefik.http.routers.homer.tls=true"
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
+    volumes:
+        - ./homer:/www/assets
     networks:
       - s1em
     expose:
-      - "80"
-      - "443"
+      - "8080"
+
 
   arkime:
-    image: v1d1an/arkime:3.0.0
+    image: v1d1an/arkime:3.4.0
     container_name: arkime
     restart: always
     hostname: arkime
@@ -1293,6 +1331,7 @@ services:
     volumes:
       - ./arkime/scripts:/arkime/bin:ro
       - ./arkime/config.ini:/data/moloch/etc/config.ini.sample:ro
+      - suricatapcap:/import:ro
       - arkimelog:/arkime/log
       - certs:/data/moloch/etc/certs:ro
     logging:
@@ -1302,37 +1341,12 @@ services:
         max-file: "3"
     networks:
       - s1em
-    entrypoint: /arkime/bin/viewer.sh
+    entrypoint: /bin/sh -c "/arkime/bin/import.sh & /arkime/bin/viewer.sh"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.arkime.rule=PathPrefix(`/arkime`)"
       - "traefik.http.routers.arkime.entryPoints=secure"
       - "traefik.http.routers.arkime.tls=true"
-
-  import:
-    image: v1d1an/arkime:3.0.0
-    container_name: import
-    restart: always
-    hostname: import
-    depends_on:
-      - es01
-      - arkime
-    env_file:
-      - .env
-    volumes:
-      - ./arkime/scripts:/arkime/bin:ro
-      - arkimelog:/arkime/log
-      - suricatapcap:/import:ro
-      - ./arkime/config.ini:/arkime/etc/config.ini:ro
-      - certs:/data/moloch/etc/certs:ro
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    networks:
-      - s1em
-    entrypoint: /arkime/bin/import.sh
 
   clamav:
     image: clamav/clamav:latest
@@ -1354,6 +1368,127 @@ services:
       retries: 3
     networks:
      - s1em
+     
+  spiderfoot:
+    image: "dtagdevsec/spiderfoot:2006"
+    container_name: spiderfoot
+    restart: always
+    labels:
+     - "traefik.enable=true"
+     - "traefik.http.routers.spiderfoot.rule=PathPrefix(`/spiderfoot`)"
+     - "traefik.http.routers.spiderfoot.entryPoints=secure"
+     - "traefik.http.routers.spiderfoot.tls=true"
+    expose:
+     - "8080"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+     - spiderfoot:/home/spiderfoot
+    networks:
+     - s1em
+
+  codimd:
+    image: hackmdio/hackmd:2.4.1
+    container_name: codimd
+    environment:
+      - CMD_DB_URL=mysql://codiuser:codipass@db/codimd
+      - CMD_USECDN=true
+      - CMD_PROTOCOL_USESSL=true
+      - CMD_DOMAIN=s1em_hostname
+      - CMD_URL_PATH=codimd
+      - CMD_SESSION_SECRET=1337h4x0r
+      - CMD_HSTS_ENABLE=false
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.codimd.rule=PathPrefix(`/codimd`)"
+      - "traefik.http.routers.codimd.entryPoints=secure"
+      - "traefik.http.routers.codimd.tls=true"
+      - "traefik.http.middlewares.codimd-stripprefix.stripprefix.prefixes=/codimd"
+      - "traefik.http.routers.codimd.middlewares=codimd-stripprefix"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - codimd:/home/hackmd/app/public/uploads
+    restart: always
+    networks:
+      - s1em
+
+  shuffle-frontend:
+    image: ghcr.io/frikky/shuffle-frontend:latest
+    container_name: shuffle-frontend
+    hostname: shuffle-frontend
+    ports:
+      - "3443:443"
+    networks:
+      - s1em
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - BACKEND_HOSTNAME=shuffle-backend
+    restart: unless-stopped
+    depends_on:
+      - shuffle-backend
+
+  shuffle-backend:
+    image: ghcr.io/frikky/shuffle-backend:latest
+    container_name: shuffle-backend
+    hostname: ${BACKEND_HOSTNAME}
+    networks:
+      - s1em
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - shuffle-apps:/shuffle-apps
+      - shuffle-files:/shuffle-files
+      - certs:$CERTS_DIR
+    env_file: .env
+    expose:
+      - "5001"
+    environment:
+      - SHUFFLE_APP_HOTLOAD_FOLDER=/shuffle-apps
+      - SHUFFLE_FILE_LOCATION=/shuffle-files
+    restart: always
+
+  shuffle-orborus:
+    image: ghcr.io/frikky/shuffle-orborus:latest
+    container_name: shuffle-orborus
+    hostname: shuffle-orborus
+    networks:
+      - s1em
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - SHUFFLE_WORKER_VERSION=latest
+      - ORG_ID=${ORG_ID}
+      - ENVIRONMENT_NAME=${ENVIRONMENT_NAME}
+      - BASE_URL=http://shuffle-backend:5001
+      - DOCKER_API_VERSION=1.40
+      - SHUFFLE_BASE_IMAGE_NAME=${SHUFFLE_BASE_IMAGE_NAME}
+      - SHUFFLE_BASE_IMAGE_REGISTRY=${SHUFFLE_BASE_IMAGE_REGISTRY}
+      - SHUFFLE_BASE_IMAGE_TAG_SUFFIX=${SHUFFLE_BASE_IMAGE_TAG_SUFFIX}
+      - HTTP_PROXY=${HTTP_PROXY}
+      - HTTPS_PROXY=${HTTPS_PROXY}
+      - SHUFFLE_PASS_WORKER_PROXY=${SHUFFLE_PASS_WORKER_PROXY}
+      - SHUFFLE_PASS_APP_PROXY=${SHUFFLE_PASS_APP_PROXY}
+    restart: always
 
   watchtower:
     image: containrrr/watchtower
@@ -1371,8 +1506,6 @@ services:
      - s1em
 
 networks:
-   reverse_proxy:
-    driver: bridge
    s1em:
     driver: bridge
     
@@ -1382,6 +1515,8 @@ volumes:
    data02:
     external: false
    data03:
+    external: false
+   kibanadata:
     external: false
    certs:
     external: false   
@@ -1424,4 +1559,12 @@ volumes:
    upload:
     external: false
    clamav:
+    external: false
+   spiderfoot:
+    external: false
+   codimd:
+    external: false
+   shuffle-apps:
+    external: false
+   shuffle-files:
     external: false

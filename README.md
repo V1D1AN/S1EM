@@ -21,6 +21,8 @@ Inside the solution:
 * Metricbeat
 * Heartbeat
 * Auditbeat
+* Shuffle
+* Spiderfoot
 * Syslog-ng
 * Elastalert
 * TheHive
@@ -32,10 +34,11 @@ Inside the solution:
 * Zeek
 * StoQ
 * Mwdb
-* Heimdall
 * Traefik
 * Clamav
+* Codimd
 * Watchtower
+* Homer
 
 Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
@@ -56,12 +59,12 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
 # Roadmap
 
-- [ ] Upgrade to ELK 8.0
-- [ ] Change docker Postgres and Mysql for multi databases
-- [ ] Add Spiderfoot
-- [ ] Add SOAR n8n or shuffle
+- [x] Change docker Postgres and Mysql for multi databases
+- [x] Add Spiderfoot
+- [x] Add SOAR shuffle
 - [ ] Add OpenCVE
-- [ ] Suppress heimdall for Organizr 
+- [x] Add Codimd
+- [x] Suppress heimdall for Homer 
 - [ ] The complete documentation
 - [ ] Upgrade to elastalert2
 - [ ] SSO
@@ -90,6 +93,7 @@ https://github.com/blueimp/jQuery-File-Upload <br />
 https://gchq.github.io/CyberChef/ <br />
 https://www.clamav.net/ <br />
 https://www.syslog-ng.com/ <br />
+https://github.com/bastienwirtz/homer <br />
 
 
 
