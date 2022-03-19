@@ -1,7 +1,0 @@
-- type: tcp
-  enabled: true
-  id: organizr
-  name: Organizr
-  hosts: ["organizr"]
-  ports: [443]
-  schedule: '@every 30s'

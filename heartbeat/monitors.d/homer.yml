@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: homer
+  name: Homer
+  hosts: ["homer"]
+  ports: [8080]
+  schedule: '@every 30s'
