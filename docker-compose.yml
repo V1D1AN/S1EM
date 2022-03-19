@@ -1,7 +1,7 @@
 version: "2.2"
 services:
   certificates:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
     container_name: certificates
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
@@ -66,7 +66,7 @@ services:
       - s1em
       
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
     container_name: es01
     restart: always
     environment:
@@ -108,7 +108,7 @@ services:
         hard: -1
 
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
     container_name: es02
     restart: always
     environment:
@@ -146,7 +146,7 @@ services:
         hard: -1
 
   es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
     container_name: es03
     restart: always
     environment:
@@ -184,7 +184,7 @@ services:
         hard: -1
 
   filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.17.0'
+    image: 'docker.elastic.co/beats/filebeat:7.17.1'
     container_name: filebeat
     hostname: filebeat
     user: root
@@ -214,7 +214,7 @@ services:
       - s1em
       
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.17.0'
+    image: 'docker.elastic.co/kibana/kibana:7.17.1'
     container_name: kibana
     hostname: kibana
     restart: always
@@ -242,7 +242,7 @@ services:
       - s1em
 
   auditbeat:
-    image: 'docker.elastic.co/beats/auditbeat:7.17.0'
+    image: 'docker.elastic.co/beats/auditbeat:7.17.1'
     container_name: auditbeat
     hostname: auditbeat
     restart: always
@@ -267,7 +267,7 @@ services:
       - s1em
 
   heartbeat:
-    image: 'docker.elastic.co/beats/heartbeat:7.17.0'
+    image: 'docker.elastic.co/beats/heartbeat:7.17.1'
     container_name: heartbeat
     restart: always
     hostname: ${HOSTNAME}
@@ -285,7 +285,7 @@ services:
       - s1em
 
   metricbeat:
-    image: 'docker.elastic.co/beats/metricbeat:7.17.0'
+    image: 'docker.elastic.co/beats/metricbeat:7.17.1'
     container_name: metricbeat
     restart: always
     depends_on:
@@ -316,7 +316,7 @@ services:
         max-file: "3"        
 
   logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.17.0'
+    image: 'docker.elastic.co/logstash/logstash:7.17.1'
     container_name: logstash
     hostname: logstash
     restart: always
