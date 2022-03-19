@@ -54,6 +54,8 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 - [Agent Guide](https://github.com/V1D1AN/S1EM/wiki/agent-guide)
 - [Architecture Guide](https://github.com/V1D1AN/S1EM/wiki/Architecture-guide)
 - [Troubleshooting Guide](https://github.com/V1D1AN/S1EM/wiki/Troubleshooting-guide)
+- [Use EDR Elastic with S1EM](https://github.com/V1D1AN/S1EM/wiki/Edr-guide)
+- [Use TPOT with S1EM](https://github.com/V1D1AN/S1EM/wiki/Tpot-guide)
 - [Screenshot of S1EM](https://github.com/V1D1AN/S1EM/wiki/Screenshot-of-S1EM)
 
 
