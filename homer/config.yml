@@ -110,7 +110,7 @@ services:
       - name: "Arkime"
         logo: "https://avatars.githubusercontent.com/u/71138764?s=200&v=4"
         tag: "app"
-        url: "https://s1em_hostname/arkime"
+        url: "https://s1em_hostname/arkime/"
         target: "_blank" # optional html a tag target attribute
 
   - name: "CVE"
