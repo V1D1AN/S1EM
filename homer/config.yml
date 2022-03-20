@@ -71,11 +71,17 @@ services:
   - name: "SIEM"
     icon: "fas fa-desktop"
     items:
-      - name: "Kibana"
+      - name: "Elastic SIEM"
+        logo: "https://elastic-content-share.eu/wp-content/uploads/edd/2020/06/security-logo-color-150x150.png"
+        tag: "app"
+        url: "https://s1em_hostname/kibana/app/security/overview"
+        target: "_blank" # optional html a tag target attribute
+      - name: "Monitoring"
         logo: "https://cdn.freebiesupply.com/logos/thumbs/2x/elastic-kibana-logo.png"
         tag: "app"
-        url: "https://s1em_hostname/kibana"
+        url: "https://s1em_hostname/kibana/app/uptime"
         target: "_blank" # optional html a tag target attribute
+
 
   - name: "SOAR"
     icon: "fas fa-project-diagram"
