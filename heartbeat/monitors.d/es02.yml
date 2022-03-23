@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: es02
+  name: Es02
+  hosts: ["es02"]
+  ports: [9200]
+  schedule: '@every 30s'

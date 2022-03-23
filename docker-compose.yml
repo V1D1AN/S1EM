@@ -118,7 +118,7 @@ services:
       - cluster.initial_master_nodes=es01
       - discovery.seed_hosts=es01
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - network.host=0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.license.self_generated.type=basic
@@ -156,7 +156,7 @@ services:
       - cluster.initial_master_nodes=es01
       - discovery.seed_hosts=es01
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - network.host=0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.license.self_generated.type=basic
@@ -512,8 +512,6 @@ services:
       - "traefik.http.routers.cortex.rule=PathPrefix(`/cortex`)"
       - "traefik.http.routers.cortex.entryPoints=secure"
       - "traefik.http.routers.cortex.tls=true"
-    environment:
-      - "JAVA_OPTS=-Xms1g -Xmx1g"
     networks:
       - s1em
 
@@ -557,8 +555,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    environment:
-      - "JAVA_OPTS=-Xms1g -Xmx1g"
     command: '--no-config --no-config-secret'
     networks:
       - s1em
@@ -687,7 +683,7 @@ services:
       - s1em
 
   mwdb:
-    image: v1d1an/mwdb:2.5.1
+    image: certpl/mwdb:v2.6.0
     container_name: mwdb
     restart: always
     env_file:
@@ -722,7 +718,7 @@ services:
       - s1em
 
   mwdb-web:
-    image: v1d1an/mwdb-web:2.5.1
+    image: certpl/mwdb-web:v2.6.0
     container_name: mwdb-web
     restart: always
     depends_on:
@@ -756,7 +752,7 @@ services:
       - s1em
 
   karton-system:
-    image: certpl/karton-system:158d07960d8cd39dee8771af719f560df93b3212
+    image: certpl/karton-system:master
     container_name: karton-system
     depends_on:
       - redis
@@ -775,7 +771,7 @@ services:
       - s1em
 
   karton-classifier:
-    image: certpl/karton-classifier:320c99de8e05ff3d029609e73ac31bcf2d0ba56c
+    image: certpl/karton-classifier:c7299fd127d7b68e191d0e72d704fd7f1c85780a
     container_name: karton-classifier
     depends_on:
       - redis
@@ -845,7 +841,7 @@ services:
       - s1em
 
   karton-mwdb-reporter:
-    image: certpl/karton-mwdb-reporter:a4a5a2ece14073e3a25a38bd5f1b0fa14ba725d3
+    image: certpl/karton-mwdb-reporter:456d43e872a09f82efb393e92ba8aae4dc24340e
     container_name: karton-mwdb-reporter
     depends_on:
       - redis

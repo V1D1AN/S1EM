@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: auditbeat
+  name: Auditbeat
+  hosts: ["auditbeat"]
+  ports: [5066]
+  schedule: '@every 30s'

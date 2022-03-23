@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: filebeat
+  name: Filebeat
+  hosts: ["filebeat"]
+  ports: [5066]
+  schedule: '@every 30s'
