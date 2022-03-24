@@ -96,7 +96,7 @@ services:
     icon: "fas fa-radiation"
     items:
       - name: "Mwdb"
-        logo: "http://s1em_hostname:8080/static/media/logo.b21df568.png"
+        logo: "http://s1em_hostname:8080/static/media/logo.787cfdb1.png"
         tag: "app"
         url: "http://s1em_hostname:8080"
         target: "_blank" # optional html a tag target attribute
