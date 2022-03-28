@@ -149,17 +149,17 @@ services:
       - name: "CyberChef"
         logo: "https://www.gchq.gov.uk/images/CyberChef768x512.jpg"
         tag: "app"
-        url: "https://s1em_hostname/cyberchef"
+        url: "https://s1em_hostname/cyberchef/"
         target: "_blank" # optional html a tag target attribute
       - name: "CodiMD"
         logo: "https://cdn.futura-sciences.com/buildsv6/images/wide1920/4/b/e/4be0f23a59_122541_markdown.jpg"
         tag: "app"
-        url: "https://s1em_hostname/codimd"
+        url: "https://s1em_hostname/codimd/"
         target: "_blank" # optional html a tag target attribute
       - name: "Upload"
         logo: "https://fileproinfo.com/images/pcap_file_extension.png"
         tag: "app"
-        url: "https://s1em_hostname/upload"
+        url: "https://s1em_hostname/upload/"
         target: "_blank" # optional html a tag target attribute
       - name: "StartMe"
         logo: "https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco,dpr_1/v1477931274/aq1yfkwbl5yslbedhkyj.png"

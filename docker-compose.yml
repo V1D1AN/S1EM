@@ -683,7 +683,7 @@ services:
       - s1em
 
   mwdb:
-    image: certpl/mwdb:v2.6.0
+    image: certpl/mwdb:master
     container_name: mwdb
     restart: always
     env_file:
@@ -718,7 +718,7 @@ services:
       - s1em
 
   mwdb-web:
-    image: certpl/mwdb-web:v2.6.0
+    image: certpl/mwdb-web:master
     container_name: mwdb-web
     restart: always
     depends_on:
