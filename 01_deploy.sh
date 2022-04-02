@@ -150,6 +150,8 @@ echo "##########################################"
 echo "########## DEPLOY KIBANA INDEX ###########"
 echo "##########################################"
 echo
+echo "Setting kibana_system password";
+until curl -s -X POST --cacert config/certs/ca/ca.crt -u elastic:${ELASTIC_PASSWORD} -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
 while [ "$(docker logs kibana | grep -i "server running" | grep -v "NotReady")" == "" ]; do
   echo "Waiting for Kibana to come online.";
   sleep 15;
@@ -157,6 +159,7 @@ done
 echo "Kibana is online"
 echo
 echo
+docker exec es01 sh -c "curl -sk -X POST 'https://127.0.0.1:9200/_security/user/kibana_system/_password' -u 'elastic:$password' -H 'Content-Type: application/json'  -d '{\"password\":\"$kibana_password\"}'"
 docker exec es01 sh -c "curl -sk -X POST 'https://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"enabled\": true,\"password\": \"$admin_password\",\"roles\":\"superuser\",\"full_name\": \"$admin_account\"}'"
 echo
 echo "##########################################"

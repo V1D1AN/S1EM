@@ -67,6 +67,7 @@ services:
         logo: "https://www.opencti.io/wp-content/uploads/2022/03/logo_menu.png"
         tag: "app"
         url: "https://s1em_hostname/opencti"
+        target: "_blank" # optional html a tag target attribute
 
   - name: "SIEM"
     icon: "fas fa-desktop"
