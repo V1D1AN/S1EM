@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: n8n
+  name: n8n
+  hosts: ["n8n"]
+  ports: [5678]
+  schedule: '@every 30s'
