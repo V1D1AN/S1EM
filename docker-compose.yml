@@ -1406,76 +1406,48 @@ services:
     networks:
       - s1em
 
-  shuffle-frontend:
-    image: ghcr.io/frikky/shuffle-frontend:latest
-    container_name: shuffle-frontend
-    hostname: shuffle-frontend
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n
     ports:
-      - "3443:443"
-    networks:
-      - s1em
+      - "127.0.0.1:5678:5678"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.n8n.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.n8n.tls=true
+      - traefik.http.routers.n8n.entrypoints=secure
+      - "traefik.http.routers.n8n.rule=PathPrefix(`/${SUBFOLDER}{regex:$$|/.*}`)"
+      - "traefik.http.middlewares.n8n-stripprefix.stripprefix.prefixes=/${SUBFOLDER}"
+      - "traefik.http.routers.n8n.middlewares=n8n-stripprefix"
+      - traefik.http.middlewares.n8n.headers.SSLRedirect=true
+      - traefik.http.middlewares.n8n.headers.STSSeconds=315360000
+      - traefik.http.middlewares.n8n.headers.browserXSSFilter=true
+      - traefik.http.middlewares.n8n.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.n8n.headers.forceSTSHeader=true
+      - traefik.http.middlewares.n8n.headers.SSLHost=${HOSTNAME}
+      - traefik.http.middlewares.n8n.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.n8n.headers.STSPreload=true
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"
+        max-file: "3
     environment:
-      - BACKEND_HOSTNAME=shuffle-backend
-    restart: unless-stopped
-    depends_on:
-      - shuffle-backend
-
-  shuffle-backend:
-    image: ghcr.io/frikky/shuffle-backend:latest
-    container_name: shuffle-backend
-    hostname: ${BACKEND_HOSTNAME}
-    networks:
-      - s1em
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER
+      - N8N_BASIC_AUTH_PASSWORD
+      - N8N_HOST=${HOSTNAME}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - N8N_PATH
+      - WEBHOOK_URL=https://${HOSTNAME}${N8N_PATH}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - shuffle-apps:/shuffle-apps
-      - shuffle-files:/shuffle-files
-      - certs:$CERTS_DIR
-    env_file: .env
-    expose:
-      - "5001"
-    environment:
-      - SHUFFLE_APP_HOTLOAD_FOLDER=/shuffle-apps
-      - SHUFFLE_FILE_LOCATION=/shuffle-files
+      - n8n_data:/home/node/.n8n
     restart: always
-
-  shuffle-orborus:
-    image: ghcr.io/frikky/shuffle-orborus:latest
-    container_name: shuffle-orborus
-    hostname: shuffle-orborus
     networks:
-      - s1em
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - SHUFFLE_WORKER_VERSION=latest
-      - ORG_ID=${ORG_ID}
-      - ENVIRONMENT_NAME=${ENVIRONMENT_NAME}
-      - BASE_URL=http://shuffle-backend:5001
-      - DOCKER_API_VERSION=1.40
-      - SHUFFLE_BASE_IMAGE_NAME=${SHUFFLE_BASE_IMAGE_NAME}
-      - SHUFFLE_BASE_IMAGE_REGISTRY=${SHUFFLE_BASE_IMAGE_REGISTRY}
-      - SHUFFLE_BASE_IMAGE_TAG_SUFFIX=${SHUFFLE_BASE_IMAGE_TAG_SUFFIX}
-      - HTTP_PROXY=${HTTP_PROXY}
-      - HTTPS_PROXY=${HTTPS_PROXY}
-      - SHUFFLE_PASS_WORKER_PROXY=${SHUFFLE_PASS_WORKER_PROXY}
-      - SHUFFLE_PASS_APP_PROXY=${SHUFFLE_PASS_APP_PROXY}
-    restart: always
+     - s1em
 
   watchtower:
     image: containrrr/watchtower
@@ -1551,7 +1523,5 @@ volumes:
     external: false
    codimd:
     external: false
-   shuffle-apps:
-    external: false
-   shuffle-files:
+   n8n_data:
     external: false

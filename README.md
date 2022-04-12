@@ -21,7 +21,7 @@ Inside the solution:
 * Metricbeat
 * Heartbeat
 * Auditbeat
-* Shuffle
+* N8n
 * Spiderfoot
 * Syslog-ng
 * Elastalert
@@ -63,7 +63,7 @@ Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
 
 - [x] Change docker Postgres and Mysql for multi databases
 - [x] Add Spiderfoot
-- [x] Add SOAR shuffle
+- [x] Change SOAR for n8n
 - [ ] Add OpenCVE
 - [x] Add Codimd
 - [x] Suppress heimdall for Homer 

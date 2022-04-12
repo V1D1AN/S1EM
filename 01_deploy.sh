@@ -35,8 +35,7 @@ read -r -p "Enter the organization:" organization
 organization=$organization
 sed -i "s|opencti_account|$admin_account|g" .env
 sed -i "s|arkime_account|$admin_account|g" .env
-sed -i "s|shuffle_account|$admin_account|g" .env
-sed -i "s|shuffle_organization|$organization|g" .env
+sed -i "s|n8n_account|$admin_account|g" .env
 echo
 while true; do
     read -s -p "Password (Must be a password with at least 6 characters): " admin_password
@@ -48,7 +47,7 @@ while true; do
 done
 sed -i "s|opencti_password|$admin_password|g" .env
 sed -i "s|arkime_password|$admin_password|g" .env
-sed -i "s|shuffle_password|$admin_password|g" .env
+sed -i "s|n8n_password|$admin_password|g" .env
 echo
 echo
 echo "##########################################"
@@ -414,11 +413,11 @@ docker-compose up -d opencti
 echo
 echo
 echo "#########################################"
-echo "########## STARTING SHUFFLE #############"
+echo "############ STARTING N8N ###############"
 echo "#########################################"
 echo
 echo
-docker-compose up -d shuffle-orborus shuffle-backend shuffle-frontend
+docker-compose up -d n8n
 echo
 echo
 echo "#########################################"

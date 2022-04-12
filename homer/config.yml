@@ -87,11 +87,12 @@ services:
   - name: "SOAR"
     icon: "fas fa-project-diagram"
     items:
-      - name: "Shuffle"
-        logo: "https://github.com/frikky/Shuffle/raw/launch/frontend/public/images/Shuffle_logo_new.png"
+      - name: "N8n"
+        logo: "https://wexample.com/wp-content/uploads/2021/06/n8n.png"
         tag: "app"
-        url: "https://s1em_hostname:3443"
+        url: "https://s1em_hostname/n8n/"
         target: "_blank" # optional html a tag target attribute
+
 
   - name: "MALWARE"
     icon: "fas fa-radiation"
