@@ -1442,8 +1442,13 @@ services:
       - NODE_ENV=production
       - N8N_PATH
       - WEBHOOK_URL=https://${HOSTNAME}${N8N_PATH}
+      - QUEUE_BULL_REDIS_HOST=redis
+      - QUEUE_BULL_REDIS_PORT=6379
+      - N8N_PAYLOAD_SIZE_MAX=32
+      - NODE_EXTRA_CA_CERTS=/home/node/certificates/ca/ca.crt
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - certs:/home/node/certificates:ro
       - n8n_data:/home/node/.n8n
     restart: always
     networks:
