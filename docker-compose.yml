@@ -1431,7 +1431,7 @@ services:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3
+        max-file: "3"
     environment:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER
