@@ -1,7 +1,7 @@
 version: "2.2"
 services:
   certificates:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.2
     container_name: certificates
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
@@ -57,7 +57,7 @@ services:
       - s1em
       
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.2
     container_name: es01
     restart: always
     environment:
@@ -99,7 +99,7 @@ services:
         hard: -1
 
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.2
     container_name: es02
     restart: always
     environment:
@@ -137,7 +137,7 @@ services:
         hard: -1
 
   es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.2
     container_name: es03
     restart: always
     environment:
@@ -175,7 +175,7 @@ services:
         hard: -1
 
   filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.17.1'
+    image: 'docker.elastic.co/beats/filebeat:7.17.2'
     container_name: filebeat
     hostname: filebeat
     user: root
@@ -205,7 +205,7 @@ services:
       - s1em
       
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.17.1'
+    image: 'docker.elastic.co/kibana/kibana:7.17.2'
     container_name: kibana
     hostname: kibana
     restart: always
@@ -233,7 +233,7 @@ services:
       - s1em
 
   auditbeat:
-    image: 'docker.elastic.co/beats/auditbeat:7.17.1'
+    image: 'docker.elastic.co/beats/auditbeat:7.17.2'
     container_name: auditbeat
     hostname: auditbeat
     restart: always
@@ -258,7 +258,7 @@ services:
       - s1em
 
   heartbeat:
-    image: 'docker.elastic.co/beats/heartbeat:7.17.1'
+    image: 'docker.elastic.co/beats/heartbeat:7.17.2'
     container_name: heartbeat
     restart: always
     hostname: ${HOSTNAME}
@@ -276,7 +276,7 @@ services:
       - s1em
 
   metricbeat:
-    image: 'docker.elastic.co/beats/metricbeat:7.17.1'
+    image: 'docker.elastic.co/beats/metricbeat:7.17.2'
     container_name: metricbeat
     restart: always
     depends_on:
@@ -307,7 +307,7 @@ services:
         max-file: "3"        
 
   logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.17.1'
+    image: 'docker.elastic.co/logstash/logstash:7.17.2'
     container_name: logstash
     hostname: logstash
     restart: always
@@ -762,7 +762,7 @@ services:
       - s1em
 
   karton-classifier:
-    image: certpl/karton-classifier:c7299fd127d7b68e191d0e72d704fd7f1c85780a
+    image: certpl/karton-classifier:8f02c6e5188414f28d37515d903ce2b6955bc768
     container_name: karton-classifier
     depends_on:
       - redis
@@ -779,7 +779,7 @@ services:
       - s1em
 
   karton-yaramatcher:
-    image: certpl/karton-yaramatcher:e3670cc69e32e56c7175ed7783056098069542f0
+    image: certpl/karton-yaramatcher:ef7fc24197115058051b416a915c4e8fb816bd08
     container_name: karton-yaramatcher
     command: karton-yaramatcher --rules /rules
     depends_on:
@@ -815,7 +815,7 @@ services:
       - s1em
       
   karton-archive-extractor:
-    image: certpl/karton-archive-extractor:6c9fd2581a3261c18bc1b0fc3c692231a48fabf9
+    image: certpl/karton-archive-extractor:a766ccc52b3c5c3cd23a87f19da8ff0f4a5db99c
     container_name: karton-archive-extractor
     depends_on:
       - redis
@@ -832,7 +832,7 @@ services:
       - s1em
 
   karton-mwdb-reporter:
-    image: certpl/karton-mwdb-reporter:456d43e872a09f82efb393e92ba8aae4dc24340e
+    image: certpl/karton-mwdb-reporter:2b0fad105f82ccf157431244d7408b0fc589dac5
     container_name: karton-mwdb-reporter
     depends_on:
       - redis
