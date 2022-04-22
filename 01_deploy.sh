@@ -353,7 +353,7 @@ echo "##########################################"
 echo
 echo
 chmod u=rx ./arkime/scripts/*.sh
-docker-compose up -d arkime import
+docker-compose up -d arkime
 echo
 echo
 echo "##########################################"

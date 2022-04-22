@@ -524,6 +524,11 @@ services:
         max-file: "3"
     networks:
       - s1em
+    healthcheck:
+      test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   thehive:
     image: 'thehiveproject/thehive4:latest'
@@ -532,7 +537,8 @@ services:
     user: root
     restart: always
     depends_on:
-      - cassandra
+      cassandra:
+        condition: service_healthy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.thehive.rule=PathPrefix(`/thehive`)"
@@ -1357,7 +1363,7 @@ services:
      - s1em
      
   spiderfoot:
-    image: "dtagdevsec/spiderfoot:2006"
+    image: "dtagdevsec/spiderfoot:2204"
     container_name: spiderfoot
     restart: always
     labels:
@@ -1373,7 +1379,7 @@ services:
         max-size: "10m"
         max-file: "3"
     volumes:
-     - spiderfoot:/home/spiderfoot
+     - spiderfoot:/home/spiderfoot/.spiderfoot
     networks:
      - s1em
 
