@@ -618,7 +618,7 @@ services:
   misp:
     image: coolacid/misp-docker:core-latest
     container_name: misp
-    hostname: s1em_hostname
+    hostname: ${HOSTNAME}
     restart: always
     depends_on:
       - redis
@@ -1390,7 +1390,7 @@ services:
       - CMD_DB_URL=mysql://codiuser:codipass@db/codimd
       - CMD_USECDN=true
       - CMD_PROTOCOL_USESSL=true
-      - CMD_DOMAIN=s1em_hostname
+      - CMD_DOMAIN=${HOSTNAME}
       - CMD_URL_PATH=codimd
       - CMD_SESSION_SECRET=1337h4x0r
       - CMD_HSTS_ENABLE=false
