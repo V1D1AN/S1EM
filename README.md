@@ -4,6 +4,7 @@
     <a href="https://discord.gg/uFBzr8fWmC" target"_blank"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg?sanitize=true" alt="Discord"></a>
     <img src="https://img.shields.io/badge/Platform-Lin-green">
     <img src="https://img.shields.io/badge/Architecture-64bit-red">
+    <a href="https://www.paypal.com/donate/?business=DUEQFS9Z2E9XW&no_recurring=0&item_name=If+this+project+help+you+reduce+time+to+develop%2C+you+can+give+me+a+cup+of+coffee+%3A%29&currency_code=EUR" target"_blank"><img src="https://img.shields.io/badge/Donate-PayPal-green.svg">
   </p>
 </div>
 
@@ -113,3 +114,9 @@ https://github.com/frack113 <br />
 https://github.com/StevenDias33 <br />
 https://github.com/wagga40 <br />
 https://github.com/xophidia <br />
+
+
+# Donate
+If this project help you reduce time to develop, you can give me a cup of coffee :) <br />
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?business=DUEQFS9Z2E9XW&no_recurring=0&item_name=If+this+project+help+you+reduce+time+to+develop%2C+you+can+give+me+a+cup+of+coffee+%3A%29&currency_code=EUR)
