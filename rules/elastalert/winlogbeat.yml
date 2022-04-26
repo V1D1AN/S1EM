@@ -34,9 +34,14 @@ hive_observable_data_mapping:
  - hash: "{match[hash][sha1]}"
  - hash: "{match[hash][md5]}"
  - hash: "{match[hash][sha256]}"
+ - hash: "{match[process][hash][sha1]}"
+ - hash: "{match[process][hash][md5]}"
+ - hash: "{match[process][hash][sha256]}"
  - hash: "{match[pe][imphash]}"
  - domain: "{match[dns][question][name]}"
  - ip: "{match[source][ip]}"
  - ip: "{match[destination][ip]}"
  - filename: "{match[process][executable]}"
+ - registry: "{match[registry][path]}"
+
 
