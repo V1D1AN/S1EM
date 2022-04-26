@@ -57,7 +57,7 @@ echo
 echo
 read -r -p "Enter the hostname of the solution S1EM (ex: s1em.cyber.local):" s1em_hostname
 s1em_hostname=$s1em_hostname
-sed -i "s|s1em_hostname|$s1em_hostname|g" docker-compose.yml thehive/application.conf misp/config.php rules/elastalert/*.yml homer/config.yml .env
+sed -i "s|s1em_hostname|$s1em_hostname|g" docker-compose.yml thehive/application.conf cortex/MISP.json misp/config.php rules/elastalert/*.yml homer/config.yml .env
 echo
 echo
 echo "##########################################"

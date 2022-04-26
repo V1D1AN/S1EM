@@ -34,7 +34,7 @@
     {
       "name": "url",
       "description": "URL of MISP servers",
-      "defaultValue": [ "http://misp/misp" ],
+      "defaultValue": [ "https://s1em_hostname/misp/" ],
       "type": "string",
       "multi": true,
       "required": true
