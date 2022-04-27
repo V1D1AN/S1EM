@@ -9,6 +9,7 @@
     var.api_token: "misp_api_key"
     var.first_interval: 300h
     var.interval: 5m
+    var.ssl.verification_mode: none
 
   abuseurl:
     enabled: true
