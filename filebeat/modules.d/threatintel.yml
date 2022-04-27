@@ -5,7 +5,7 @@
   misp:
     enabled: true
     var.input: httpjson
-    var.url: https://s1em_hostname/misp/events/restSearch
+    var.url: http://misp/misp/events/restSearch
     var.api_token: "misp_api_key"
     var.first_interval: 300h
     var.interval: 5m
