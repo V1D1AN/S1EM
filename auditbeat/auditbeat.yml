@@ -54,10 +54,10 @@ setup.template.settings:
         limit: 8192
 
 processors:
-  drop_event:
-    when:
-      equals:
-        process.executable: "/usr/share/metricbeat/metricbeat"
+  - drop_event:
+      when:
+        equals:
+           process.executable: "/usr/share/metricbeat/metricbeat"
 
 
 
