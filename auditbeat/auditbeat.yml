@@ -53,6 +53,13 @@ setup.template.settings:
       total_fields:
         limit: 8192
 
+processors:
+  - drop_event:
+    when:
+      equals:
+        process.executable: "/usr/share/metricbeat/metricbeat"
+
+
 
 output.elasticsearch:
   hosts: ["https://es01:9200"]
