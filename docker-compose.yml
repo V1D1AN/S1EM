@@ -242,6 +242,7 @@ services:
     hostname: auditbeat
     restart: always
     user: root
+    command: auditbeat -e -strict.perms=false
     cap_add: 
       - AUDIT_CONTROL
       - AUDIT_READ
@@ -252,6 +253,7 @@ services:
     volumes:
       - ./auditbeat/auditbeat.yml:/usr/share/auditbeat/auditbeat.yml:ro
       - ./auditbeat/ilm.json:/usr/share/auditbeat/ilm.json:ro
+      - /var/run/docker.sock:/var/run/docker.sock
       - certs:/usr/share/certificates:ro
     logging:
       driver: "json-file"
