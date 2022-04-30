@@ -1,11 +1,5 @@
 auditbeat.modules:
 
-- module: auditd
-  audit_rules: |
-    -w /etc/passwd -p wa -k identity
-    -a always,exit -F arch=b32 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EPERM -k access
-    -a always,exit -S execve,execveat
-
 - module: file_integrity
   paths:
     - /bin
@@ -52,14 +46,6 @@ setup.template.settings:
     mapping:
       total_fields:
         limit: 8192
-
-processors:
-  drop_event:
-    when:
-      equals:
-        process.executable: "/usr/share/metricbeat/metricbeat"
-
-
 
 output.elasticsearch:
   hosts: ["https://es01:9200"]
