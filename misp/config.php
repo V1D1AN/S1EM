@@ -41,6 +41,7 @@ $config = array (
     'host_org_id' => 1,
     'default_event_tag_collection' => 0,
     'proposals_block_attributes' => false,
+	'tmpdir' => '/tmp',
   ),
   'GnuPG' => 
   array (
