@@ -534,7 +534,7 @@ services:
     networks:
       - s1em
     healthcheck:
-      test: ["CMD-SHELL", "[ $$(nodetool statusgossip) = running ]"]
+      test: ["CMD-SHELL", "[ $$(nodetool statusgossip -Dcom.sun.jndi.rmiURLParsing=legacy) = running ]"]
       interval: 30s
       timeout: 10s
       retries: 5
