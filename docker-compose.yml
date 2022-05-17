@@ -585,7 +585,7 @@ services:
       - s1em
 
   redis:
-    image: redis:latest
+    image: redis:6.2
     hostname: redis
     container_name: redis
     restart: always
