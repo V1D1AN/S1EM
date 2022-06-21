@@ -585,7 +585,7 @@ services:
       - s1em
 
   redis:
-    image: redis:6.2
+    image: redis:7
     hostname: redis
     container_name: redis
     restart: always
@@ -900,7 +900,7 @@ services:
       - s1em
 
   rabbitmq:
-    image: rabbitmq:3.9-management
+    image: rabbitmq:management
     container_name: rabbitmq
     hostname: rabbitmq
     environment:
@@ -1501,6 +1501,7 @@ services:
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
+    restart: always
     logging:
       driver: "json-file"
       options:
