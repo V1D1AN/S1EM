@@ -33,6 +33,7 @@ read -r -p "Enter the admin account (Must be like user@domain.tld):" admin_accou
 admin_account=$admin_account
 read -r -p "Enter the organization:" organization
 organization=$organization
+sed -i "s|organization_name|$$organization|g" .env
 sed -i "s|opencti_account|$admin_account|g" .env
 sed -i "s|arkime_account|$admin_account|g" .env
 sed -i "s|n8n_account|$admin_account|g" .env
@@ -303,7 +304,7 @@ echo "########### CONFIGURING STOQ #############"
 echo "##########################################"
 echo
 echo
-sed -i "s|mwdb_api_key|$mwdb_apikey|g" stoq/stoq.cfg
+sed -i "s|mwdb_api_key|$mwdb_apikey|g" stoq/stoq.cfg .env
 echo
 echo
 echo "##########################################"
@@ -331,20 +332,6 @@ echo "##########################################"
 echo
 echo
 docker-compose up -d logstash
-echo
-echo
-echo "##########################################"
-echo "######### CONFIGURING LOGSTASH ###########"
-echo "##########################################"
-echo
-echo
-docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_component_template/pfelk-settings?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-settings"
-docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_component_template/pfelk-mappings-ecs?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-mappings-ecs"
-docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_ilm/policy/pfelk-ilm?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-ilm"
-docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_index_template/pfelk?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk"
-docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_index_template/pfelk-dhcp?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-dhcp"
-docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_index_template/pfelk-haproxy?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-haproxy"
-docker exec logstash sh -c "curl -sk -X PUT 'https://es01:9200/_index_template/pfelk-suricata?pretty' -u 'elastic:$password' -H 'Content-Type: application/json' -d@/usr/share/logstash/templates/pfelk-suricata"
 echo
 echo
 echo "##########################################"

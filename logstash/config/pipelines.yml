@@ -4,6 +4,3 @@
 - pipeline.id: stoq
   path.config: "/usr/share/logstash/pipeline/stoq/*.conf"
   pipeline.workers: 3
-- pipeline.id: pfelk
-  path.config: "/usr/share/logstash/pipeline/pfelk/*.conf"
-  pipeline.workers: 3
