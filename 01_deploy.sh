@@ -412,7 +412,7 @@ echo "####### STARTING OTHER DOCKER ###########"
 echo "#########################################"
 echo
 echo
-docker-compose up -d elastalert cyberchef file-upload syslog-ng tcpreplay clamav heartbeat spiderfoot codimd watchtower
+docker-compose up -d fleet-server elastalert cyberchef file-upload syslog-ng tcpreplay clamav heartbeat spiderfoot codimd watchtower
 echo
 echo
 echo "#########################################"

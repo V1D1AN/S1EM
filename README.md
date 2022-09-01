@@ -22,6 +22,7 @@ Inside the solution:
 * Metricbeat
 * Heartbeat
 * Auditbeat
+* Fleet
 * N8n
 * Spiderfoot
 * Syslog-ng
