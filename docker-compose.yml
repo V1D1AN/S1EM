@@ -1028,28 +1028,6 @@ services:
     networks:
       - s1em
 
-  connector-history:
-    image: opencti/connector-history:latest
-    container_name: connector-history
-    hostname: connector-history
-    environment:
-      - OPENCTI_URL=http://opencti:8080/opencti
-      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
-      - CONNECTOR_ID=${CONNECTOR_HISTORY_ID} # Valid UUIDv4
-      - CONNECTOR_TYPE=STREAM
-      - CONNECTOR_NAME=History
-      - CONNECTOR_SCOPE=history
-      - CONNECTOR_CONFIDENCE_LEVEL=3
-      - CONNECTOR_LOG_LEVEL=info
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    restart: always
-    networks:
-      - s1em
-
   connector-export-file-stix:
     image: opencti/connector-export-file-stix:latest
     container_name: connector-export-file-stix
