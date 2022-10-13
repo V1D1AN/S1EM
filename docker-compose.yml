@@ -992,7 +992,6 @@ services:
       - connector-cve
       - connector-export-file-csv
       - connector-export-file-stix
-      - connector-history
       - connector-import-document
       - connector-import-file-stix
       - connector-misp
