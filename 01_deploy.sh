@@ -31,9 +31,9 @@ echo
 echo
 read -r -p "Enter the admin account (Must be like user@domain.tld):" admin_account
 admin_account=$admin_account
-read -r -p "Enter the organization:" organization
+read -r -p "Enter the organization (Must be like 'Cyber'):" organization
 organization=$organization
-sed -i "s|organization_name|$$organization|g" .env
+sed -i "s|organization_name|$organization|g" .env
 sed -i "s|opencti_account|$admin_account|g" .env
 sed -i "s|arkime_account|$admin_account|g" .env
 sed -i "s|n8n_account|$admin_account|g" .env
@@ -66,13 +66,24 @@ echo "####### CONFIGURING ACCOUNT MWDB #########"
 echo "##########################################"
 echo
 echo
-cd mwdb
-bash ./gen_vars.sh
-mwdb_password=$(cat mwdb-vars.env | grep MWDB_ADMIN_PASSWORD | cut -b 21-)
-sed -i "s|mwdb_password|$mwdb_password|g" karton.ini
-cd -
+bash ./mwdb/gen_vars.sh
+mwdb_password=$(cat mwdb/mwdb-vars.env | grep MWDB_ADMIN_PASSWORD | cut -b 21-)
+sed -i "s|mwdb_password|$mwdb_password|g" mwdb/karton.ini
 mwdb_postgres=$(sed -n "3p" mwdb/postgres-vars.env | cut -c19-)
 sed -i "s|mwdb_postgres|$mwdb_postgres|g" postgres/databases.sh
+echo
+echo
+echo "##########################################"
+echo "### CONFIGURING CLUSTER ELASTICSEARCH  ###"
+echo "##########################################"
+echo
+echo
+read -p "Enter the RAM of master node elasticsearch [2]: " master_node
+master_node=${master_node:-2}
+sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
+read -p "Enter the RAM of data,ingest node elasticsearch [4]: " data_node
+data_node=${data_node:-4}
+sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
 echo
 echo
 echo "##########################################"
@@ -212,7 +223,7 @@ echo "##########################################"
 echo
 echo
 docker-compose up -d cortex
-docker exec -ti cortex keytool -delete -alias ca -keystore /usr/local/openjdk-8/jre/lib/security/cacerts --storepass changeit -noprompt
+docker exec -ti cortex keytool -delete -alias ca -keystore /usr/local/openjdk-8/jre/lib/security/cacerts --storepass changeit -noprompt >/dev/null
 docker exec -ti cortex keytool -import -alias ca -file /opt/cortex/certificates/ca/ca.crt -keystore /usr/local/openjdk-8/jre/lib/security/cacerts --storepass changeit -noprompt
 docker-compose restart cortex
 echo
@@ -231,12 +242,12 @@ curl -sk -L -XPOST "https://127.0.0.1/cortex/api/user" -H 'Content-Type: applica
 curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization" -d "{  \"name\": \"$organization\",\"description\": \"SOC team\",\"status\": \"Active\"}"
 curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user" -d "{\"name\": \"$admin_account\",\"roles\": [\"read\",\"analyze\",\"orgadmin\"],\"organization\": \"$organization\",\"login\": \"$admin_account\"}"
 curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user/$admin_account/password/set" -d "{ \"password\": \"$admin_password\" }"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/MISP_2_1" -d "{\"name\": \"MISP_2_1\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/OpenCTI_SearchObservables_2_0" -d "{\"name\": \"OpenCTI_SearchObservables_2_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/OTXQuery_2_0" -d "{\"name\": \"OTXQuery\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_IP_Analysis_1_0" -d "{\"name\": \"Elasticsearch_IP_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_Hash_Analysis_1_0" -d "{\"name\": \"Elasticsearch_Hash_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
 cortex_apikey=$(curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user/$admin_account/key/renew")
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/MISP_2_1" -d "{\"name\": \"MISP_2_1\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/OpenCTI_SearchObservables_2_0" -d "{\"name\": \"OpenCTI_SearchObservables_2_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/OTXQuery_2_0" -d "{\"name\": \"OTXQuery\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_IP_Analysis_1_0" -d "{\"name\": \"Elasticsearch_IP_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_Hash_Analysis_1_0" -d "{\"name\": \"Elasticsearch_Hash_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
 echo
 echo
 echo "##########################################"
@@ -264,8 +275,27 @@ while [ "$(docker exec thehive sh -c 'curl -s http://127.0.0.1:9000')" == "" ]; 
   echo "Waiting for TheHive to come online.";
   sleep 15;
 done
+echo
+echo
 curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v0/organisation" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"description\": \"SOC team\",\"name\": \"$organization\"}"
+echo
+echo
+while [ "$(docker logs thehive | grep -i "End of deduplication of Organisation")" == "" ]; do
+  echo "Waiting for TheHive organization.";
+  sleep 15;
+done
+echo
+echo
 curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"login\": \"$admin_account\",\"name\": \"admin\",\"organisation\": \"$organization\",\"profile\": \"org-admin\",\"email\": \"$admin_account\",\"password\": \"$admin_password\"}"
+echo
+echo
+while [ "$(docker logs thehive | grep -i " End of deduplication of User")" == "" ]; do
+  echo "Waiting for the creation of user in TheHive .";
+  sleep 15;
+done
+curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"login\": \"$admin_account\",\"name\": \"admin\",\"organisation\": \"$organization\",\"profile\": \"org-admin\",\"email\": \"$admin_account\",\"password\": \"$admin_password\"}"
+echo
+echo
 thehive_apikey=$(curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user/$admin_account/key/renew" -u admin@thehive.local:secret)
 echo
 echo
