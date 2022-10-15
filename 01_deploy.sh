@@ -31,9 +31,9 @@ echo
 echo
 read -r -p "Enter the admin account (Must be like user@domain.tld):" admin_account
 admin_account=$admin_account
-read -r -p "Enter the organization:" organization
+read -r -p "Enter the organization (Must be like 'Cyber'):" organization
 organization=$organization
-sed -i "s|organization_name|$$organization|g" .env
+sed -i "s|organization_name|$organization|g" .env
 sed -i "s|opencti_account|$admin_account|g" .env
 sed -i "s|arkime_account|$admin_account|g" .env
 sed -i "s|n8n_account|$admin_account|g" .env
@@ -66,13 +66,24 @@ echo "####### CONFIGURING ACCOUNT MWDB #########"
 echo "##########################################"
 echo
 echo
-cd mwdb
-bash ./gen_vars.sh
-mwdb_password=$(cat mwdb-vars.env | grep MWDB_ADMIN_PASSWORD | cut -b 21-)
-sed -i "s|mwdb_password|$mwdb_password|g" karton.ini
-cd -
+bash ./mwdb/gen_vars.sh
+mwdb_password=$(cat mwdb/mwdb-vars.env | grep MWDB_ADMIN_PASSWORD | cut -b 21-)
+sed -i "s|mwdb_password|$mwdb_password|g" mwdb/karton.ini
 mwdb_postgres=$(sed -n "3p" mwdb/postgres-vars.env | cut -c19-)
 sed -i "s|mwdb_postgres|$mwdb_postgres|g" postgres/databases.sh
+echo
+echo
+echo "##########################################"
+echo "### CONFIGURING CLUSTER ELASTICSEARCH  ###"
+echo "##########################################"
+echo
+echo
+read -p "Enter the RAM of master node elasticsearch [2]: " master_node
+master_node=${master_node:-2}
+sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
+read -p "Enter the RAM of data,ingest node elasticsearch [4]: " data_node
+data_node=${data_node:-4}
+sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
 echo
 echo
 echo "##########################################"

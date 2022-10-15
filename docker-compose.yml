@@ -68,7 +68,7 @@ services:
       - node.roles=master
       - cluster.initial_master_nodes=es01
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - "ES_JAVA_OPTS=-XmsRAM_MASTERg -XmxRAM_MASTERg"
       - network.host=0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.license.self_generated.type=basic
@@ -112,7 +112,7 @@ services:
       - cluster.initial_master_nodes=es01
       - discovery.seed_hosts=es01
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+      - "ES_JAVA_OPTS=-XmsRAM_DATAg -XmxRAM_DATAg"
       - network.host=0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.license.self_generated.type=basic
@@ -151,7 +151,7 @@ services:
       - cluster.initial_master_nodes=es01
       - discovery.seed_hosts=es01
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+      - "ES_JAVA_OPTS=-XmsRAM_DATAg -XmxRAM_DATAg"
       - network.host=0.0.0.0
       - bootstrap.memory_lock=true
       - xpack.license.self_generated.type=basic
