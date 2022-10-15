@@ -275,8 +275,26 @@ while [ "$(docker exec thehive sh -c 'curl -s http://127.0.0.1:9000')" == "" ]; 
   echo "Waiting for TheHive to come online.";
   sleep 15;
 done
+echo
+echo
 curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v0/organisation" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"description\": \"SOC team\",\"name\": \"$organization\"}"
+echo
+echo
+while [ "$(docker logs thehive | grep -i "End of deduplication of Organisation")" == "" ]; do
+  echo "Waiting for TheHive organization.";
+  sleep 15;
+done
+echo
+echo
 curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"login\": \"$admin_account\",\"name\": \"admin\",\"organisation\": \"$organization\",\"profile\": \"org-admin\",\"email\": \"$admin_account\",\"password\": \"$admin_password\"}"
+echo
+echo
+while [ "$(docker logs thehive | grep -i " End of deduplication of User")" == "" ]; do
+  echo "Waiting for the creation of user in TheHive .";
+  sleep 15;
+done
+echo
+echo
 thehive_apikey=$(curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user/$admin_account/key/renew" -u admin@thehive.local:secret)
 echo
 echo
