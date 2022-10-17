@@ -766,7 +766,7 @@ services:
       - s1em
 
   postgres:
-    image: postgres
+    image: postgres:14
     container_name: postgres
     hostname: postgres
     restart: always
