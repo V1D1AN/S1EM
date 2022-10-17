@@ -648,7 +648,7 @@ services:
       - s1em
 
   misp:
-    image: coolacid/misp-docker:core-latest
+    image: coolacid/misp-docker:core-v2.4.163a
     container_name: misp
     hostname: misp
     restart: always
