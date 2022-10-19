@@ -391,6 +391,10 @@ echo "######## UPDATE SURICATA RULES ###########"
 echo "##########################################"
 echo
 echo
+while [ "$(docker exec -it suricata test -e /var/run/suricata/suricata-command.socket && echo "File exists." || echo "File does not exist")" == "File does not exist" ]; do
+  echo "Waiting for Suricata to come online.";
+  sleep 5;
+done
 docker exec -ti suricata suricata-update update-sources
 docker exec -ti suricata suricata-update --no-test
 echo
