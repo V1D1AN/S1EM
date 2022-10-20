@@ -9,6 +9,7 @@ echo "###### CONFIGURING ACCOUNT ELASTIC #######"
 echo "###### AND KIBANA API KEY          ######"
 echo "##########################################"
 echo  
+echo
 password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 kibana_password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 kibana_api_key=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
@@ -16,7 +17,6 @@ cortex_api=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 echo "The master password Elastic set in .env:" $password
 echo "The master password Kibana set in .env:" $kibana_password
 echo "The Kibana api key is : " $kibana_api_key
-echo
 sed -i "s|kibana_api_key|$kibana_api_key|g" kibana/kibana.yml
 sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/stoq/300_output_stoq.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
 sed -i "s|kibana_changeme|$kibana_password|g" .env
@@ -78,10 +78,10 @@ echo "### CONFIGURING CLUSTER ELASTICSEARCH  ###"
 echo "##########################################"
 echo
 echo
-read -p "Enter the RAM of master node elasticsearch [2]: " master_node
+read -p "Enter the RAM in Go of master node elasticsearch [2]: " master_node
 master_node=${master_node:-2}
 sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
-read -p "Enter the RAM of data,ingest node elasticsearch [4]: " data_node
+read -p "Enter the RAM in Go of data,ingest node elasticsearch [4]: " data_node
 data_node=${data_node:-4}
 sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
 echo
@@ -111,6 +111,23 @@ systemctl enable S1EM-promiscuous
 # start service
 systemctl start S1EM-promiscuous
 ###########
+echo
+echo
+echo "##########################################"
+echo "########## CONFIGURE DETECTION ###########"
+echo "##########################################"
+echo
+echo
+while true; do
+    read -r -p "Do you want use detection with rules of Sigma or Elastic (Elastic recommanded) [E/S]?" rules
+    case $rules in
+        [Ee]) detection=ELASTIC; break;;
+        [Ss]) detection=SIGMA; break;;
+        * ) echo "Please answer (E/e) or (S/s).";;
+    esac
+done
+echo
+echo "$detection"
 echo
 echo
 echo "##########################################"
@@ -286,17 +303,22 @@ while [ "$(docker logs thehive | grep -i "End of deduplication of Organisation")
 done
 echo
 echo
-curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"login\": \"$admin_account\",\"name\": \"admin\",\"organisation\": \"$organization\",\"profile\": \"org-admin\",\"email\": \"$admin_account\",\"password\": \"$admin_password\"}"
+curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"login\":\"$admin_account\",\"name\":\"admin\",\"profile\":\"org-admin\",\"organisation\":\"$organization\"}"
 echo
-echo
+
 while [ "$(docker logs thehive | grep -i " End of deduplication of User")" == "" ]; do
   echo "Waiting for the creation of user in TheHive .";
   sleep 15;
 done
-curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"login\": \"$admin_account\",\"name\": \"admin\",\"organisation\": \"$organization\",\"profile\": \"org-admin\",\"email\": \"$admin_account\",\"password\": \"$admin_password\"}"
 echo
 echo
+curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user/$admin_account/password/set" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"password\":\"$admin_password\"}"
 thehive_apikey=$(curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user/$admin_account/key/renew" -u admin@thehive.local:secret)
+
+while [ "$(docker logs thehive | grep -i " End of deduplication of User")" == "" ]; do
+  echo "Waiting for the password change of user in TheHive .";
+  sleep 15;
+done
 echo
 echo
 echo "##########################################"
@@ -386,6 +408,10 @@ echo "######## UPDATE SURICATA RULES ###########"
 echo "##########################################"
 echo
 echo
+while [ "$(docker exec -it suricata test -e /var/run/suricata/suricata-command.socket && echo "File exists." || echo "File does not exist")" == "File does not exist" ]; do
+  echo "Waiting for Suricata to come online.";
+  sleep 5;
+done
 docker exec -ti suricata suricata-update update-sources
 docker exec -ti suricata suricata-update --no-test
 echo
@@ -410,15 +436,23 @@ docker restart cortex
 echo
 echo
 echo "##########################################"
-echo "######### INSTALL SIGMA RULES ############"
+echo "####### INSTALL DETECTION RULES ##########"
 echo "##########################################"
 echo
 echo
 curl -sk -XPOST -u elastic:$password "https://127.0.0.1/kibana/s/default/api/detection_engine/index" -H "kbn-xsrf: true"
-docker image rm -f sigma:1.0
-docker container prune -f
-docker-compose -f sigma.yml build
-docker-compose -f sigma.yml up -d
+echo
+echo
+if 	 [ "$detection" == ELASTIC ];
+then
+        curl -sk -XPUT -u elastic:$password "https://127.0.0.1/kibana/s/default/api/detection_engine/rules/prepackaged" -H "kbn-xsrf: true"
+elif [ "$detection" == SIGMA ];
+then
+        docker image rm -f sigma:1.0
+        docker container prune -f
+        docker-compose -f sigma.yml build
+        docker-compose -f sigma.yml up -d
+fi
 echo
 echo
 echo "#########################################"
