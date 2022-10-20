@@ -17,8 +17,6 @@ cortex_api=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 echo "The master password Elastic set in .env:" $password
 echo "The master password Kibana set in .env:" $kibana_password
 echo "The Kibana api key is : " $kibana_api_key
-echo
-echo
 sed -i "s|kibana_api_key|$kibana_api_key|g" kibana/kibana.yml
 sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/stoq/300_output_stoq.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
 sed -i "s|kibana_changeme|$kibana_password|g" .env
