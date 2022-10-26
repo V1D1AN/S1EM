@@ -42,8 +42,6 @@ Inside the solution:
 * Watchtower
 * Homer
 
-Note: Cortex v3.1 use ELK connector and the OpenCTI v4 connector
-
 
 # Guides
 - [Installation Guide](https://github.com/V1D1AN/S1EM/wiki/Installation-Guide)
