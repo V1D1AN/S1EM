@@ -90,7 +90,7 @@ services:
       - name: "N8n"
         logo: "https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-logo.png"
         tag: "app"
-        url: "https://s1em_hostname/n8n/"
+        url: "https://s1em_hostname/n8n/signin"
         target: "_blank" # optional html a tag target attribute
 
 
