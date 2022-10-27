@@ -224,6 +224,15 @@ while [ "$( curl -sk 'https://127.0.0.1/misp/users/login' | grep "MISP" )" == ""
 done
 misp_apikey=$(docker exec misp sh -c "mysql -u misp --password=misppass -D misp -e'select authkey from users;'" | sed "1d")
 sed -i "s|misp_api_key|$misp_apikey|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml .env
+
+echo "Load external Feed List"
+curl -sk -X POST --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/loadDefaultFeeds >/dev/null 2>&1
+sleep 30
+echo "Enable Feeds "
+curl -sk -X GET --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/enable/1 >/dev/null 2>&1
+curl -sk -X GET --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/enable/2 >/dev/null 2>&1
+echo "Starting Feed synchronisation in background"
+curl -sk -X GET --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/fetchFromAllFeeds >/dev/null 2>&1
 echo
 echo
 echo "##########################################"
