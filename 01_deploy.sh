@@ -440,12 +440,13 @@ echo "####### INSTALL DETECTION RULES ##########"
 echo "##########################################"
 echo
 echo
-curl -sk -XPOST -u elastic:$password "https://127.0.0.1/kibana/s/default/api/detection_engine/index" -H "kbn-xsrf: true"
 echo
 echo
 if 	 [ "$detection" == ELASTIC ];
 then
         curl -sk -XPUT -u elastic:$password "https://127.0.0.1/kibana/s/default/api/detection_engine/rules/prepackaged" -H "kbn-xsrf: true"
+        echo "Install rules from folder"    
+        for rule in $(find ./rules/elastic/ -type f ); do (curl -sk -X POST 'https://127.0.0.1/kibana/api/detection_engine/rules/_import?overwrite=true' -u "elastic:$password" -H 'kbn-xsrf: true' --form 'file=@'$rule  >/dev/null 2>&1); done
 elif [ "$detection" == SIGMA ];
 then
         docker image rm -f sigma:1.0
