@@ -41,3 +41,9 @@ instances:
   - name: heartbeat
     dns:
        - heartbeat
+  - name: fleet-server
+    dns:
+       - fleet-server
+    ip:
+       - monitoringip
+       - 127.0.0.1
