@@ -264,6 +264,10 @@ while [ "$(docker exec cortex sh -c 'curl -s http://127.0.0.1:9001')" == "" ]; d
   sleep 15;
 done
 curl -sk -L -XPOST "https://127.0.0.1/cortex/api/maintenance/migrate"
+while [ "$(docker logs cortex | grep -i 'End of migration')" == "" ]; do
+  echo "Waiting for Cortex & elasticsearch init.";
+  sleep 15;
+done
 curl -sk -L -XPOST "https://127.0.0.1/cortex/api/user" -H 'Content-Type: application/json' -d "{\"login\" : \"admin@cortex.local\",\"name\" : \"admin@cortex.local\",\"roles\" : [\"superadmin\"],\"preferences\" : \"{}\",\"password\" : \"secret\", \"key\": \"$cortex_api\"}"
 curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization" -d "{  \"name\": \"$organization\",\"description\": \"SOC team\",\"status\": \"Active\"}"
 curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user" -d "{\"name\": \"$admin_account\",\"roles\": [\"read\",\"analyze\",\"orgadmin\"],\"organization\": \"$organization\",\"login\": \"$admin_account\"}"
