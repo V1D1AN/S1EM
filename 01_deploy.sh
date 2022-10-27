@@ -476,20 +476,20 @@ while [ "$(curl -k -w "%{http_code}" -o /dev/null --header 'kbn-xsrf: true' -X P
 done
 
 echo " Setting Fleet URL as https://$MONITORING_IP:8220"
-curl -svk -u "elastic:$password" -XPUT "https://127.0.0.1/kibana/api/fleet/settings" \
+curl -sk -u "elastic:$password" -XPUT "https://127.0.0.1/kibana/api/fleet/settings" \
   --header 'kbn-xsrf: true' \
   --header 'Content-Type: application/json' \
-  -d '{"fleet_server_hosts":["https://${MONITORING_IP}:8220"]}' # >/dev/null 2>&1
+  -d '{"fleet_server_hosts":["https://${MONITORING_IP}:8220"]}' >/dev/null 2>&1
 
-POLICYID=`curl -sk -u elastic:$password -XGET https://127.0.0.1/kibana/api/fleet/agent_policies | jq -r '.items[] | select (.name | contains("Default Fleet Server policy")).id'` #  >/dev/null 2>&1
+POLICYID=`curl -sk -u elastic:$password -XGET https://127.0.0.1/kibana/api/fleet/agent_policies | jq -r '.items[] | select (.name | contains("Default Fleet Server policy")).id'` >/dev/null 2>&1
 echo "Fleet Server Policy ID: $POLICYID"
 
-FLEET_ENROLLTOKEN=`curl -sk -s -u elastic:$password -XGET "https://127.0.0.1/kibana/api/fleet/enrollment-api-keys" | jq -r '.list[] | select (.policy_id |contains("'$POLICYID'")).api_key'` # >/dev/null 2>&1
+FLEET_ENROLLTOKEN=`curl -sk -s -u elastic:$password -XGET "https://127.0.0.1/kibana/api/fleet/enrollment-api-keys" | jq -r '.list[] | select (.policy_id |contains("'$POLICYID'")).api_key'` >/dev/null 2>&1
 echo "Fleet Server Enrollment API KEY: $FLEET_ENROLLTOKEN"
 sleep 5
 
 
-FLEET_SERVICETOKEN=`curl -vsk -u "elastic:$password" -s -X POST https://127.0.0.1/kibana/api/fleet/service-tokens --header 'kbn-xsrf: true' | jq -r .value` # >/dev/null 2>&1
+FLEET_SERVICETOKEN=`curl -vsk -u "elastic:$password" -s -X POST https://127.0.0.1/kibana/api/fleet/service-tokens --header 'kbn-xsrf: true' | jq -r .value` >/dev/null 2>&1
 echo "Generated SERVICE TOKEN for fleet server: $FLEET_SERVICETOKEN"
 sed -i "s|fleettoken|$FLEET_SERVICETOKEN|g" .env docker-compose.yml
 sed -i "s|fleetenroll|$FLEET_ENROLLTOKEN|g" .env docker-compose.yml
@@ -516,10 +516,12 @@ fi
 EOF
 }
 
-curl -svk -u "elastic:$password" -XPUT "https://127.0.0.1/kibana/api/fleet/outputs/fleet-default-output" \
+curl -sk -u "elastic:$password" -XPUT "https://127.0.0.1/kibana/api/fleet/outputs/fleet-default-output" \
       --header 'kbn-xsrf: true' \
       --header 'Content-Type: application/json' \
-      -d "$(generate_post_data)" #>/dev/null 2>&1
+      -d "$(generate_post_data)" >/dev/null 2>&1
+
+
 echo
 echo
 echo "#########################################"

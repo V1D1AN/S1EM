@@ -45,5 +45,5 @@ instances:
     dns:
        - fleet-server
     ip:
-       - monitoringip_changeme
+       - monitoringip
        - 127.0.0.1
