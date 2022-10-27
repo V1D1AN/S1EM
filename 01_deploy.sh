@@ -448,6 +448,7 @@ echo "####### INSTALL DETECTION RULES ##########"
 echo "##########################################"
 echo
 echo
+curl -sk -XPOST -u elastic:$password "https://127.0.0.1/kibana/s/default/api/detection_engine/index" -H "kbn-xsrf: true"
 echo
 echo
 if 	 [ "$detection" == ELASTIC ];
@@ -471,7 +472,7 @@ echo
 
 docker-compose up -d fleet-server
 
-while [ "$(curl -k -w "%{http_code}" -o /dev/null --header 'kbn-xsrf: true' -X POST -u "elastic:$password" https://127.0.0.1/kibana/api/fleet/setup)" != "200" ]; do
+while [ "$(curl -sk -w "%{http_code}" -o /dev/null --header 'kbn-xsrf: true' -X POST -u "elastic:$password" https://127.0.0.1/kibana/api/fleet/setup)" != "200" ]; do
   echo "Waiting for fleet setup.";
   sleep 15;
 done
