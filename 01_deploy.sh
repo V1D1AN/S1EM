@@ -3,6 +3,8 @@ if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
 fi
+SCRIPTDIR="$(pwd)"
+mkdir certs
 cp env.sample .env
 echo "##########################################"
 echo "###### CONFIGURING ACCOUNT ELASTIC #######"
@@ -113,6 +115,8 @@ systemctl start S1EM-promiscuous
 INTERFACE=`netstat -rn | grep ${monitoring_interface} | awk '{ print $NF }'| tail -n1`
 MONITORING_IP=`ifconfig ${INTERFACE} | grep inet | awk '{ print $2 }' | grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'`
 echo "Interface: ${INTERFACE}   IP found: ${MONITORING_IP}"
+sed -i "s;monitoringip;${MONITORING_IP};" instances.yml .env
+
 echo
 ###########
 echo
@@ -466,64 +470,44 @@ echo
 
 docker-compose up -d fleet-server
 
-
-docker run -it -v "soc-sfir-test_certs:/certs" -v "/home/dmgadmin/git/soc-sfir-test/certs/:/certstarget" amd64/alpine cp /certs/ca/ca.crt /certstarget/ca.crt
-
-
-
 while [ "$(curl -k -w "%{http_code}" -o /dev/null --header 'kbn-xsrf: true' -X POST -u "elastic:$password" https://127.0.0.1/kibana/api/fleet/setup)" != "200" ]; do
   echo "Waiting for fleet setup.";
   sleep 15;
 done
 
-
 echo " Setting Fleet URL as https://$MONITORING_IP:8220"
-curl -k -u "elastic:$password" -XPUT "https://127.0.0.1/kibana/api/fleet/settings" \
+curl -svk -u "elastic:$password" -XPUT "https://127.0.0.1/kibana/api/fleet/settings" \
   --header 'kbn-xsrf: true' \
   --header 'Content-Type: application/json' \
   -d '{"fleet_server_hosts":["https://${MONITORING_IP}:8220"]}' # >/dev/null 2>&1
 
-#      echo "Creating Fleet Server Policy"
-#        # >/dev/null 2>&1
-# curl -sk -XPOST -u "elastic:$password" 'https://127.0.0.1/kibana/api/fleet/agent_policies?sys_monitoring=true' \
-#     --header 'kbn-xsrf: true' \
-#     --header 'Content-Type: application/json' \
-#   --data-raw '{"name":"fleet-server-policy","description":"fleet-server","namespace":"default","monitoring_enabled":["logs","metrics"]}' 
+POLICYID=`curl -sk -u elastic:$password -XGET https://127.0.0.1/kibana/api/fleet/agent_policies | jq -r '.items[] | select (.name | contains("Default Fleet Server policy")).id'` #  >/dev/null 2>&1
+echo "Fleet Server Policy ID: $POLICYID"
 
-    # Get policy_id
-    POLICYID=`curl -sk -u elastic:$password -XGET https://127.0.0.1/kibana/api/fleet/agent_policies | jq -r '.items[] | select (.name | contains("Default Fleet Server policy")).id'` #  >/dev/null 2>&1
-    echo "Fleet Server Policy ID: $POLICYID"
+FLEET_ENROLLTOKEN=`curl -sk -s -u elastic:$password -XGET "https://127.0.0.1/kibana/api/fleet/enrollment-api-keys" | jq -r '.list[] | select (.policy_id |contains("'$POLICYID'")).api_key'` # >/dev/null 2>&1
+echo "Fleet Server Enrollment API KEY: $FLEET_ENROLLTOKEN"
+sleep 5
 
-    # Get enrollment token
-    FLEET_ENROLLTOKEN=`curl -sk -s -u elastic:$password -XGET "https://127.0.0.1/kibana/api/fleet/enrollment-api-keys" | jq -r '.list[] | select (.policy_id |contains("'$POLICYID'")).api_key'` # >/dev/null 2>&1
-    echo "Fleet Server Enrollment API KEY: $FLEET_ENROLLTOKEN"
 
-sleep 5 
-    # Create service token
-    FLEET_SERVICETOKEN=`curl -vsk -u "elastic:$password" -s -X POST https://127.0.0.1/kibana/api/fleet/service-tokens --header 'kbn-xsrf: true' | jq -r .value` # >/dev/null 2>&1
-    echo "Generated SERVICE TOKEN for fleet server: $FLEET_SERVICETOKEN"
-  sed -i "s|fleettoken_changeme|$FLEET_SERVICETOKEN|g" .env docker-compose.yml
- sed -i "s|fleetenroll_changeme|$FLEET_ENROLLTOKEN|g" .env docker-compose.yml
+FLEET_SERVICETOKEN=`curl -vsk -u "elastic:$password" -s -X POST https://127.0.0.1/kibana/api/fleet/service-tokens --header 'kbn-xsrf: true' | jq -r .value` # >/dev/null 2>&1
+echo "Generated SERVICE TOKEN for fleet server: $FLEET_SERVICETOKEN"
+sed -i "s|fleettoken|$FLEET_SERVICETOKEN|g" .env docker-compose.yml
+sed -i "s|fleetenroll|$FLEET_ENROLLTOKEN|g" .env docker-compose.yml
 
-   # setting Elasticsearch URL and SSL certificate and fingerprint
-    echo "Setting Elasticsearch URL & Fingerprint & SSL CA"
+echo "Setting Elasticsearch URL & Fingerprint & SSL CA"
+FINGERPRINT=`openssl x509 -fingerprint -sha256 -noout -in certs/ca.crt | awk -F"=" {' print $2 '} | sed s/://g `
     
-    ## fingerprint
-    FINGERPRINT=`openssl x509 -fingerprint -sha256 -noout -in certs/ca.crt | awk -F"=" {' print $2 '} | sed s/://g `
-    
-    ## ssl ca
-    if [ -f ${2}/ca.temp ]; then
-     sudo rm -rf certs/ca.temp
-    fi
-    while read line
-    do
-      echo "    ${line}" >> /tmp/ca.temp
-    done < certs/ca.crt
-    truncate -s -1 /tmp/ca.temp
-    CA=$(jq -R -s '.' < /tmp/ca.temp | tr -d '"' | sed 's!\\n!/\\r\\n!g')
-    #CA=$(cat /tmp/ca.temp)
-    sudo rm -rf /tmp/ca.temp
-     generate_post_data(){
+if [ -f ${2}/ca.temp ]; then
+ sudo rm -rf certs/ca.temp
+fi
+ while read line
+   do
+     echo "    ${line}" >> /tmp/ca.temp
+   done < certs/ca.crt
+   truncate -s -1 /tmp/ca.temp
+   CA=$(jq -R -s '.' < /tmp/ca.temp | tr -d '"' | sed 's!\\n!/\\r\\n!g')
+   sudo rm -rf /tmp/ca.temp
+   generate_post_data(){
         cat <<EOF
 {
   "hosts":["https://${MONITORING_IP}:9200"],
@@ -532,11 +516,12 @@ sleep 5
 EOF
 }
 
-      curl -sk -u "elastic:$password" -XPUT "https://127.0.0.1/kibana/api/fleet/outputs/fleet-default-output" \
+curl -svk -u "elastic:$password" -XPUT "https://127.0.0.1/kibana/api/fleet/outputs/fleet-default-output" \
       --header 'kbn-xsrf: true' \
       --header 'Content-Type: application/json' \
-      -d "$(generate_post_data)" >/dev/null 2>&1
-
+      -d "$(generate_post_data)" #>/dev/null 2>&1
+echo
+echo
 echo "#########################################"
 echo "########## STARTING OPENCTI #############"
 echo "#########################################"

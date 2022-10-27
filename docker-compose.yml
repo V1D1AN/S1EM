@@ -6,6 +6,7 @@ services:
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - ./instances.yml:/usr/share/elasticsearch/config/certs/instances.yml
+      - ./certs:/target_ca_cert_dir
     user: "0"
     networks:
       - s1em
@@ -31,6 +32,7 @@ services:
         chown -R 1000:0 config/certs;
         find . -type d -exec chmod 755 \{\} \;;
         find . -type f -exec chmod 644 \{\} \;;
+        cp config/certs/ca/ca.crt /target_ca_cert_dir/ ;
         echo "All done!";'
 
   traefik:
@@ -336,22 +338,6 @@ services:
     ports:
       - "5044:5044"
 
-  fleet-server:
-    container_name: fleet-server
-    hostname: fleet-server    
-    user: root
-    image: docker.elastic.co/beats/elastic-agent:7.17.6
-    environment:
-      - FLEET_SERVER_ENABLE=true
-      - FLEET_URL=https://192.168.100.18:8220
-      - FLEET_ENROLLMENT_TOKEN=M0lZX0NZUUIxQUVsVmRtbUxfYUw6cWttOGkwSk9Ubi1RbmxBckoya0o1dw==
-      - FLEET_CA=/usr/share/certificates/ca/ca.crt
-      - FLEET_SERVER_ELASTICSEARCH_HOST=https://es01:9200
-      - FLEET_SERVER_ELASTICSEARCH_CA=/usr/share/certificates/ca/ca.crt
-      - FLEET_SERVER_CERT=/usr/share/certificates/fleet-server/fleet-server.crt
-      - FLEET_SERVER_CERT_KEY=/usr/share/certificates/fleet-server/fleet-server.key
-      - FLEET_SERVER_SERVICE_TOKEN=AAEAAWVsYXN0aWMvZmxlZXQtc2VydmVyL3Rva2VuLTE2NjY2MDI0NTY2MDM6OHYtR3hORzNRZ1NpZ21EalB5YWlCQQ
-      - CERTIFICATE_AUTHORITIES=/usr/share/certificates/ca/ca.crt
 
   fleet-server:
     container_name: fleet-server
@@ -360,14 +346,14 @@ services:
     image: docker.elastic.co/beats/elastic-agent:7.17.6
     environment:
       - FLEET_SERVER_ENABLE=true
-      - FLEET_URL=https://monitoringip_changeme:8220
-      - FLEET_ENROLLMENT_TOKEN=fleetenroll_changeme
+      - FLEET_URL=https://${MONITORING_IP}:8220
+      - FLEET_ENROLLMENT_TOKEN=fleetenroll
       - FLEET_CA=/usr/share/certificates/ca/ca.crt
       - FLEET_SERVER_ELASTICSEARCH_HOST=https://es01:9200
       - FLEET_SERVER_ELASTICSEARCH_CA=/usr/share/certificates/ca/ca.crt
       - FLEET_SERVER_CERT=/usr/share/certificates/fleet-server/fleet-server.crt
       - FLEET_SERVER_CERT_KEY=/usr/share/certificates/fleet-server/fleet-server.key
-      - FLEET_SERVER_SERVICE_TOKEN=fleettoken_changeme
+      - FLEET_SERVER_SERVICE_TOKEN=fleettoken
       - CERTIFICATE_AUTHORITIES=/usr/share/certificates/ca/ca.crt
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
