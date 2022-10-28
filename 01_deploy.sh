@@ -88,37 +88,27 @@ sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
 echo
 echo
 echo "##########################################"
-echo "#### CONFIGURING MONITORING INTERFACE ####"
+echo "######### CONFIGURING INTERFACES #########"
 echo "##########################################"
 echo
 echo
 ip a | egrep -A 2 "ens[[:digit:]]{1,3}:|eth[[:digit:]]{1,3}:"
 echo
 echo
-read -r -p "Enter the monitoring interface (ex:ens32):" monitoring_interface
+read -r -p "Enter the administration interface (ex:ens32):" administration_interface
+administration_interface=$administration_interface
+INTERFACE=`netstat -rn | grep ${administration_interface} | awk '{ print $NF }'| tail -n1`
+ADMINISTRATION_IP=`ifconfig ${INTERFACE} | grep inet | awk '{ print $2 }' | grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'`
+echo "Interface: ${INTERFACE}   IP found: ${ADMINISTRATION_IP}"
+sed -i "s;administrationip;${ADMINISTRATION_IP};" instances.yml .env
+echo
+echo
+ip a | egrep -A 2 "ens[[:digit:]]{1,3}:|eth[[:digit:]]{1,3}:"
+echo
+echo
+read -r -p "Enter the monitoring interface (ex:ens33):" monitoring_interface
 monitoring_interface=$monitoring_interface
 sed -i "s|network_monitoring|$monitoring_interface|g" docker-compose.yml suricata/suricata.yaml
-########### Set Service to enable Promiscuous mode on monitoring interface on boot
-# set service path
-serviceConfigurationFile="/usr/lib/systemd/system/S1EM-promiscuous.service"
-cp ./S1EM-promiscuous.service ${serviceConfigurationFile}
-chmod 600 ${serviceConfigurationFile}
-# set monitoring_interface name in service_configuration_file
-sed -i "s;<monitoring_interface>;${monitoring_interface};" ${serviceConfigurationFile}
-# reload systemd to implement new service
-systemctl daemon-reload
-# enable service
-systemctl enable S1EM-promiscuous
-# start service
-systemctl start S1EM-promiscuous
-
-INTERFACE=`netstat -rn | grep ${monitoring_interface} | awk '{ print $NF }'| tail -n1`
-MONITORING_IP=`ifconfig ${INTERFACE} | grep inet | awk '{ print $2 }' | grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'`
-echo "Interface: ${INTERFACE}   IP found: ${MONITORING_IP}"
-sed -i "s;monitoringip;${MONITORING_IP};" instances.yml .env
-
-echo
-###########
 echo
 echo
 echo "##########################################"
@@ -501,11 +491,11 @@ while [ "$(curl -sk -w "%{http_code}" -o /dev/null --header 'kbn-xsrf: true' -X 
   sleep 15;
 done
 
-echo " Setting Fleet URL as https://$MONITORING_IP:8220"
+echo " Setting Fleet URL as https://$ADMINISTRATION_IP:8220"
 curl -sk -u "elastic:$password" -XPUT "https://127.0.0.1/kibana/api/fleet/settings" \
   --header 'kbn-xsrf: true' \
   --header 'Content-Type: application/json' \
-  -d '{"fleet_server_hosts":["https://${MONITORING_IP}:8220"]}' >/dev/null 2>&1
+  -d '{"fleet_server_hosts":["https://${ADMINISTRATION_IP}:8220"]}' >/dev/null 2>&1
 
 POLICYID=`curl -sk -u elastic:$password -XGET https://127.0.0.1/kibana/api/fleet/agent_policies | jq -r '.items[] | select (.name | contains("Default Fleet Server policy")).id'` >/dev/null 2>&1
 echo "Fleet Server Policy ID: $POLICYID"
@@ -536,7 +526,7 @@ fi
    generate_post_data(){
         cat <<EOF
 {
-  "hosts":["https://${MONITORING_IP}:9200"],
+  "hosts":["https://${ADMINISTRATION_IP}:9200"],
   "config_yaml":"ssl:\r\n  verification_mode: none\r\n  certificate_authorities:\r\n  - >\r\n${CA}"
 } 
 EOF

@@ -346,7 +346,7 @@ services:
     image: docker.elastic.co/beats/elastic-agent:7.17.6
     environment:
       - FLEET_SERVER_ENABLE=true
-      - FLEET_URL=https://${MONITORING_IP}:8220
+      - FLEET_URL=https://${ADMINISTRATION_IP}:8220
       - FLEET_ENROLLMENT_TOKEN=fleetenroll
       - FLEET_CA=/usr/share/certificates/ca/ca.crt
       - FLEET_SERVER_ELASTICSEARCH_HOST=https://es01:9200
