@@ -4,10 +4,10 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=ip link set dev <monitoring_interface> promisc on
-ExecStart=ip link set dev <monitoring_interface> up
-ExecStop=ip link set dev <monitoring_interface> promisc off
-ExecStop=ip link set dev <monitoring_interface> down
+ExecStart=/bin/bash -c "ip link set dev <monitoring_interface> promisc on"
+ExecStart=/bin/bash -c "ip link set dev <monitoring_interface> up"
+ExecStop=/bin/bash -c "ip link set dev <monitoring_interface> promisc off"
+ExecStop=/bin/bash -c "ip link set dev <monitoring_interface> down"
 TimeoutStartSec=0
 RemainAfterExit=yes
 
