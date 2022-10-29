@@ -809,7 +809,7 @@ services:
       - s1em
 
   karton-classifier:
-    image: certpl/karton-classifier:8f02c6e5188414f28d37515d903ce2b6955bc768
+    image: certpl/karton-classifier
     container_name: karton-classifier
     hostname: karton-classifier
     depends_on:
@@ -827,7 +827,7 @@ services:
       - s1em
 
   karton-yaramatcher:
-    image: certpl/karton-yaramatcher:ef7fc24197115058051b416a915c4e8fb816bd08
+    image: certpl/karton-yaramatcher
     container_name: karton-yaramatcher
     hostname: karton-yaramatcher
     command: karton-yaramatcher --rules /rules
@@ -847,7 +847,7 @@ services:
       - s1em
 
   karton-asciimagic:
-    image: certpl/karton-asciimagic:d805f42fc19801e9fed5e91c6431ed035431dab4
+    image: certpl/karton-asciimagic
     container_name: karton-asciimagic
     hostname: karton-asciimagic
     depends_on:
@@ -865,7 +865,7 @@ services:
       - s1em
       
   karton-archive-extractor:
-    image: certpl/karton-archive-extractor:a766ccc52b3c5c3cd23a87f19da8ff0f4a5db99c
+    image: certpl/karton-archive-extractor
     container_name: karton-archive-extractor
     hostname: karton-archive-extractor
     depends_on:
@@ -883,7 +883,7 @@ services:
       - s1em
 
   karton-mwdb-reporter:
-    image: certpl/karton-mwdb-reporter:2b0fad105f82ccf157431244d7408b0fc589dac5
+    image: certpl/karton-mwdb-reporter
     container_name: karton-mwdb-reporter
     hostname: karton-mwdb-reporter
     depends_on:
