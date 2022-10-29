@@ -109,6 +109,20 @@ echo
 read -r -p "Enter the monitoring interface (ex:ens33):" monitoring_interface
 monitoring_interface=$monitoring_interface
 sed -i "s|network_monitoring|$monitoring_interface|g" docker-compose.yml suricata/suricata.yaml
+########### Set Service to enable Promiscuous mode on monitoring interface on boot
+# set service path
+serviceConfigurationFile="/usr/lib/systemd/system/S1EM-promiscuous.service"
+cp ./S1EM-promiscuous.service ${serviceConfigurationFile}
+chmod 600 ${serviceConfigurationFile}
+# set monitoring_interface name in service_configuration_file
+sed -i "s;<monitoring_interface>;${monitoring_interface};" ${serviceConfigurationFile}
+# reload systemd to implement new service
+systemctl daemon-reload
+# enable service
+systemctl enable S1EM-promiscuous
+# start service
+systemctl start S1EM-promiscuous
+###########
 echo
 echo
 echo "##########################################"
