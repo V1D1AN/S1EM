@@ -44,7 +44,7 @@ Inside the solution:
 
 
 # Guides
-- [Installation Guide](https://github.com/V1D1AN/S1EM/wiki/Installation-Guide)
+- :exclamation:[Installation Guide](https://github.com/V1D1AN/S1EM/wiki/Installation-Guide)
 - [Access Guide](https://github.com/V1D1AN/S1EM/wiki/Access-guide)
 - [Configuration Guide](https://github.com/V1D1AN/S1EM/wiki/Configuration-guide)
 - [Upgrade guide](https://github.com/V1D1AN/S1EM/wiki/Upgrade-guide)
@@ -62,12 +62,7 @@ Inside the solution:
 
 # Roadmap
 
-- [x] Change docker Postgres and Mysql for multi databases
-- [x] Add Spiderfoot
-- [x] Change SOAR for n8n
 - [ ] Add OpenCVE
-- [x] Add Codimd
-- [x] Suppress heimdall for Homer 
 - [ ] The complete documentation
 - [ ] Upgrade to elastalert2
 - [ ] SSO
@@ -82,7 +77,7 @@ https://github.com/jasonish/docker-suricata <br />
 https://github.com/blacktop/docker-zeek <br />
 https://github.com/rskntroot/arkime <br />
 https://github.com/coolacid/docker-misp <br />
-https://github.com/watsoninfosec/ElasticXDR<br />
+https://github.com/m0ns7er/ElasticXDR<br />
 https://github.com/PUNCH-Cyber/stoq <br />
 https://github.com/jertel/elastalert-docker <br />
 https://github.com/OpenCTI-Platform/docker <br />
@@ -114,6 +109,8 @@ https://github.com/StevenDias33 <br />
 https://github.com/wagga40 <br />
 https://github.com/xophidia <br />
 
+# Special thanks in english
+Thanks to @Mcdave2k1 for your pull requests
 
 # Donate
 If this project help you reduce time to develop, you can give me a cup of coffee :) <br />
