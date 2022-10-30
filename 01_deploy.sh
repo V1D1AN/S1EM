@@ -237,10 +237,10 @@ echo "Load external Feed List"
 curl -sk -X POST --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/loadDefaultFeeds >/dev/null 2>&1
 sleep 30
 echo "Enable Feeds "
-curl -sk -X GET --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/enable/1 >/dev/null 2>&1
-curl -sk -X GET --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/enable/2 >/dev/null 2>&1
+curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/enable/1 >/dev/null 2>&1
+curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/enable/2 >/dev/null 2>&1
 echo "Starting Feed synchronisation in background"
-curl -sk -X GET --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/fetchFromAllFeeds >/dev/null 2>&1
+curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/fetchFromAllFeeds >/dev/null 2>&1
 echo
 echo
 echo "##########################################"
