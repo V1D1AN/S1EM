@@ -98,7 +98,7 @@ services:
     icon: "fas fa-radiation"
     items:
       - name: "Mwdb"
-        logo: "http://s1em_hostname:8080/static/media/logo.787cfdb1.png"
+        logo: "https://github.com/CERT-Polska/mwdb-core/raw/master/mwdb/web/src/assets/logo.png"
         tag: "app"
         url: "http://s1em_hostname:8080"
         target: "_blank" # optional html a tag target attribute
@@ -125,7 +125,7 @@ services:
     icon: "fas fa-bug"
     items:
       - name: "Cvetrends"
-        logo: "https://cve.mitre.org/images/cvelogobanner.png"
+        logo: "https://www.cve.org/img/cveLogoR.432ef005.svg"
         tag: "site"
         tagstyle: "is-success"
         url: "https://cvetrends.com/"
