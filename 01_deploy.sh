@@ -1,8 +1,6 @@
 #!/bin/bash
-if [ "$EUID" -ne 0 ]
-  then echo "Please run as root"
-  exit
-fi
+SCRIPTDIR="$(pwd)"
+mkdir certs
 cp env.sample .env
 echo "##########################################"
 echo "###### CONFIGURING ACCOUNT ELASTIC #######"
@@ -60,7 +58,6 @@ read -r -p "Enter the hostname of the solution S1EM (ex: s1em.cyber.local):" s1e
 s1em_hostname=$s1em_hostname
 sed -i "s|s1em_hostname|$s1em_hostname|g" docker-compose.yml thehive/application.conf cortex/MISP.json misp/config.php rules/elastalert/*.yml homer/config.yml filebeat/modules.d/threatintel.yml .env
 echo
-echo
 echo "##########################################"
 echo "####### CONFIGURING ACCOUNT MWDB #########"
 echo "##########################################"
@@ -87,14 +84,25 @@ sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
 echo
 echo
 echo "##########################################"
-echo "#### CONFIGURING MONITORING INTERFACE ####"
+echo "######### CONFIGURING INTERFACES #########"
 echo "##########################################"
 echo
 echo
 ip a | egrep -A 2 "ens[[:digit:]]{1,3}:|eth[[:digit:]]{1,3}:"
 echo
 echo
-read -r -p "Enter the monitoring interface (ex:ens32):" monitoring_interface
+read -r -p "Enter the administration interface (ex:ens32):" administration_interface
+administration_interface=$administration_interface
+INTERFACE=`netstat -rn | grep ${administration_interface} | awk '{ print $NF }'| tail -n1`
+ADMINISTRATION_IP=`ifconfig ${INTERFACE} | grep inet | awk '{ print $2 }' | grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'`
+echo "Interface: ${INTERFACE}   IP found: ${ADMINISTRATION_IP}"
+sed -i "s;administrationip;${ADMINISTRATION_IP};" instances.yml .env
+echo
+echo
+ip a | egrep -A 2 "ens[[:digit:]]{1,3}:|eth[[:digit:]]{1,3}:"
+echo
+echo
+read -r -p "Enter the monitoring interface (ex:ens33):" monitoring_interface
 monitoring_interface=$monitoring_interface
 sed -i "s|network_monitoring|$monitoring_interface|g" docker-compose.yml suricata/suricata.yaml
 ########### Set Service to enable Promiscuous mode on monitoring interface on boot
@@ -224,6 +232,15 @@ while [ "$( curl -sk 'https://127.0.0.1/misp/users/login' | grep "MISP" )" == ""
 done
 misp_apikey=$(docker exec misp sh -c "mysql -u misp --password=misppass -D misp -e'select authkey from users;'" | sed "1d")
 sed -i "s|misp_api_key|$misp_apikey|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml .env
+
+echo "Load external Feed List"
+curl -sk -X POST --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/loadDefaultFeeds >/dev/null 2>&1
+sleep 30
+echo "Enable Feeds "
+curl -sk -X GET --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/enable/1 >/dev/null 2>&1
+curl -sk -X GET --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/enable/2 >/dev/null 2>&1
+echo "Starting Feed synchronisation in background"
+curl -sk -X GET --header "Authorization: $misp_apikey" https://127.0.0.1/misp/feeds/fetchFromAllFeeds >/dev/null 2>&1
 echo
 echo
 echo "##########################################"
@@ -255,6 +272,10 @@ while [ "$(docker exec cortex sh -c 'curl -s http://127.0.0.1:9001')" == "" ]; d
   sleep 15;
 done
 curl -sk -L -XPOST "https://127.0.0.1/cortex/api/maintenance/migrate"
+while [ "$(docker logs cortex | grep -i 'End of migration')" == "" ]; do
+  echo "Waiting for Cortex & elasticsearch init.";
+  sleep 15;
+done
 curl -sk -L -XPOST "https://127.0.0.1/cortex/api/user" -H 'Content-Type: application/json' -d "{\"login\" : \"admin@cortex.local\",\"name\" : \"admin@cortex.local\",\"roles\" : [\"superadmin\"],\"preferences\" : \"{}\",\"password\" : \"secret\", \"key\": \"$cortex_api\"}"
 curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization" -d "{  \"name\": \"$organization\",\"description\": \"SOC team\",\"status\": \"Active\"}"
 curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user" -d "{\"name\": \"$admin_account\",\"roles\": [\"read\",\"analyze\",\"orgadmin\"],\"organization\": \"$organization\",\"login\": \"$admin_account\"}"
@@ -319,6 +340,17 @@ while [ "$(docker logs thehive | grep -i " End of deduplication of User")" == ""
   echo "Waiting for the password change of user in TheHive .";
   sleep 15;
 done
+echo
+echo
+echo "##########################################"
+echo "###### IMPORT THEHIVE DASHBOARDS## #######"
+echo "##########################################"
+echo
+echo
+curl -sk 'https://127.0.0.1/thehive/api/dashboard' -u $admin_account:$admin_password -H 'accept: application/json, text/plain, */*' -H 'content-type:  application/json' -d @thehive/Dashboards/alerts.json >/dev/null 2>&1
+curl -sk 'https://127.0.0.1/thehive/api/dashboard' -u $admin_account:$admin_password -H 'accept: application/json, text/plain, */*' -H 'content-type:  application/json' -d @thehive/Dashboards/case.json >/dev/null 2>&1
+curl -sk 'https://127.0.0.1/thehive/api/dashboard' -u $admin_account:$admin_password -H 'accept: application/json, text/plain, */*' -H 'content-type:  application/json' -d @thehive/Dashboards/jobs.json >/dev/null 2>&1
+curl -sk 'https://127.0.0.1/thehive/api/dashboard' -u $admin_account:$admin_password -H 'accept: application/json, text/plain, */*' -H 'content-type:  application/json' -d @thehive/Dashboards/observable.json >/dev/null 2>&1
 echo
 echo
 echo "##########################################"
@@ -446,6 +478,8 @@ echo
 if 	 [ "$detection" == ELASTIC ];
 then
         curl -sk -XPUT -u elastic:$password "https://127.0.0.1/kibana/s/default/api/detection_engine/rules/prepackaged" -H "kbn-xsrf: true"
+        echo "Install rules from folder"    
+        for rule in $(find ./rules/elastic/ -type f ); do (curl -sk -X POST 'https://127.0.0.1/kibana/api/detection_engine/rules/_import?overwrite=true' -u "elastic:$password" -H 'kbn-xsrf: true' --form 'file=@'$rule  >/dev/null 2>&1); done
 elif [ "$detection" == SIGMA ];
 then
         docker image rm -f sigma:1.0
@@ -453,6 +487,67 @@ then
         docker-compose -f sigma.yml build
         docker-compose -f sigma.yml up -d
 fi
+echo
+echo
+echo "#########################################"
+echo "########## CONFIGURE FLEET ##############"
+echo "#########################################"
+echo
+
+docker-compose up -d fleet-server
+
+while [ "$(curl -sk -w "%{http_code}" -o /dev/null --header 'kbn-xsrf: true' -X POST -u "elastic:$password" https://127.0.0.1/kibana/api/fleet/setup)" != "200" ]; do
+  echo "Waiting for fleet setup.";
+  sleep 15;
+done
+
+echo " Setting Fleet URL as https://$ADMINISTRATION_IP:8220"
+curl -sk -u "elastic:$password" -XPUT "https://127.0.0.1/kibana/api/fleet/settings" \
+  --header 'kbn-xsrf: true' \
+  --header 'Content-Type: application/json' \
+  -d '{"fleet_server_hosts":["https://${ADMINISTRATION_IP}:8220"]}' >/dev/null 2>&1
+
+POLICYID=`curl -sk -u elastic:$password -XGET https://127.0.0.1/kibana/api/fleet/agent_policies | jq -r '.items[] | select (.name | contains("Default Fleet Server policy")).id'` >/dev/null 2>&1
+echo "Fleet Server Policy ID: $POLICYID"
+
+FLEET_ENROLLTOKEN=`curl -sk -s -u elastic:$password -XGET "https://127.0.0.1/kibana/api/fleet/enrollment-api-keys" | jq -r '.list[] | select (.policy_id |contains("'$POLICYID'")).api_key'` >/dev/null 2>&1
+echo "Fleet Server Enrollment API KEY: $FLEET_ENROLLTOKEN"
+sleep 5
+
+
+FLEET_SERVICETOKEN=`curl -vsk -u "elastic:$password" -s -X POST https://127.0.0.1/kibana/api/fleet/service-tokens --header 'kbn-xsrf: true' | jq -r .value` >/dev/null 2>&1
+echo "Generated SERVICE TOKEN for fleet server: $FLEET_SERVICETOKEN"
+sed -i "s|fleettoken|$FLEET_SERVICETOKEN|g" .env docker-compose.yml
+sed -i "s|fleetenroll|$FLEET_ENROLLTOKEN|g" .env docker-compose.yml
+
+echo "Setting Elasticsearch URL & Fingerprint & SSL CA"
+FINGERPRINT=`openssl x509 -fingerprint -sha256 -noout -in certs/ca.crt | awk -F"=" {' print $2 '} | sed s/://g `
+    
+if [ -f ${2}/ca.temp ]; then
+ sudo rm -rf certs/ca.temp
+fi
+ while read line
+   do
+     echo "    ${line}" >> /tmp/ca.temp
+   done < certs/ca.crt
+   truncate -s -1 /tmp/ca.temp
+   CA=$(jq -R -s '.' < /tmp/ca.temp | tr -d '"' | sed 's!\\n!/\\r\\n!g')
+   sudo rm -rf /tmp/ca.temp
+   generate_post_data(){
+        cat <<EOF
+{
+  "hosts":["https://${ADMINISTRATION_IP}:9200"],
+  "config_yaml":"ssl:\r\n  verification_mode: none\r\n  certificate_authorities:\r\n  - >\r\n${CA}"
+} 
+EOF
+}
+
+curl -sk -u "elastic:$password" -XPUT "https://127.0.0.1/kibana/api/fleet/outputs/fleet-default-output" \
+      --header 'kbn-xsrf: true' \
+      --header 'Content-Type: application/json' \
+      -d "$(generate_post_data)" >/dev/null 2>&1
+
+
 echo
 echo
 echo "#########################################"
