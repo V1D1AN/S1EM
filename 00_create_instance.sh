@@ -26,6 +26,13 @@ if ! command_exists docker-compose
   else
         echo "docker-compose installed"
 fi
+if ! command_exists curl
+  then
+        echo "Please install curl"
+        exit
+  else
+        echo "curl installed"
+fi
 if ! command_exists jq
   then
         echo "Please install jq"
