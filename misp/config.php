@@ -82,6 +82,8 @@ $config = array (
     'require_password_confirmation' => true,
     'advanced_authkeys' => false,
     'csp_enforce' => false,
+	'password_policy_length' => 1,
+    'password_policy_complexity' => '/^((?=.*\\d)|(?=.*\\W+))(?![\\n])(?=.*[A-Z])(?=.*[a-z]).*$|.{1,}/',
   ),
   'Session.defaults' => 'php',
   'Session.timeout' => 60,
