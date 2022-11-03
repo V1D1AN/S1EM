@@ -1389,7 +1389,7 @@ services:
 
 
   arkime:
-    image: v1d1an/arkime:3.4.0
+    image: v1d1an/arkime:4.0.2
     container_name: arkime
     restart: always
     hostname: arkime
