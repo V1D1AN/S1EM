@@ -40,6 +40,20 @@ if ! command_exists jq
   else
         echo "jq installed"
 fi
+if ! command_exists ifconfig
+  then
+        echo "Please install ifconfig"
+        exit
+  else
+        echo "ifconfig installed"
+fi
+if ! command_exists netstat
+  then
+        echo "Please install netstat"
+        exit
+  else
+        echo "netstat installed"
+fi
 echo
 echo
 echo "##########################################"

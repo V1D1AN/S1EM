@@ -135,7 +135,29 @@ while true; do
     esac
 done
 echo
-echo "$detection"
+echo
+echo "##########################################"
+echo "############# CONFIRMATION ###############"
+echo "##########################################"
+echo
+echo
+echo "The administration account: $admin_account"
+echo "The organization: $organization"
+echo "The S1EM hostname: $s1em_hostname"
+echo "The RAM of Master node of Elasticsearch: $master_node"
+echo "The RAM of Data node of Elasticsearch: $data_node"
+echo "The administration interface: $administration_interface"
+echo "The administration ip: $ADMINISTRATION_IP"
+echo "The monitoring interface: $monitoring_interface"
+echo "The choice of rules: $detection"
+while true; do
+    read -r -p "Do you confirm for installation [Y/N]?" choice
+    case $choice in
+        [Yy]) echo "Starting of installation"; break;;
+        [Nn]) echo "Stopping of installation"; exit 0;;
+        * ) echo "Please answer (Y/y) or (Y/y).";;
+    esac
+done
 echo
 echo
 echo "##########################################"

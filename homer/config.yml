@@ -130,6 +130,17 @@ services:
         tagstyle: "is-success"
         url: "https://cvetrends.com/"
         target: "_blank" # optional html a tag target attribute
+        
+  - name: "MITRE"
+    icon: "fas fa-cogs"
+    items:
+      - name: "Elastic Rules"
+        logo: "http://attack.mitre.org/theme/images/ATT&CK_red.png"
+        tag: "site"
+        tagstyle: "is-success"
+        url: "https://ela.st/tj-mitre-an"
+        target: "_blank" # optional html a tag target attribute
+
 
   - name: "SIRP"
     icon: "fas fa-sitemap"
