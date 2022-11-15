@@ -297,7 +297,7 @@ while [ "$(docker exec cortex sh -c 'curl -s http://127.0.0.1:9001')" == "" ]; d
   echo "Waiting for Cortex to come online.";
   sleep 15;
 done
-#curl -sk -L -XPOST "https://127.0.0.1/cortex/api/maintenance/migrate"
+curl -sk -L -XPOST "https://127.0.0.1/cortex/api/maintenance/migrate"
 #while [ "$(docker logs cortex | grep -i 'End of migration')" == "" ]; do
 #  echo "Waiting for Cortex & elasticsearch init.";
 #  sleep 15;
@@ -498,7 +498,7 @@ echo "####### INSTALL DETECTION RULES ##########"
 echo "##########################################"
 echo
 echo
-curl -sk -XPOST -u elastic:$password "https://127.0.0.1/kibana/s/default/api/detection_engine/index" -H "kbn-xsrf: true"
+curl -sk -XPOST -u elastic:$password "https://127.0.0.1/kibana/s/default/api/detection_engine/index" -H "kbn-xsrf: true" >/dev/null 2>&1
 echo
 echo
 if 	 [ "$detection" == ELASTIC ];
