@@ -150,6 +150,7 @@ echo "The administration interface: $administration_interface"
 echo "The administration ip: $ADMINISTRATION_IP"
 echo "The monitoring interface: $monitoring_interface"
 echo "The choice of rules: $detection"
+echo
 while true; do
     read -r -p "Do you confirm for installation [Y/N]?" choice
     case $choice in
@@ -214,10 +215,9 @@ while [ "$(docker logs kibana | grep -i "server running" | grep -v "NotReady")" 
   sleep 15;
 done
 echo "Kibana is online"
+docker exec es01 sh -c "curl -sk -X POST 'https://127.0.0.1:9200/_security/user/kibana_system/_password' -u 'elastic:$password' -H 'Content-Type: application/json'  -d '{\"password\":\"$kibana_password\"}'" >/dev/null 2>&1
+docker exec es01 sh -c "curl -sk -X POST 'https://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"enabled\": true,\"password\": \"$admin_password\",\"roles\":\"superuser\",\"full_name\": \"$admin_account\"}'" >/dev/null 2>&1
 echo
-echo
-docker exec es01 sh -c "curl -sk -X POST 'https://127.0.0.1:9200/_security/user/kibana_system/_password' -u 'elastic:$password' -H 'Content-Type: application/json'  -d '{\"password\":\"$kibana_password\"}'"
-docker exec es01 sh -c "curl -sk -X POST 'https://127.0.0.1:9200/_security/user/$admin_account' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"enabled\": true,\"password\": \"$admin_password\",\"roles\":\"superuser\",\"full_name\": \"$admin_account\"}'"
 echo
 echo "##########################################"
 echo "##### STARTING RabbitMQ Redis Minio ######"
@@ -297,21 +297,21 @@ while [ "$(docker exec cortex sh -c 'curl -s http://127.0.0.1:9001')" == "" ]; d
   echo "Waiting for Cortex to come online.";
   sleep 15;
 done
-curl -sk -L -XPOST "https://127.0.0.1/cortex/api/maintenance/migrate"
-while [ "$(docker logs cortex | grep -i 'End of migration')" == "" ]; do
-  echo "Waiting for Cortex & elasticsearch init.";
-  sleep 15;
-done
-curl -sk -L -XPOST "https://127.0.0.1/cortex/api/user" -H 'Content-Type: application/json' -d "{\"login\" : \"admin@cortex.local\",\"name\" : \"admin@cortex.local\",\"roles\" : [\"superadmin\"],\"preferences\" : \"{}\",\"password\" : \"secret\", \"key\": \"$cortex_api\"}"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization" -d "{  \"name\": \"$organization\",\"description\": \"SOC team\",\"status\": \"Active\"}"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user" -d "{\"name\": \"$admin_account\",\"roles\": [\"read\",\"analyze\",\"orgadmin\"],\"organization\": \"$organization\",\"login\": \"$admin_account\"}"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user/$admin_account/password/set" -d "{ \"password\": \"$admin_password\" }"
+#curl -sk -L -XPOST "https://127.0.0.1/cortex/api/maintenance/migrate"
+#while [ "$(docker logs cortex | grep -i 'End of migration')" == "" ]; do
+#  echo "Waiting for Cortex & elasticsearch init.";
+#  sleep 15;
+#done
+curl -sk -L -XPOST "https://127.0.0.1/cortex/api/user" -H 'Content-Type: application/json' -d "{\"login\" : \"admin@cortex.local\",\"name\" : \"admin@cortex.local\",\"roles\" : [\"superadmin\"],\"preferences\" : \"{}\",\"password\" : \"secret\", \"key\": \"$cortex_api\"}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization" -d "{  \"name\": \"$organization\",\"description\": \"SOC team\",\"status\": \"Active\"}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user" -d "{\"name\": \"$admin_account\",\"roles\": [\"read\",\"analyze\",\"orgadmin\"],\"organization\": \"$organization\",\"login\": \"$admin_account\"}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user/$admin_account/password/set" -d "{ \"password\": \"$admin_password\" }" >/dev/null 2>&1
 cortex_apikey=$(curl -sk -XPOST -H "Authorization: Bearer $cortex_api" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/user/$admin_account/key/renew")
-curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/MISP_2_1" -d "{\"name\": \"MISP_2_1\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/OpenCTI_SearchObservables_2_0" -d "{\"name\": \"OpenCTI_SearchObservables_2_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/OTXQuery_2_0" -d "{\"name\": \"OTXQuery\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_IP_Analysis_1_0" -d "{\"name\": \"Elasticsearch_IP_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
-curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_Hash_Analysis_1_0" -d "{\"name\": \"Elasticsearch_Hash_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}"
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/MISP_2_1" -d "{\"name\": \"MISP_2_1\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/OpenCTI_SearchObservables_2_0" -d "{\"name\": \"OpenCTI_SearchObservables_2_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/OTXQuery_2_0" -d "{\"name\": \"OTXQuery\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_IP_Analysis_1_0" -d "{\"name\": \"Elasticsearch_IP_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_Hash_Analysis_1_0" -d "{\"name\": \"Elasticsearch_Hash_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 echo
 echo
 echo "##########################################"
@@ -341,7 +341,7 @@ while [ "$(docker exec thehive sh -c 'curl -s http://127.0.0.1:9000')" == "" ]; 
 done
 echo
 echo
-curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v0/organisation" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"description\": \"SOC team\",\"name\": \"$organization\"}"
+curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v0/organisation" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"description\": \"SOC team\",\"name\": \"$organization\"}" >/dev/null 2>&1
 echo
 echo
 while [ "$(docker logs thehive | grep -i "End of deduplication of Organisation")" == "" ]; do
@@ -350,7 +350,7 @@ while [ "$(docker logs thehive | grep -i "End of deduplication of Organisation")
 done
 echo
 echo
-curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"login\":\"$admin_account\",\"name\":\"admin\",\"profile\":\"org-admin\",\"organisation\":\"$organization\"}"
+curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"login\":\"$admin_account\",\"name\":\"admin\",\"profile\":\"org-admin\",\"organisation\":\"$organization\"}" >/dev/null 2>&1
 echo
 
 while [ "$(docker logs thehive | grep -i " End of deduplication of User")" == "" ]; do
@@ -359,7 +359,7 @@ while [ "$(docker logs thehive | grep -i " End of deduplication of User")" == ""
 done
 echo
 echo
-curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user/$admin_account/password/set" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"password\":\"$admin_password\"}"
+curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user/$admin_account/password/set" -H 'Content-Type: application/json' -u admin@thehive.local:secret -d "{\"password\":\"$admin_password\"}" >/dev/null 2>&1
 thehive_apikey=$(curl -sk -L -XPOST "https://127.0.0.1/thehive/api/v1/user/$admin_account/key/renew" -u admin@thehive.local:secret)
 
 while [ "$(docker logs thehive | grep -i " End of deduplication of User")" == "" ]; do
@@ -430,9 +430,9 @@ echo "########## DEPLOY KIBANA INDEX ###########"
 echo "##########################################"
 echo
 echo
-for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -sk -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index"; done
+for index in $(find kibana/index/* -type f); do docker exec kibana sh -c "curl -sk -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$index >/dev/null 2>&1"; done
 sleep 10
-for dashboard in $(find kibana/dashboard/* -type f); do docker exec kibana sh -c "curl -sk -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$dashboard"; done
+for dashboard in $(find kibana/dashboard/* -type f); do docker exec kibana sh -c "curl -sk -X POST 'https://kibana:5601/kibana/api/saved_objects/_import?overwrite=true' -u 'elastic:$password' -H 'kbn-xsrf: true' -H 'Content-Type: multipart/form-data' --form file=@/usr/share/$dashboard >/dev/null 2>&1"; done
 sleep 10
 echo
 echo
