@@ -1,7 +1,7 @@
 version: "2.2"
 services:
   certificates:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
     container_name: certificates
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
@@ -60,7 +60,7 @@ services:
       - s1em
       
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
     container_name: es01
     hostname: es01
     restart: always
@@ -103,7 +103,7 @@ services:
         hard: -1
 
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
     container_name: es02
     hostname: es02
     restart: always
@@ -142,7 +142,7 @@ services:
         hard: -1
 
   es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.6
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
     container_name: es03
     hostname: es03
     restart: always
@@ -181,7 +181,7 @@ services:
         hard: -1
 
   filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.17.6'
+    image: 'docker.elastic.co/beats/filebeat:7.17.7'
     container_name: filebeat
     hostname: filebeat
     user: root
@@ -211,7 +211,7 @@ services:
       - s1em
       
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.17.6'
+    image: 'docker.elastic.co/kibana/kibana:7.17.7'
     container_name: kibana
     hostname: kibana
     restart: always
@@ -239,7 +239,7 @@ services:
       - s1em
 
   auditbeat:
-    image: 'docker.elastic.co/beats/auditbeat:7.17.6'
+    image: 'docker.elastic.co/beats/auditbeat:7.17.7'
     container_name: auditbeat
     hostname: auditbeat
     restart: always
@@ -266,7 +266,7 @@ services:
       - s1em
 
   heartbeat:
-    image: 'docker.elastic.co/beats/heartbeat:7.17.6'
+    image: 'docker.elastic.co/beats/heartbeat:7.17.7'
     container_name: heartbeat
     restart: always
     hostname: heartbeat
@@ -284,7 +284,7 @@ services:
       - s1em
 
   metricbeat:
-    image: 'docker.elastic.co/beats/metricbeat:7.17.6'
+    image: 'docker.elastic.co/beats/metricbeat:7.17.7'
     container_name: metricbeat
     restart: always
     depends_on:
@@ -315,7 +315,7 @@ services:
         max-file: "3"        
 
   logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.17.6'
+    image: 'docker.elastic.co/logstash/logstash:7.17.7'
     container_name: logstash
     hostname: logstash
     restart: always
@@ -343,7 +343,7 @@ services:
     container_name: fleet-server
     hostname: fleet-server    
     user: root
-    image: docker.elastic.co/beats/elastic-agent:7.17.6
+    image: docker.elastic.co/beats/elastic-agent:7.17.7
     environment:
       - FLEET_SERVER_ENABLE=true
       - FLEET_URL=https://${ADMINISTRATION_IP}:8220
@@ -909,8 +909,8 @@ services:
     ports:
       - "8889:9000"
     environment:
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
     command: server /data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
@@ -1003,6 +1003,7 @@ services:
       - connector-alienvault
       - connector-opencti
       - connector-mwdb
+      - connector-disarm-framework
     restart: always
     volumes:
       - certs:/usr/share/certificates:ro
@@ -1337,6 +1338,31 @@ services:
     networks:
       - s1em
 
+  connector-disarm-framework:
+    image: opencti/connector-disarm-framework:latest
+    container_name: connector-disarm-framework
+    hostname: connector-disarm-framework
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_DISARM_ID}
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - "CONNECTOR_NAME=DISARM Framework"
+      - CONNECTOR_SCOPE=marking-definition,identity,attack-pattern,course-of-action,intrusion-set,campaign,malware,tool,report,narrative,event,channel
+      - CONNECTOR_CONFIDENCE_LEVEL=75 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_UPDATE_EXISTING_DATA=false
+      - CONNECTOR_RUN_AND_TERMINATE=false
+      - CONNECTOR_LOG_LEVEL=info
+      - DISARM_FRAMEWORK_URL=https://raw.githubusercontent.com/DISARMFoundation/DISARMframeworks/main/generated_files/DISARM_STIX/DISARM.json
+      - DISARM_FRAMEWORK_INTERVAL=7 # In days, must be strictly greater than 1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
 
   cyberchef:
     image: mpepping/cyberchef:latest
