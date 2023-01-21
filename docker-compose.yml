@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.3"
 services:
   certificates:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
@@ -6,7 +6,7 @@ services:
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - ./instances.yml:/usr/share/elasticsearch/config/certs/instances.yml
-      - ./certs:/target_ca_cert_dir
+      - certs:/target_ca_cert_dir
     user: "0"
     networks:
       - s1em
@@ -1322,7 +1322,7 @@ services:
       - CONNECTOR_LOG_LEVEL=info
       - MWDB_URL=http://mwdb-web/
       - MWDB_CONFIDENCE_LEVEL=40 # From 0 (Unknown) to 100 (Fully trusted)
-      - MWDB_INTERVAL=3 # In days, must be strictly greater than 1
+      - MWDB_INTERVAL=1 # In days, must be strictly greater than 1
       - MWDB_TOKEN=${MWDB_API}
       - MWDB_IMPORT_CONFIG=True
       - MWDB_CREATE_INDICATORS=True
@@ -1331,7 +1331,7 @@ services:
       - MWDB_ORG_DESCRIPTION=Cyber
       - MWDB_ORG_NAME=${ORGANIZATION}
       - MWDB_START_DATE=2022-04-01T00:00:00.000Z  # ISO 8601
-      - MWDB_TAG_FILTER=*
+      - MWDB_TAG_FILTER=.*
       - MWDB_MAX_START_RETENTION=6
     logging:
       driver: "json-file"
