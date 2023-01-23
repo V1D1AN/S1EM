@@ -84,6 +84,26 @@ sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
 echo
 echo
 echo "##########################################"
+echo "########## CONFIGURING THEHIVE ###########"
+echo "##########################################"
+echo
+echo
+read -p "Enter the RAM in Go of TheHive [1]: " ram_thehive
+ram_thehive=${ram_thehive:-1}
+sed -i "s|RAM_THEHIVE|$ram_thehive|g" docker-compose.yml
+echo
+echo
+echo "##########################################"
+echo "########### CONFIGURING CORTEX ###########"
+echo "##########################################"
+echo
+echo
+read -p "Enter the RAM in Go of Cortex [1]: " ram_cortex
+ram_cortex=${ram_cortex:-1}
+sed -i "s|RAM_CORTEX|$ram_cortex|g" docker-compose.yml
+echo
+echo
+echo "##########################################"
 echo "######### CONFIGURING INTERFACES #########"
 echo "##########################################"
 echo
@@ -146,6 +166,8 @@ echo "The organization: $organization"
 echo "The S1EM hostname: $s1em_hostname"
 echo "The RAM of Master node of Elasticsearch: $master_node"
 echo "The RAM of Data node of Elasticsearch: $data_node"
+echo "The RAM of TheHive: $ram_thehive"
+echo "The RAM of Cortex: $ram_cortex"
 echo "The administration interface: $administration_interface"
 echo "The administration ip: $ADMINISTRATION_IP"
 echo "The monitoring interface: $monitoring_interface"

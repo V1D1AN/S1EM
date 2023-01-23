@@ -1,12 +1,12 @@
-version: "2.2"
+version: "3.3"
 services:
   certificates:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
     container_name: certificates
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - ./instances.yml:/usr/share/elasticsearch/config/certs/instances.yml
-      - ./certs:/target_ca_cert_dir
+      - certs:/target_ca_cert_dir
     user: "0"
     networks:
       - s1em
@@ -60,7 +60,7 @@ services:
       - s1em
       
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
     container_name: es01
     hostname: es01
     restart: always
@@ -103,7 +103,7 @@ services:
         hard: -1
 
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
     container_name: es02
     hostname: es02
     restart: always
@@ -142,7 +142,7 @@ services:
         hard: -1
 
   es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
     container_name: es03
     hostname: es03
     restart: always
@@ -181,7 +181,7 @@ services:
         hard: -1
 
   filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.17.7'
+    image: 'docker.elastic.co/beats/filebeat:7.17.8'
     container_name: filebeat
     hostname: filebeat
     user: root
@@ -211,7 +211,7 @@ services:
       - s1em
       
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.17.7'
+    image: 'docker.elastic.co/kibana/kibana:7.17.8'
     container_name: kibana
     hostname: kibana
     restart: always
@@ -239,7 +239,7 @@ services:
       - s1em
 
   auditbeat:
-    image: 'docker.elastic.co/beats/auditbeat:7.17.7'
+    image: 'docker.elastic.co/beats/auditbeat:7.17.8'
     container_name: auditbeat
     hostname: auditbeat
     restart: always
@@ -266,7 +266,7 @@ services:
       - s1em
 
   heartbeat:
-    image: 'docker.elastic.co/beats/heartbeat:7.17.7'
+    image: 'docker.elastic.co/beats/heartbeat:7.17.8'
     container_name: heartbeat
     restart: always
     hostname: heartbeat
@@ -284,7 +284,7 @@ services:
       - s1em
 
   metricbeat:
-    image: 'docker.elastic.co/beats/metricbeat:7.17.7'
+    image: 'docker.elastic.co/beats/metricbeat:7.17.8'
     container_name: metricbeat
     restart: always
     depends_on:
@@ -315,7 +315,7 @@ services:
         max-file: "3"        
 
   logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.17.7'
+    image: 'docker.elastic.co/logstash/logstash:7.17.8'
     container_name: logstash
     hostname: logstash
     restart: always
@@ -343,7 +343,7 @@ services:
     container_name: fleet-server
     hostname: fleet-server    
     user: root
-    image: docker.elastic.co/beats/elastic-agent:7.17.7
+    image: docker.elastic.co/beats/elastic-agent:7.17.8
     environment:
       - FLEET_SERVER_ENABLE=true
       - FLEET_URL=https://${ADMINISTRATION_IP}:8220
@@ -528,6 +528,8 @@ services:
       - ./rules/yara:/opt/rules/yara:ro
       - certs:/opt/cortex/certificates:ro
       - ./cortex/cacerts:/usr/local/openjdk-8/jre/lib/security/cacerts
+    environment:
+      - JVM_OPTS="-XmsRAM_CORTEXG -XmxRAM_CORTEXG"
     logging:
       driver: "json-file"
       options:
@@ -574,8 +576,8 @@ services:
     user: root
     restart: always
     depends_on:
-      cassandra:
-        condition: service_healthy
+      - cassandra
+      - es01
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.thehive.rule=PathPrefix(`/thehive`)"
@@ -584,6 +586,8 @@ services:
     volumes:
       - ./thehive/application.conf:/etc/thehive/application.conf:ro
       - thehivedata:/opt/data
+    environment:
+      - JVM_OPTS="-XmsRAM_THEHIVEG -XmxRAM_THEHIVEG"
     logging:
       driver: "json-file"
       options:
@@ -1318,7 +1322,7 @@ services:
       - CONNECTOR_LOG_LEVEL=info
       - MWDB_URL=http://mwdb-web/
       - MWDB_CONFIDENCE_LEVEL=40 # From 0 (Unknown) to 100 (Fully trusted)
-      - MWDB_INTERVAL=3 # In days, must be strictly greater than 1
+      - MWDB_INTERVAL=1 # In days, must be strictly greater than 1
       - MWDB_TOKEN=${MWDB_API}
       - MWDB_IMPORT_CONFIG=True
       - MWDB_CREATE_INDICATORS=True
@@ -1327,7 +1331,7 @@ services:
       - MWDB_ORG_DESCRIPTION=Cyber
       - MWDB_ORG_NAME=${ORGANIZATION}
       - MWDB_START_DATE=2022-04-01T00:00:00.000Z  # ISO 8601
-      - MWDB_TAG_FILTER=*
+      - MWDB_TAG_FILTER=.*
       - MWDB_MAX_START_RETENTION=6
     logging:
       driver: "json-file"
