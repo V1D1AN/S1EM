@@ -24,6 +24,7 @@ Inside the solution:
 * Auditbeat
 * Fleet
 * N8n
+* Zircolite
 * Spiderfoot
 * Syslog-ng
 * Elastalert
@@ -69,6 +70,7 @@ Inside the solution:
 - [ ] SSO
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
 - [ ] Add Capa
+- [ ] Add Zircolite
 
 # Related project
 
@@ -93,6 +95,7 @@ https://gchq.github.io/CyberChef/ <br />
 https://www.clamav.net/ <br />
 https://www.syslog-ng.com/ <br />
 https://github.com/bastienwirtz/homer <br />
+https://github.com/wagga40/zircolite <br />
 
 
 

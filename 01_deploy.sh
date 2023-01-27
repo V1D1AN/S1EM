@@ -35,6 +35,7 @@ sed -i "s|organization_name|$organization|g" .env
 sed -i "s|opencti_account|$admin_account|g" .env
 sed -i "s|arkime_account|$admin_account|g" .env
 sed -i "s|n8n_account|$admin_account|g" .env
+sed -i "s|zircolite_account|$admin_account|g" .env
 echo
 while true; do
     read -s -p "Password (Must be a password with at least 6 characters): " admin_password
@@ -47,6 +48,7 @@ done
 sed -i "s|opencti_password|$admin_password|g" .env
 sed -i "s|arkime_password|$admin_password|g" .env
 sed -i "s|n8n_password|$admin_password|g" .env
+sed -i "s|zircolite_password|$admin_password|g" .env
 echo
 echo
 echo "##########################################"
@@ -614,7 +616,7 @@ echo "####### STARTING OTHER DOCKER ###########"
 echo "#########################################"
 echo
 echo
-docker-compose up -d fleet-server elastalert cyberchef file-upload syslog-ng tcpreplay clamav heartbeat spiderfoot codimd watchtower
+docker-compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload syslog-ng tcpreplay clamav heartbeat spiderfoot codimd watchtower
 echo
 echo
 echo "#########################################"

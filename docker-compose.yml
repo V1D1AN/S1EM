@@ -323,6 +323,7 @@ services:
     volumes:
       - certs:/usr/share/certificates:ro
       - stoq:/var/log/stoq
+      - zircolite:/usr/share/logstash/zircolite:rw
       - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
@@ -482,7 +483,7 @@ services:
       - upload:/pcap
 
   file-upload:
-    image: v1d1an/file-upload:1.0
+    image: v1d1an/file-upload:1.1
     container_name: file-upload
     hostname: file-upload
     restart: always
@@ -495,9 +496,10 @@ services:
     volumes:
       - upload:/var/www/upload/server/php/chroot/files
     environment:
-      - SITE_NAME=S1EM
+      - SITE_NAME=Upload for PCAP
       - SITE_USERNAME=upload
       - SITE_PASSWORD=upload
+      - DESCRIPTION=Upload only PCAP file.
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.upload.rule=PathPrefix(`/upload`)"
@@ -508,8 +510,56 @@ services:
       - "traefik.http.routers.upload.middlewares=redirect-to-https"
       - "traefik.http.middlewares.upload-stripprefix.stripprefix.prefixes=/upload"
       - "traefik.http.routers.upload.middlewares=upload-stripprefix"
-    ports:
-      - "8022:22"
+    networks:
+      - s1em
+
+  zircolite:
+    #image: docker.io/wagga40/zircolite:latest
+    image: v1d1an/zircolite:1.0
+    container_name: zircolite
+    hostname: zircolite
+    restart: always
+    user: root
+    tty: true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - zircolite:/case
+    command:  "--ruleset rules/rules_windows_sysmon_full.json --evtx /case/ --outfile /case/detected_events.json --remote 'https://es01:9200' --index 'zircolite' --eslogin '${ZIRCOLITE_USER}' --espass '${ZIRCOLITE_PASSWORD}' --forwardall --remove-events --nolog"
+    networks:
+      - s1em
+
+  zircolite-upload:
+    image: v1d1an/file-upload:1.1
+    container_name: zircolite-upload
+    hostname: zircolite-upload
+    restart: always
+    user: root
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - zircolite:/var/www/upload/server/php/chroot/files
+    environment:
+      - SITE_NAME=Upload for Zircolite
+      - SITE_USERNAME=upload
+      - SITE_PASSWORD=upload
+      - DESCRIPTION=Upload only JSON file or EVTX file.
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zircolite.rule=PathPrefix(`/zircolite`)"
+      - "traefik.http.routers.zircolite.entryPoints=secure"
+      - "traefik.http.routers.zircolite.tls=true"
+      - "traefik.http.services.zircolite.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.zircolite.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.zircolite-stripprefix.stripprefix.prefixes=/zircolite"
+      - "traefik.http.routers.zircolite.middlewares=zircolite-stripprefix"
     networks:
       - s1em
 
@@ -1644,4 +1694,6 @@ volumes:
    codimd:
     external: false
    n8n_data:
+    external: false
+   zircolite:
     external: false
