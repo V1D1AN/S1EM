@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: zircolite
+  name: Zircolite upload
+  hosts: ["zircolite-upload"]
+  ports: [80]
+  schedule: '@every 30s'
