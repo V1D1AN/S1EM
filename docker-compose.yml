@@ -549,7 +549,7 @@ services:
       - SITE_NAME=Upload for Zircolite
       - SITE_USERNAME=upload
       - SITE_PASSWORD=upload
-      - DESCRIPTION=Upload only JSON file or EVTX file.
+      - DESCRIPTION=Upload only EVTX file or JSON file (Use template exportForELK.tmpl).
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.zircolite.rule=PathPrefix(`/zircolite`)"

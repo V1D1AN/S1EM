@@ -9,7 +9,7 @@ logo: "https://user-images.githubusercontent.com/18678787/119020235-49428680-b99
 
 header: true
 footer: '<p>Created with <span class="has-text-danger">❤️</span> with <a href="https://bulma.io/">bulma</a>, <a href="https://vuejs.org/">vuejs</a> & <a href="https://fontawesome.com/">font awesome</a> // Fork me on <a href="https://github.com/V1D1AN/S1EM"><i class="fab fa-github-alt"></i></a></p>' # set false if you want to hide it.
-columns: 6
+columns: 5
 # Optional theme customization
 theme: default
 colors:
