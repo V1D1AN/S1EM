@@ -138,7 +138,7 @@ services:
         logo: "http://attack.mitre.org/theme/images/ATT&CK_red.png"
         tag: "site"
         tagstyle: "is-success"
-        url: "https://ela.st/tj-mitre-an"
+        url: "https://ela.st/detection-rules-navigator"
         target: "_blank" # optional html a tag target attribute
 
 
