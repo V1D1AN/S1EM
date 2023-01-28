@@ -5,5 +5,5 @@
   path.config: "/usr/share/logstash/pipeline/stoq/*.conf"
   pipeline.workers: 3
 - pipeline.id: zircolite
-  path.config: "/usr/share/logstash/pipeline/stoq/*.conf"
+  path.config: "/usr/share/logstash/pipeline/zircolite/*.conf"
   pipeline.workers: 3

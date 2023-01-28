@@ -145,6 +145,11 @@ services:
   - name: "SIRP"
     icon: "fas fa-sitemap"
     items:
+     - name: "Zircolite"
+        logo: "https://github.com/wagga40/Zircolite/raw/master/pics/zircolite_400.png"
+        tag: "app"
+        url: "https://s1em_hostname/kibana/app/dashboards#/view/832a98e0-9ef0-11ed-bedc-f9813e7df557"
+        target: "_blank" # optional html a tag target attribute
       - name: "TheHive"
         logo: "https://github.com/TheHive-Project/TheHive/raw/main/images/thehive-logo.png"
         tag: "app"

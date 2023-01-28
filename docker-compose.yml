@@ -400,6 +400,8 @@ services:
       - NET_ADMIN
       - SYS_NICE
     restart: always
+    depends_on:
+      - filebeat
     volumes:
       - ./rules/suricata:/etc/suricata/rules
       - ./suricata/suricata.yaml:/etc/suricata/suricata.yaml

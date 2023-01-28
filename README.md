@@ -43,7 +43,7 @@ Inside the solution:
 * Watchtower
 * Homer
 
-![S1EM](https://user-images.githubusercontent.com/18678787/201867896-1bdb6c45-6f34-45cb-b68e-e8174d1eda82.png)
+![S1EM](https://user-images.githubusercontent.com/18678787/215265829-4538679f-9efe-4ce6-a49b-2d31ec45bc55.png)
 
 # Guides
 - :exclamation:[Installation Guide](https://github.com/V1D1AN/S1EM/wiki/Installation-Guide)
@@ -70,7 +70,7 @@ Inside the solution:
 - [ ] SSO
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
 - [ ] Add Capa
-- [ ] Add Zircolite
+- [x] Add Zircolite
 
 # Related project
 
