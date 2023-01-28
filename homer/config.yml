@@ -138,13 +138,18 @@ services:
         logo: "http://attack.mitre.org/theme/images/ATT&CK_red.png"
         tag: "site"
         tagstyle: "is-success"
-        url: "https://ela.st/tj-mitre-an"
+        url: "https://ela.st/detection-rules-navigator"
         target: "_blank" # optional html a tag target attribute
 
 
   - name: "SIRP"
     icon: "fas fa-sitemap"
     items:
+      - name: "Zircolite"
+        logo: "https://github.com/wagga40/Zircolite/raw/master/pics/zircolite_400.png"
+        tag: "app"
+        url: "https://s1em_hostname/kibana/app/dashboards#/view/832a98e0-9ef0-11ed-bedc-f9813e7df557"
+        target: "_blank" # optional html a tag target attribute
       - name: "TheHive"
         logo: "https://github.com/TheHive-Project/TheHive/raw/main/images/thehive-logo.png"
         tag: "app"
@@ -169,14 +174,23 @@ services:
         tag: "app"
         url: "https://s1em_hostname/codimd/"
         target: "_blank" # optional html a tag target attribute
-      - name: "Upload"
-        logo: "https://fileproinfo.com/images/pcap_file_extension.png"
-        tag: "app"
-        url: "https://s1em_hostname/upload/"
-        target: "_blank" # optional html a tag target attribute
       - name: "StartMe"
         logo: "https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco,dpr_1/v1477931274/aq1yfkwbl5yslbedhkyj.png"
         tag: "site"
         tagstyle: "is-success"
         url: "https://start.me/p/6r66da/cybersecurity"
+        target: "_blank" # optional html a tag target attribute
+
+  - name: "UPLOAD"
+    icon: "fas fa-tools"
+    items:
+      - name: "PCAP"
+        logo: "https://fileproinfo.com/images/pcap_file_extension.png"
+        tag: "app"
+        url: "https://s1em_hostname/upload/"
+        target: "_blank" # optional html a tag target attribute
+      - name: "Zircolite"
+        logo: "https://fileproinfo.com/images/pcap_file_extension.png"
+        tag: "app"
+        url: "https://s1em_hostname/zircolite/"
         target: "_blank" # optional html a tag target attribute
