@@ -516,8 +516,7 @@ services:
       - s1em
 
   zircolite:
-    #image: docker.io/wagga40/zircolite:latest
-    image: v1d1an/zircolite:1.0
+    image: docker.io/wagga40/zircolite:latest
     container_name: zircolite
     hostname: zircolite
     restart: always
