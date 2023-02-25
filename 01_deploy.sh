@@ -405,11 +405,11 @@ curl -sk 'https://127.0.0.1/thehive/api/dashboard' -u $admin_account:$admin_pass
 echo
 echo
 echo "##########################################"
-echo "######## CONFIGURING ELASTALERT ##########"
+echo "######### CONFIGURING API THEHIVE ########"
 echo "##########################################"
 echo
 echo
-sed -i "s|thehive_api_key|$thehive_apikey|g" elastalert/elastalert.yaml
+sed -i "s|thehive_api_key|$thehive_apikey|g" .env elastalert/elastalert.yaml
 echo
 echo
 echo "##########################################"
