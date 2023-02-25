@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   certificates:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
     container_name: certificates
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
@@ -60,7 +60,7 @@ services:
       - s1em
       
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
     container_name: es01
     hostname: es01
     restart: always
@@ -103,7 +103,7 @@ services:
         hard: -1
 
   es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
     container_name: es02
     hostname: es02
     restart: always
@@ -142,7 +142,7 @@ services:
         hard: -1
 
   es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
     container_name: es03
     hostname: es03
     restart: always
@@ -181,7 +181,7 @@ services:
         hard: -1
 
   filebeat:
-    image: 'docker.elastic.co/beats/filebeat:7.17.8'
+    image: 'docker.elastic.co/beats/filebeat:7.17.9'
     container_name: filebeat
     hostname: filebeat
     user: root
@@ -211,7 +211,7 @@ services:
       - s1em
       
   kibana:
-    image: 'docker.elastic.co/kibana/kibana:7.17.8'
+    image: 'docker.elastic.co/kibana/kibana:7.17.9'
     container_name: kibana
     hostname: kibana
     restart: always
@@ -239,7 +239,7 @@ services:
       - s1em
 
   auditbeat:
-    image: 'docker.elastic.co/beats/auditbeat:7.17.8'
+    image: 'docker.elastic.co/beats/auditbeat:7.17.9'
     container_name: auditbeat
     hostname: auditbeat
     restart: always
@@ -266,7 +266,7 @@ services:
       - s1em
 
   heartbeat:
-    image: 'docker.elastic.co/beats/heartbeat:7.17.8'
+    image: 'docker.elastic.co/beats/heartbeat:7.17.9'
     container_name: heartbeat
     restart: always
     hostname: heartbeat
@@ -284,7 +284,7 @@ services:
       - s1em
 
   metricbeat:
-    image: 'docker.elastic.co/beats/metricbeat:7.17.8'
+    image: 'docker.elastic.co/beats/metricbeat:7.17.9'
     container_name: metricbeat
     restart: always
     depends_on:
@@ -315,7 +315,7 @@ services:
         max-file: "3"        
 
   logstash:
-    image: 'docker.elastic.co/logstash/logstash:7.17.8'
+    image: 'docker.elastic.co/logstash/logstash:7.17.9'
     container_name: logstash
     hostname: logstash
     restart: always
@@ -344,7 +344,7 @@ services:
     container_name: fleet-server
     hostname: fleet-server    
     user: root
-    image: docker.elastic.co/beats/elastic-agent:7.17.8
+    image: docker.elastic.co/beats/elastic-agent:7.17.9
     environment:
       - FLEET_SERVER_ENABLE=true
       - FLEET_URL=https://${ADMINISTRATION_IP}:8220
@@ -418,20 +418,20 @@ services:
         soft: -1
         hard: -1
 
-
-  stoq:
-    image: v1d1an/stoq:3.0.5
-    command: run -a yara hash peinfo iocextract hash_ssdeep lief entropy clamav -A mwdb
-    container_name: stoq
-    hostname: stoq
+  file4thehive:
+    image: v1d1an/file4thehive:1.6
+    container_name: file4thehive
+    hostname: file4thehive
     user: root
     restart: always
     volumes:
-      - ./rules/yara:/rules/yara:ro
-      - ./stoq/stoq.cfg:/home/stoq/.stoq/stoq.cfg:ro
-      - ./stoq/clamd.conf:/etc/clamav/clamd.conf:ro
-      - stoq:/home/stoq/tmp/
-      - zeekfiles:/files
+      - zeekfiles:/file
+    environment:
+      - THE_HIVE_KEY=${THE_HIVE_KEY}
+      - THE_HIVE_HOST=${THE_HIVE_HOST}
+      - SOURCE=S1EM
+      - EXCLUDE=${EXCLUDE}
+      - MONITOR_FILE=${MONITOR_FILE}
     logging:
       driver: "json-file"
       options:
@@ -439,7 +439,6 @@ services:
         max-file: "3"
     networks:
       - s1em
-
   
   zeek:
     image: blacktop/zeek:4.1-elastic
@@ -565,7 +564,7 @@ services:
       - s1em
 
   cortex:
-    image: v1d1an/cortex:3.1.7-1
+    image: v1d1an/cortex:3.1.7-4
     container_name: cortex
     hostname: cortex
     restart: always
@@ -576,6 +575,9 @@ services:
       - ./cortex/OTXQuery.json:/opt/Cortex-Analyzers/analyzers/OTXQuery/OTXQuery.json:ro
       - ./cortex/Elasticsearch_IP.json:/opt/Cortex-Analyzers/analyzers/Elasticsearch/Elasticsearch_IP.json:ro
       - ./cortex/Elasticsearch_Hash.json:/opt/Cortex-Analyzers/analyzers/Elasticsearch/Elasticsearch_Hash.json:ro
+      - ./cortex/Capa.json:/opt/Cortex-Analyzers/analyzers/Capa.json:ro
+      - ./cortex/Yara.json:/opt/Cortex-Analyzers/analyzers/Yara/Yara.json:ro
+      - ./cortex/Mwdb.json:/opt/Cortex-Analyzers/analyzers/Mwdb/mwdb.json:ro
       - ./rules/yara:/opt/rules/yara:ro
       - certs:/opt/cortex/certificates:ro
       - ./cortex/cacerts:/usr/local/openjdk-8/jre/lib/security/cacerts
@@ -1497,28 +1499,6 @@ services:
       - "traefik.http.routers.arkime.rule=PathPrefix(`/arkime`)"
       - "traefik.http.routers.arkime.entryPoints=secure"
       - "traefik.http.routers.arkime.tls=true"
-
-  clamav:
-    image: clamav/clamav:latest
-    container_name: clamav
-    hostname: clamav
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    restart: always
-    volumes:
-      - clamav:/var/lib/clamav
-    environment:
-      - CLAMAV_NO_MILTERD=true
-    healthcheck:
-      test: ["CMD", "/usr/local/bin/clamdcheck.sh || exit 1"]
-      timeout: 30s
-      interval: 1m
-      retries: 3
-    networks:
-     - s1em
      
   spiderfoot:
     image: "dtagdevsec/spiderfoot:2204"
@@ -1687,8 +1667,6 @@ volumes:
    mwdb-uploads:
     external: false
    upload:
-    external: false
-   clamav:
     external: false
    spiderfoot:
     external: false

@@ -1,9 +1,6 @@
 - pipeline.id: beats
   path.config: "/usr/share/logstash/pipeline/beats/*.conf"
   pipeline.workers: 3
-- pipeline.id: stoq
-  path.config: "/usr/share/logstash/pipeline/stoq/*.conf"
-  pipeline.workers: 3
 - pipeline.id: zircolite
   path.config: "/usr/share/logstash/pipeline/zircolite/*.conf"
   pipeline.workers: 3

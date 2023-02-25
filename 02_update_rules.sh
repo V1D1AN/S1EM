@@ -14,17 +14,14 @@ echo "##########################################"
 echo "########## UPDATE YARA RULES #############"
 echo "##########################################"
 echo
-git clone https://github.com/Yara-Rules/rules.git tmp
-rm -fr rules/yara/*
-rm -fr tmp/deprecated
-rm -fr tmp/malware
-rm -fr tmp/malware_index.yar
-mv tmp/* rules/yara/
+mkdir tmp
+git clone https://github.com/malpedia/signator-rules tmp
+rm rules/yara/*.yar
+mv tmp/rules/* rules/yara/
 rm -fr tmp
 cd rules/yara
 bash index_gen.sh
 cd -
-docker restart stoq
 docker restart cortex
 echo
 echo "##########################################"

@@ -16,7 +16,7 @@ echo "The master password Elastic set in .env:" $password
 echo "The master password Kibana set in .env:" $kibana_password
 echo "The Kibana api key is : " $kibana_api_key
 sed -i "s|kibana_api_key|$kibana_api_key|g" kibana/kibana.yml
-sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/stoq/300_output_stoq.conf logstash/pipeline/zircolite/300_output_zircolite.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
+sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/zircolite/300_output_zircolite.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
 sed -i "s|kibana_changeme|$kibana_password|g" .env
 echo
 echo
@@ -333,6 +333,10 @@ curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: appl
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_IP_Analysis_1_0" -d "{\"name\": \"Elasticsearch_IP_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_Hash_Analysis_1_0" -d "{\"name\": \"Elasticsearch_Hash_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/CIRCLHashlookup_1_1" -d "{\"name\": \"CIRCLHashlookup_1_1\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Capa_1_0" -d "{\"name\": \"Capa_1_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Yara_2_0" -d "{\"name\": \"Yara_2_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/FileInfo_8_0" -d "{\"name\": \"FileInfo_8_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Mwdb_1_0" -d "{\"name\": \"Mwdb_1_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 echo
 echo
 echo "##########################################"
@@ -431,19 +435,11 @@ mwdb_apikey=$(curl -s -X POST -H "Authorization: Bearer $mwdb_admin_token" -H 'a
 echo
 echo
 echo "##########################################"
-echo "########### CONFIGURING STOQ #############"
+echo "###### CONFIGURING MWDB FOR CORTEX #######"
 echo "##########################################"
 echo
 echo
-sed -i "s|mwdb_api_key|$mwdb_apikey|g" stoq/stoq.cfg .env
-echo
-echo
-echo "##########################################"
-echo "############# STARTING STOQ ##############"
-echo "##########################################"
-echo
-echo
-docker-compose up -d stoq
+sed -i "s|mwdb_api_key|$mwdb_apikey|g" .env cortex/Mwdb.json
 echo
 echo
 echo "##########################################"
@@ -500,17 +496,12 @@ echo "########## UPDATE YARA RULES #############"
 echo "##########################################"
 echo
 mkdir tmp
-git clone https://github.com/Yara-Rules/rules.git tmp
-rm -fr rules/yara/*
-rm -fr tmp/deprecated
-rm -fr tmp/malware
-rm -fr tmp/malware_index.yar
-mv tmp/* rules/yara/
+git clone https://github.com/malpedia/signator-rules tmp
+mv tmp/rules/* rules/yara/
 rm -fr tmp
 cd rules/yara
 bash index_gen.sh
 cd -
-docker restart stoq
 docker restart cortex
 echo
 echo
@@ -616,7 +607,7 @@ echo "####### STARTING OTHER DOCKER ###########"
 echo "#########################################"
 echo
 echo
-docker-compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload syslog-ng tcpreplay clamav heartbeat spiderfoot codimd watchtower
+docker-compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload syslog-ng tcpreplay file4thehive heartbeat spiderfoot codimd watchtower
 echo
 echo
 echo "#########################################"

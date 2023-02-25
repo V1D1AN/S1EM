@@ -69,8 +69,10 @@ Inside the solution:
 - [ ] Upgrade to elastalert2
 - [ ] SSO
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
-- [ ] Add Capa
+- [x] Add Capa ( In cortex )
+- [x] Suppress Stoq
 - [x] Add Zircolite
+- [ ] Installation of S1EM with Ansible
 
 # Related project
 
