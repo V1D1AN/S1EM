@@ -29,13 +29,12 @@ Inside the solution:
 * Syslog-ng
 * Elastalert
 * TheHive
-* Cortex
+* Cortex ( With Mwdb, Capa, Yara, FileInfo )
 * MISP
 * OpenCTI 
 * Arkime
 * Suricata
 * Zeek
-* StoQ
 * Mwdb
 * Traefik
 * Clamav
@@ -83,7 +82,6 @@ https://github.com/blacktop/docker-zeek <br />
 https://github.com/rskntroot/arkime <br />
 https://github.com/coolacid/docker-misp <br />
 https://github.com/m0ns7er/ElasticXDR<br />
-https://github.com/PUNCH-Cyber/stoq <br />
 https://github.com/jertel/elastalert-docker <br />
 https://github.com/OpenCTI-Platform/docker <br />
 https://github.com/CERT-Polska/mwdb-core <br />
