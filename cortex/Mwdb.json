@@ -8,6 +8,9 @@
   "dataTypeList": ["file"],
   "command": "Mwdb/mwdb.py",
   "baseConfig": "Mwdb",
+  "config": {
+       "service": "file"
+  },
   "configurationItems": [
     {
       "name": "mwdb_url",
@@ -15,14 +18,14 @@
       "type": "string",
       "multi": false,
       "required": true,
-      "defaultValue": [ "http://mwdb-web" ]
+      "defaultValue": "http://mwdb-web"
     },
     {
       "name": "mwdb_apikey",
       "description": "The API key to your Mwdb user",
       "multi": false,
       "required": true,
-	  "defaultValue": [ "mwdb_api_key" ]
+	  "defaultValue": "mwdb_api_key"
     }
   ]
 }
