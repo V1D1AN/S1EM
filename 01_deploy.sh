@@ -601,8 +601,7 @@ echo
 echo
 docker-compose up -d n8n
 docker exec n8n sh -c "n8n import:workflow --input=S1EM_TheHive.json"
-docker exec n8n sh -c "n8n update:workflow --id=22 --active=true"
-docker-compose restart n8n
+docker exec n8n sh -c "n8n import:credentials --input=user.json"
 echo
 echo
 echo "#########################################"

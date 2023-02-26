@@ -1,0 +1,1 @@
+[{"createdAt":"2023-02-26T13:07:03.478Z","updatedAt":"2023-02-26T13:07:03.441Z","id":"1","name":"The Hive account","data":{"ApiKey":"thehive_api_key","url":"http://thehive:9000/thehive","apiVersion":"v1","allowUnauthorizedCerts":true},"type":"theHiveApi","nodesAccess":[{"nodeType":"n8n-nodes-base.theHive","date":"2023-02-26T13:07:03.428Z"}]}]

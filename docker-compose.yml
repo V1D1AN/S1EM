@@ -1594,8 +1594,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - certs:/home/node/certificates:ro
-      - n8n_data:/home/node/.n8n
+      - n8n_data:/root/.n8n
       - ./n8n/S1EM_TheHive.json:/data/S1EM_TheHive.json
+      - ./n8n/user.json:/data/user.json
     restart: always
     networks:
      - s1em
