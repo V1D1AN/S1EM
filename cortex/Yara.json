@@ -15,7 +15,7 @@
       "type": "string",
       "multi": true,
       "required": true,
-	  "defaultValue": "/opt/rules/yara/index.yar"
+      "defaultValue": [ "/opt/rules/yara/index.yar" ]
     }
   ]
 }

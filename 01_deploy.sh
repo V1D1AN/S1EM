@@ -302,6 +302,36 @@ docker-compose up -d filebeat metricbeat auditbeat
 echo
 echo
 echo "##########################################"
+echo "############ STARTING MWDB ###############"
+echo "##########################################"
+echo
+echo
+docker-compose up -d mwdb mwdb-web
+echo
+echo
+echo "##########################################"
+echo "########### CONFIGURING MWDB #############"
+echo "##########################################"
+echo
+echo
+while [ "$(curl -s 'http://127.0.0.1:8080' | grep "Malware Database")" == "" ]; do
+  echo "Waiting for Mwdb to come online.";
+  sleep 15;
+done
+sleep 15
+mwdb_admin_token=$(curl -s -X POST "http://127.0.0.1:8080/api/auth/login" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"login\":\"admin\",\"password\":\"$mwdb_password\"}" | sed -n 's/.*"token": "\([^ ]\+\)".*/\1/p')
+mwdb_apikey=$(curl -s -X POST -H "Authorization: Bearer $mwdb_admin_token" -H 'accept: application/json' -H "Content-Type: application/json" "http://127.0.0.1:8080/api/user/admin/api_key" -d "{ \"name\": \"mwdb\"}" | sed -n 's/.*"token": "\([^ ]\+\)".*/\1/p')
+echo
+echo
+echo "##########################################"
+echo "###### CONFIGURING MWDB FOR CORTEX #######"
+echo "##########################################"
+echo
+echo
+sed -i "s|mwdb_api_key|$mwdb_apikey|g" .env cortex/Mwdb.json
+echo
+echo
+echo "##########################################"
 echo "########### STARTING CORTEX ##############"
 echo "##########################################"
 echo
@@ -410,36 +440,6 @@ echo "##########################################"
 echo
 echo
 sed -i "s|thehive_api_key|$thehive_apikey|g" .env elastalert/elastalert.yaml
-echo
-echo
-echo "##########################################"
-echo "############ STARTING MWDB ###############"
-echo "##########################################"
-echo
-echo
-docker-compose up -d mwdb mwdb-web
-echo
-echo
-echo "##########################################"
-echo "########### CONFIGURING MWDB #############"
-echo "##########################################"
-echo
-echo
-while [ "$(curl -s 'http://127.0.0.1:8080' | grep "Malware Database")" == "" ]; do
-  echo "Waiting for Mwdb to come online.";
-  sleep 15;
-done
-sleep 15
-mwdb_admin_token=$(curl -s -X POST "http://127.0.0.1:8080/api/auth/login" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"login\":\"admin\",\"password\":\"$mwdb_password\"}" | sed -n 's/.*"token": "\([^ ]\+\)".*/\1/p')
-mwdb_apikey=$(curl -s -X POST -H "Authorization: Bearer $mwdb_admin_token" -H 'accept: application/json' -H "Content-Type: application/json" "http://127.0.0.1:8080/api/user/admin/api_key" -d "{ \"name\": \"mwdb\"}" | sed -n 's/.*"token": "\([^ ]\+\)".*/\1/p')
-echo
-echo
-echo "##########################################"
-echo "###### CONFIGURING MWDB FOR CORTEX #######"
-echo "##########################################"
-echo
-echo
-sed -i "s|mwdb_api_key|$mwdb_apikey|g" .env cortex/Mwdb.json
 echo
 echo
 echo "##########################################"
@@ -600,6 +600,9 @@ echo "#########################################"
 echo
 echo
 docker-compose up -d n8n
+docker exec n8n sh -c "n8n import:workflow --input=S1EM_TheHive.json"
+docker exec n8n sh -c "n8n update:workflow --id=22 --active=true"
+docker-compose restart n8n
 echo
 echo
 echo "#########################################"

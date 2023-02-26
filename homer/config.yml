@@ -125,7 +125,7 @@ services:
     icon: "fas fa-bug"
     items:
       - name: "Cvetrends"
-        logo: "https://www.cve.org/img/cveLogoR.432ef005.svg"
+        logo: "https://cveproject.github.io/img/cve_logo_tagline.png"
         tag: "site"
         tagstyle: "is-success"
         url: "https://cvetrends.com/"

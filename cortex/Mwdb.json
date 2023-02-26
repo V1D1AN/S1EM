@@ -15,15 +15,14 @@
       "type": "string",
       "multi": false,
       "required": true,
-      "defaultValue": "http://mwdb-web"
+      "defaultValue": [ "http://mwdb-web" ]
     },
     {
       "name": "mwdb_apikey",
       "description": "The API key to your Mwdb user",
-      "type": "string",
       "multi": false,
       "required": true,
-	  "defaultValue": "wdb_api_key"
+	  "defaultValue": [ "mwdb_api_key" ]
     }
   ]
 }

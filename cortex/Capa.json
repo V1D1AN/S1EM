@@ -18,7 +18,7 @@
       "type": "string",
       "multi": false,
       "required": true,
-      "defaultValue": "/opt/Cortex-Analyzers/analyzers/Capa/capa"
+      "defaultValue": [ "/opt/Cortex-Analyzers/analyzers/Capa/capa" ]
     }
     ]
 }
