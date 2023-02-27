@@ -16,7 +16,7 @@ echo "The master password Elastic set in .env:" $password
 echo "The master password Kibana set in .env:" $kibana_password
 echo "The Kibana api key is : " $kibana_api_key
 sed -i "s|kibana_api_key|$kibana_api_key|g" kibana/kibana.yml
-sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/zircolite/300_output_zircolite.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
+sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/zircolite/300_output_zircolite.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_Domain.json cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
 sed -i "s|kibana_changeme|$kibana_password|g" .env
 echo
 echo
@@ -362,11 +362,34 @@ curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: appl
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/OTXQuery_2_0" -d "{\"name\": \"OTXQuery\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_IP_Analysis_1_0" -d "{\"name\": \"Elasticsearch_IP_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_Hash_Analysis_1_0" -d "{\"name\": \"Elasticsearch_Hash_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_Domain_Analysis_1_0" -d "{\"name\": \"Elasticsearch_Domain_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/CIRCLHashlookup_1_1" -d "{\"name\": \"CIRCLHashlookup_1_1\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Capa_1_0" -d "{\"name\": \"Capa_1_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Yara_2_0" -d "{\"name\": \"Yara_2_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/FileInfo_8_0" -d "{\"name\": \"FileInfo_8_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Mwdb_1_0" -d "{\"name\": \"Mwdb_1_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
+s1em_analyzer_misp=$(curl -sk -H 'Authorization: Bearer $cortex_apikey' 'https://127.0.0.1/cortex/api/analyzer/type/hash'|jq '.[] | select(.name=="MISP_2_1")' | jq -r ."id")
+sed -i "s|s1em_analyzer_misp|$s1em_analyzer_misp|g" n8n/S1EM_TheHive.json
+s1em_analyzer_opencti=$(curl -sk -H 'Authorization: Bearer $cortex_apikey' 'https://127.0.0.1/cortex/api/analyzer/type/hash'|jq '.[] | select(.name=="OpenCTI_SearchObservables_2_0")' | jq -r ."id")
+sed -i "s|s1em_analyzer_opencti|$s1em_analyzer_opencti|g" n8n/S1EM_TheHive.json
+s1em_analyzer_otx=$(curl -sk -H 'Authorization: Bearer $cortex_apikey' 'https://127.0.0.1/cortex/api/analyzer/type/hash'|jq '.[] | select(.name=="OTXQuery_2_0")' | jq -r ."id")
+sed -i "s|s1em_analyzer_otx|$s1em_analyzer_otx|g" n8n/S1EM_TheHive.json
+s1em_analyzer_elasticsearch_ip=$(curl -sk -H 'Authorization: Bearer $cortex_apikey' 'https://127.0.0.1/cortex/api/analyzer'|jq '.[] | select(.name=="Elasticsearch_IP_Analysis_1_0")' | jq -r ."id")
+sed -i "s|s1em_analyzer_elasticsearch_ip|$s1em_analyzer_elasticsearch_ip|g" n8n/S1EM_TheHive.json
+s1em_analyzer_elasticsearch_hash=$(curl -sk -H 'Authorization: Bearer $cortex_apikey' 'https://127.0.0.1/cortex/api/analyzer/type/hash'|jq '.[] | select(.name=="Elasticsearch_Hash_Analysis_1_0")' | jq -r ."id")
+sed -i "s|s1em_analyzer_elasticsearch_hash|$s1em_analyzer_elasticsearch_hash|g" n8n/S1EM_TheHive.json
+s1em_analyzer_elasticsearch_domain=$(curl -sk -H 'Authorization: Bearer $cortex_apikey' 'https://127.0.0.1/cortex/api/analyzer'|jq '.[] | select(.name=="Elasticsearch_Domain_Analysis_1_0")' | jq -r ."id")
+sed -i "s|s1em_analyzer_elasticsearch_domain|$s1em_analyzer_elasticsearch_domain|g" n8n/S1EM_TheHive.json
+s1em_analyzer_circl=$(curl -sk -H 'Authorization: Bearer $cortex_apikey' 'https://127.0.0.1/cortex/api/analyzer/type/hash'|jq '.[] | select(.name=="CIRCLHashlookup_1_1")' | jq -r ."id")
+sed -i "s|s1em_analyzer_circl|$s1em_analyzer_circl|g" n8n/S1EM_TheHive.json
+s1em_analyzer_capa=$(curl -sk -H 'Authorization: Bearer $cortex_apikey' 'https://127.0.0.1/cortex/api/analyzer'|jq '.[] | select(.name=="Capa_1_0")' | jq -r ."id")
+sed -i "s|s1em_analyzer_capa|$s1em_analyzer_capa|g" n8n/S1EM_TheHive.json
+s1em_analyzer_yara=$(curl -sk -H 'Authorization: Bearer $cortex_apikey' 'https://127.0.0.1/cortex/api/analyzer'|jq '.[] | select(.name=="Yara_2_0")' | jq -r ."id")
+sed -i "s|s1em_analyzer_yara|$s1em_analyzer_yara|g" n8n/S1EM_TheHive.json
+s1em_analyzer_fileinfo=$(curl -sk -H 'Authorization: Bearer $cortex_apikey' 'https://127.0.0.1/cortex/api/analyzer'|jq '.[] | select(.name=="FileInfo_8_0")' | jq -r ."id")
+sed -i "s|s1em_analyzer_fileinfo|$s1em_analyzer_fileinfo|g" n8n/S1EM_TheHive.json
+s1em_analyzer_mwdb=$(curl -sk -H 'Authorization: Bearer $cortex_apikey' 'https://127.0.0.1/cortex/api/analyzer'|jq '.[] | select(.name=="Mwdb_1_0")' | jq -r ."id")
+sed -i "s|s1em_analyzer_mwdb|$s1em_analyzer_mwdb|g" n8n/S1EM_TheHive.json
 echo
 echo
 echo "##########################################"

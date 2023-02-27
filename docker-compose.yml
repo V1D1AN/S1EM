@@ -575,6 +575,7 @@ services:
       - ./cortex/OTXQuery.json:/opt/Cortex-Analyzers/analyzers/OTXQuery/OTXQuery.json:ro
       - ./cortex/Elasticsearch_IP.json:/opt/Cortex-Analyzers/analyzers/Elasticsearch/Elasticsearch_IP.json:ro
       - ./cortex/Elasticsearch_Hash.json:/opt/Cortex-Analyzers/analyzers/Elasticsearch/Elasticsearch_Hash.json:ro
+      - ./cortex/Elasticsearch_Domain.json:/opt/Cortex-Analyzers/analyzers/Elasticsearch/Elasticsearch_Domain.json:ro
       - ./cortex/Capa.json:/opt/Cortex-Analyzers/analyzers/Capa/Capa.json:ro
       - ./cortex/Yara.json:/opt/Cortex-Analyzers/analyzers/Yara/Yara.json:ro
       - ./cortex/Mwdb.json:/opt/Cortex-Analyzers/analyzers/Mwdb/mwdb.json:ro

@@ -294,10 +294,10 @@
         "id": "={{$node[\"Get Hash From Case Elastalert\"].json[\"_id\"]}}",
         "dataType": "hash",
         "analyzers": [
-          "69bda1b828b81062489cf810dbf07380::CORTEX",
-          "d92d9cb7809d6ba5de4ddc1d3ca4e53d::CORTEX",
-          "b084bf78d1aea92966b6ef6a4f6193a5::CORTEX",
-          "bd4fcb243af10d554adc2a4bcca9600c::CORTEX"
+          "s1em_analyzer_misp::CORTEX",
+          "s1em_analyzer_opencti::CORTEX",
+          "s1em_analyzer_otx::CORTEX",
+          "s1em_analyzer_circl::CORTEX"
         ]
       },
       "name": "Analyze Hash From Case Elastalert",
@@ -322,9 +322,9 @@
         "id": "={{$node[\"Get IP From Case Elastalert\"].json[\"_id\"]}}",
         "dataType": "ip",
         "analyzers": [
-          "69bda1b828b81062489cf810dbf07380::CORTEX",
-          "b084bf78d1aea92966b6ef6a4f6193a5::CORTEX",
-          "d92d9cb7809d6ba5de4ddc1d3ca4e53d::CORTEX"
+          "s1em_analyzer_misp::CORTEX",
+          "s1em_analyzer_otx::CORTEX",
+          "s1em_analyzer_opencti::CORTEX"
         ]
       },
       "name": "Analyze IP From Case Elastalert",
@@ -349,9 +349,9 @@
         "id": "={{$node[\"Get Domain From Case Elastalert\"].json[\"_id\"]}}",
         "dataType": "ip",
         "analyzers": [
-          "69bda1b828b81062489cf810dbf07380::CORTEX",
-          "b084bf78d1aea92966b6ef6a4f6193a5::CORTEX",
-          "d92d9cb7809d6ba5de4ddc1d3ca4e53d::CORTEX"
+          "s1em_analyzer_misp::CORTEX",
+          "s1em_analyzer_otx::CORTEX",
+          "s1em_analyzer_opencti::CORTEX"
         ]
       },
       "name": "Analyze Domain From Case Elastalert",
@@ -374,11 +374,10 @@
         "resource": "observable",
         "operation": "executeAnalyzer",
         "id": "={{$node[\"Get Registry From Case Elastalert\"].json[\"_id\"]}}",
-        "dataType": "ip",
+        "dataType": "registry",
         "analyzers": [
-          "69bda1b828b81062489cf810dbf07380::CORTEX",
-          "b084bf78d1aea92966b6ef6a4f6193a5::CORTEX",
-          "d92d9cb7809d6ba5de4ddc1d3ca4e53d::CORTEX"
+          "s1em_analyzer_misp::CORTEX",
+          "s1em_analyzer_opencti::CORTEX"
         ]
       },
       "name": "Analyze Registry From Case Elastalert",
@@ -701,7 +700,7 @@
         "id": "={{$node[\"Get IP From Case MISP\"].json[\"_id\"]}}",
         "dataType": "ip",
         "analyzers": [
-          "1dc583fae797ac4cae3a9afbd40d0f97::CORTEX"
+          "s1em_analyzer_elasticsearch_ip::CORTEX"
         ]
       },
       "name": "Analyze IP From Case MISP",
@@ -726,7 +725,7 @@
         "id": "={{$node[\"Get Hash From Case MISP\"].json[\"_id\"]}}",
         "dataType": "hash",
         "analyzers": [
-          "0fce46174e1fa2e8c6b8d0e8168eff86::CORTEX"
+          "s1em_analyzer_elasticsearch_hash::CORTEX"
         ]
       },
       "name": "Analyze Hash From Case MISP",
@@ -751,7 +750,7 @@
         "id": "={{$node[\"Get Domain From Case MISP\"].json[\"_id\"]}}",
         "dataType": "domain",
         "analyzers": [
-          "23ab61a62433bf4b43ea8c641ae33430::CORTEX"
+          "s1em_analyzer_elasticsearch_domain::CORTEX"
         ]
       },
       "name": "Analyze Domain From Case MISP",
@@ -1105,7 +1104,7 @@
         "id": "={{$node[\"Get Observables From Case External\"].json[\"_id\"]}}",
         "dataType": "file",
         "analyzers": [
-          "6126c884e01aa081552f1a8f9d8c78a4::CORTEX"
+          "s1em_analyzer_capa::CORTEX"
         ]
       },
       "name": "Analyze File From Capa",
@@ -1121,7 +1120,8 @@
           "id": "1",
           "name": "The Hive account"
         }
-      }
+      },
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -1130,7 +1130,7 @@
         "id": "={{$node[\"Get Observables From Case External\"].json[\"_id\"]}}",
         "dataType": "file",
         "analyzers": [
-          "b084bf78d1aea92966b6ef6a4f6193a5::CORTEX"
+          "s1em_analyzer_otx::CORTEX"
         ]
       },
       "name": "Analyze File from OTX",
@@ -1155,7 +1155,7 @@
         "id": "={{$node[\"Get Observables From Case External\"].json[\"_id\"]}}",
         "dataType": "file",
         "analyzers": [
-          "dd2533f2576515a34cab91dc4da43f6c::CORTEX"
+          "s1em_analyzer_yara::CORTEX"
         ]
       },
       "name": "Analyze File from Yara",
@@ -1180,7 +1180,7 @@
         "id": "={{$node[\"Get Observables From Case External\"].json[\"_id\"]}}",
         "dataType": "file",
         "analyzers": [
-          "29632e21412aae6abed3899bdc72cc7c::CORTEX"
+          "s1em_analyzer_mwdb::CORTEX"
         ]
       },
       "name": "Upload file to Mwdb",
@@ -1205,7 +1205,7 @@
         "id": "={{$node[\"Get Observables From Case External\"].json[\"_id\"]}}",
         "dataType": "file",
         "analyzers": [
-          "45d4c947d90aabe091c32a924ebce742::CORTEX"
+          "s1em_analyzer_fileinfo::CORTEX"
         ]
       },
       "name": "Analyze File From FileInfo",
@@ -1785,7 +1785,7 @@
     "saveManualExecutions": false,
     "callerPolicy": "any"
   },
-  "versionId": "7e990a8e-82f5-443f-b644-9dd2403a3886",
+  "versionId": "e57acf98-7bb3-4566-8a0c-d15e1191e24f",
   "id": "1",
   "meta": {
     "instanceId": "ae2c3b36e0c96f988ef0c068ac5443fafc66aace4493a62da8517779eea129d3"

@@ -1,0 +1,56 @@
+{
+  "name": "Elasticsearch_Domain_Analysis",
+  "author": "V1D1AN",
+  "license": "AGPL-V3",
+  "url": "https://github.com/V1D1AN/S1EM",
+  "version": "1.0",
+  "description": "Search for IoCs in a Elasticsearch Instance",
+  "dataTypeList": ["domain"],
+  "command": "Elasticsearch/elk.py",
+  "config": {
+       "service": "domain"
+    },
+  "baseConfig": "Elasticsearch",
+  "configurationItems": [
+   {
+      "name": "endpoint",
+      "description": "Define the Elasticsearch endpoint",
+      "type": "string",
+      "multi": false,
+      "required": false,
+      "defaultValue": "https://elastic:changeme@es01:9200"
+    },
+    {
+      "name": "index",
+      "description": "Define the Elasticsearch index to use",
+      "type": "string",
+      "multi": true,
+      "required": true,
+      "defaultValue": [ "filebeat-*","winlogbeat-*","logs-*","auditbeat-*" ]
+    },
+    {
+      "name": "domain",
+      "description": "Define the field to query for Domain IoCs",
+      "type": "string",
+      "multi": true,
+      "required": true,
+      "defaultValue": [ "dns.question.name" ]
+    },
+    {
+      "name": "verifyssl",
+      "description": "Verify SSL certificate",
+      "type": "boolean",
+      "multi": false,
+      "required": true,
+      "defaultValue": false
+    },
+    {
+      "name": "cert_path",
+      "description": "Path to the CA on the system used to check server certificate",
+      "type": "string",
+      "multi": true,
+      "required": false
+    }
+  ]
+}
+
