@@ -363,10 +363,10 @@ curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: appl
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_IP_Analysis_1_0" -d "{\"name\": \"Elasticsearch_IP_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_Hash_Analysis_1_0" -d "{\"name\": \"Elasticsearch_Hash_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/CIRCLHashlookup_1_1" -d "{\"name\": \"CIRCLHashlookup_1_1\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
-curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Capa_1_0" -d "{\"name\": \"Capa_1_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
-curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Yara_2_0" -d "{\"name\": \"Yara_2_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
-curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/FileInfo_8_0" -d "{\"name\": \"FileInfo_8_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
-curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Mwdb_1_0" -d "{\"name\": \"Mwdb_1_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Capa_1_0" -d "{\"name\": \"Capa_1_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Yara_2_0" -d "{\"name\": \"Yara_2_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/FileInfo_8_0" -d "{\"name\": \"FileInfo_8_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Mwdb_1_0" -d "{\"name\": \"Mwdb_1_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
 echo
 echo
 echo "##########################################"
@@ -439,7 +439,7 @@ echo "######### CONFIGURING API THEHIVE ########"
 echo "##########################################"
 echo
 echo
-sed -i "s|thehive_api_key|$thehive_apikey|g" .env elastalert/elastalert.yaml
+sed -i "s|thehive_api_key|$thehive_apikey|g" .env elastalert/elastalert.yaml n8n/user.json
 echo
 echo
 echo "##########################################"
@@ -500,10 +500,10 @@ git clone https://github.com/malpedia/signator-rules tmp
 mv tmp/rules/* rules/yara/
 rm -fr tmp
 cd rules/yara
-bash index_gen.sh
+bash index_gen.sh  >/dev/null 2>&1
 rm index_w_mobile.yar
-cd -
-docker restart cortex
+cd - >/dev/null 2>&1
+docker restart cortex  >/dev/null 2>&1
 echo
 echo
 echo "##########################################"
@@ -603,6 +603,14 @@ echo
 docker-compose up -d n8n
 docker exec n8n sh -c "n8n import:workflow --input=S1EM_TheHive.json"
 docker exec n8n sh -c "n8n import:credentials --input=user.json"
+echo
+echo
+echo "#########################################"
+echo "###### ACTIVATION WEBHOOK THEHIVE #######"
+echo "#########################################"
+echo
+echo
+curl -XPUT -sk -u$admin_account:$admin_password -H 'Content-type: application/json' https://127.0.0.1/thehive/api/config/organisation/notification -d '{"value": [{"delegate": false,"trigger": { "name": "AnyEvent"},"notifier": { "name": "webhook", "endpoint": "n8n" }}]}'
 echo
 echo
 echo "#########################################"
