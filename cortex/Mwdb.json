@@ -23,6 +23,7 @@
     {
       "name": "mwdb_apikey",
       "description": "The API key to your Mwdb user",
+	  "type": "string",
       "multi": false,
       "required": true,
 	  "defaultValue": "mwdb_api_key"

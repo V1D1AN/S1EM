@@ -501,6 +501,7 @@ mv tmp/rules/* rules/yara/
 rm -fr tmp
 cd rules/yara
 bash index_gen.sh
+rm index_w_mobile.yar
 cd -
 docker restart cortex
 echo
