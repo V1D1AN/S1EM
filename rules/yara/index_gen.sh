@@ -47,7 +47,7 @@ echo "          Yara-Rules"
 echo "        Index generator"
 echo "   **************************"
 
-INC_MOBILE=true
+INC_MOBILE=false
 
 for folder in $(get_folders)
 do
@@ -70,4 +70,3 @@ do
         echo "[+] Generating index..."
     fi
 done
-

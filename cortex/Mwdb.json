@@ -1,0 +1,32 @@
+{
+  "name": "Mwdb",
+  "version": "1.0",
+  "author": "@V1D1AN",
+  "url": "https://github.com/V1D1AN/S1EM",
+  "license": "AGPL-V3",
+  "description": "Send Malware to Mwdb",
+  "dataTypeList": ["file"],
+  "command": "Mwdb/mwdb.py",
+  "baseConfig": "Mwdb",
+  "config": {
+       "service": "file"
+  },
+  "configurationItems": [
+    {
+      "name": "mwdb_url",
+      "description": "The URL to your mwdb instance",
+      "type": "string",
+      "multi": false,
+      "required": true,
+      "defaultValue": "http://mwdb-web"
+    },
+    {
+      "name": "mwdb_apikey",
+      "description": "The API key to your Mwdb user",
+	  "type": "string",
+      "multi": false,
+      "required": true,
+	  "defaultValue": "mwdb_api_key"
+    }
+  ]
+}

@@ -16,7 +16,7 @@ echo "The master password Elastic set in .env:" $password
 echo "The master password Kibana set in .env:" $kibana_password
 echo "The Kibana api key is : " $kibana_api_key
 sed -i "s|kibana_api_key|$kibana_api_key|g" kibana/kibana.yml
-sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/stoq/300_output_stoq.conf logstash/pipeline/zircolite/300_output_zircolite.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
+sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/zircolite/300_output_zircolite.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_Domain.json cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
 sed -i "s|kibana_changeme|$kibana_password|g" .env
 echo
 echo
@@ -302,6 +302,36 @@ docker-compose up -d filebeat metricbeat auditbeat
 echo
 echo
 echo "##########################################"
+echo "############ STARTING MWDB ###############"
+echo "##########################################"
+echo
+echo
+docker-compose up -d mwdb mwdb-web
+echo
+echo
+echo "##########################################"
+echo "########### CONFIGURING MWDB #############"
+echo "##########################################"
+echo
+echo
+while [ "$(curl -s 'http://127.0.0.1:8080' | grep "Malware Database")" == "" ]; do
+  echo "Waiting for Mwdb to come online.";
+  sleep 15;
+done
+sleep 15
+mwdb_admin_token=$(curl -s -X POST "http://127.0.0.1:8080/api/auth/login" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"login\":\"admin\",\"password\":\"$mwdb_password\"}" | sed -n 's/.*"token": "\([^ ]\+\)".*/\1/p')
+mwdb_apikey=$(curl -s -X POST -H "Authorization: Bearer $mwdb_admin_token" -H 'accept: application/json' -H "Content-Type: application/json" "http://127.0.0.1:8080/api/user/admin/api_key" -d "{ \"name\": \"mwdb\"}" | sed -n 's/.*"token": "\([^ ]\+\)".*/\1/p')
+echo
+echo
+echo "##########################################"
+echo "###### CONFIGURING MWDB FOR CORTEX #######"
+echo "##########################################"
+echo
+echo
+sed -i "s|mwdb_api_key|$mwdb_apikey|g" .env cortex/Mwdb.json
+echo
+echo
+echo "##########################################"
 echo "########### STARTING CORTEX ##############"
 echo "##########################################"
 echo
@@ -332,7 +362,34 @@ curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: appl
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/OTXQuery_2_0" -d "{\"name\": \"OTXQuery\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_IP_Analysis_1_0" -d "{\"name\": \"Elasticsearch_IP_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_Hash_Analysis_1_0" -d "{\"name\": \"Elasticsearch_Hash_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Elasticsearch_Domain_Analysis_1_0" -d "{\"name\": \"Elasticsearch_Domain_Analysis_1_0\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
 curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/CIRCLHashlookup_1_1" -d "{\"name\": \"CIRCLHashlookup_1_1\",\"configuration\":{\"auto_extract_artifacts\":false,\"check_tlp\":true,\"max_tlp\":2,\"check_pap\":true,\"max_pap\":2},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Capa_1_0" -d "{\"name\": \"Capa_1_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Yara_2_0" -d "{\"name\": \"Yara_2_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/FileInfo_8_0" -d "{\"name\": \"FileInfo_8_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
+curl -sk -XPOST -H "Authorization: Bearer $cortex_apikey" -H 'Content-Type: application/json' -L "https://127.0.0.1/cortex/api/organization/analyzer/Mwdb_1_0" -d "{\"name\": \"Mwdb_1_0\",\"configuration\":{\"auto_extract_artifacts\":true,\"check_tlp\":true,\"max_tlp\":3,\"check_pap\":true,\"max_pap\":3},\"jobCache\": 10}" >/dev/null 2>&1
+s1em_analyzer_misp=$(curl -sk -H "Authorization: Bearer $cortex_apikey" 'https://127.0.0.1/cortex/api/analyzer/type/hash' | jq -r '.[] | select(.name=="MISP_2_1") | .id')
+sed -i "s|s1em_analyzer_misp|$s1em_analyzer_misp|g" n8n/S1EM_TheHive.json
+s1em_analyzer_opencti=$(curl -sk -H "Authorization: Bearer $cortex_apikey" 'https://127.0.0.1/cortex/api/analyzer/type/hash' | jq -r '.[] | select(.name=="OpenCTI_SearchObservables_2_0") | .id')
+sed -i "s|s1em_analyzer_opencti|$s1em_analyzer_opencti|g" n8n/S1EM_TheHive.json
+s1em_analyzer_otx=$(curl -sk -H "Authorization: Bearer $cortex_apikey" 'https://127.0.0.1/cortex/api/analyzer/type/hash' | jq -r '.[] | select(.name=="OTXQuery") | .id')
+sed -i "s|s1em_analyzer_otx|$s1em_analyzer_otx|g" n8n/S1EM_TheHive.json
+s1em_analyzer_elasticsearch_ip=$(curl -sk -H "Authorization: Bearer $cortex_apikey" 'https://127.0.0.1/cortex/api/analyzer' | jq -r '.[] | select(.name=="Elasticsearch_IP_Analysis_1_0") | .id')
+sed -i "s|s1em_analyzer_elasticsearch_ip|$s1em_analyzer_elasticsearch_ip|g" n8n/S1EM_TheHive.json
+s1em_analyzer_elasticsearch_hash=$(curl -sk -H "Authorization: Bearer $cortex_apikey" 'https://127.0.0.1/cortex/api/analyzer/type/hash' | jq -r '.[] | select(.name=="Elasticsearch_Hash_Analysis_1_0") | .id')
+sed -i "s|s1em_analyzer_elasticsearch_hash|$s1em_analyzer_elasticsearch_hash|g" n8n/S1EM_TheHive.json
+s1em_analyzer_elasticsearch_domain=$(curl -sk -H "Authorization: Bearer $cortex_apikey" 'https://127.0.0.1/cortex/api/analyzer' | jq -r '.[] | select(.name=="Elasticsearch_Domain_Analysis_1_0") | .id')
+sed -i "s|s1em_analyzer_elasticsearch_domain|$s1em_analyzer_elasticsearch_domain|g" n8n/S1EM_TheHive.json
+s1em_analyzer_circl=$(curl -sk -H "Authorization: Bearer $cortex_apikey" 'https://127.0.0.1/cortex/api/analyzer/type/hash'|jq -r '.[] | select(.name=="CIRCLHashlookup_1_1") | .id')
+sed -i "s|s1em_analyzer_circl|$s1em_analyzer_circl|g" n8n/S1EM_TheHive.json
+s1em_analyzer_capa=$(curl -sk -H "Authorization: Bearer $cortex_apikey" 'https://127.0.0.1/cortex/api/analyzer'|jq -r '.[] | select(.name=="Capa_1_0") | .id')
+sed -i "s|s1em_analyzer_capa|$s1em_analyzer_capa|g" n8n/S1EM_TheHive.json
+s1em_analyzer_yara=$(curl -sk -H "Authorization: Bearer $cortex_apikey" 'https://127.0.0.1/cortex/api/analyzer'|jq -r '.[] | select(.name=="Yara_2_0") | .id')
+sed -i "s|s1em_analyzer_yara|$s1em_analyzer_yara|g" n8n/S1EM_TheHive.json
+s1em_analyzer_fileinfo=$(curl -sk -H "Authorization: Bearer $cortex_apikey" 'https://127.0.0.1/cortex/api/analyzer'|jq -r '.[] | select(.name=="FileInfo_8_0") | .id')
+sed -i "s|s1em_analyzer_fileinfo|$s1em_analyzer_fileinfo|g" n8n/S1EM_TheHive.json
+s1em_analyzer_mwdb=$(curl -sk -H "Authorization: Bearer $cortex_apikey" 'https://127.0.0.1/cortex/api/analyzer'|jq -r '.[] | select(.name=="Mwdb_1_0") | .id')
+sed -i "s|s1em_analyzer_mwdb|$s1em_analyzer_mwdb|g" n8n/S1EM_TheHive.json
 echo
 echo
 echo "##########################################"
@@ -401,49 +458,11 @@ curl -sk 'https://127.0.0.1/thehive/api/dashboard' -u $admin_account:$admin_pass
 echo
 echo
 echo "##########################################"
-echo "######## CONFIGURING ELASTALERT ##########"
+echo "######### CONFIGURING API THEHIVE ########"
 echo "##########################################"
 echo
 echo
-sed -i "s|thehive_api_key|$thehive_apikey|g" elastalert/elastalert.yaml
-echo
-echo
-echo "##########################################"
-echo "############ STARTING MWDB ###############"
-echo "##########################################"
-echo
-echo
-docker-compose up -d mwdb mwdb-web
-echo
-echo
-echo "##########################################"
-echo "########### CONFIGURING MWDB #############"
-echo "##########################################"
-echo
-echo
-while [ "$(curl -s 'http://127.0.0.1:8080' | grep "Malware Database")" == "" ]; do
-  echo "Waiting for Mwdb to come online.";
-  sleep 15;
-done
-sleep 15
-mwdb_admin_token=$(curl -s -X POST "http://127.0.0.1:8080/api/auth/login" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"login\":\"admin\",\"password\":\"$mwdb_password\"}" | sed -n 's/.*"token": "\([^ ]\+\)".*/\1/p')
-mwdb_apikey=$(curl -s -X POST -H "Authorization: Bearer $mwdb_admin_token" -H 'accept: application/json' -H "Content-Type: application/json" "http://127.0.0.1:8080/api/user/admin/api_key" -d "{ \"name\": \"mwdb\"}" | sed -n 's/.*"token": "\([^ ]\+\)".*/\1/p')
-echo
-echo
-echo "##########################################"
-echo "########### CONFIGURING STOQ #############"
-echo "##########################################"
-echo
-echo
-sed -i "s|mwdb_api_key|$mwdb_apikey|g" stoq/stoq.cfg .env
-echo
-echo
-echo "##########################################"
-echo "############# STARTING STOQ ##############"
-echo "##########################################"
-echo
-echo
-docker-compose up -d stoq
+sed -i "s|thehive_api_key|$thehive_apikey|g" .env elastalert/elastalert.yaml n8n/user.json
 echo
 echo
 echo "##########################################"
@@ -500,18 +519,14 @@ echo "########## UPDATE YARA RULES #############"
 echo "##########################################"
 echo
 mkdir tmp
-git clone https://github.com/Yara-Rules/rules.git tmp
-rm -fr rules/yara/*
-rm -fr tmp/deprecated
-rm -fr tmp/malware
-rm -fr tmp/malware_index.yar
-mv tmp/* rules/yara/
+git clone https://github.com/malpedia/signator-rules tmp
+mv tmp/rules/* rules/yara/
 rm -fr tmp
 cd rules/yara
-bash index_gen.sh
-cd -
-docker restart stoq
-docker restart cortex
+bash index_gen.sh  >/dev/null 2>&1
+rm index_w_mobile.yar
+cd - >/dev/null 2>&1
+docker restart cortex  >/dev/null 2>&1
 echo
 echo
 echo "##########################################"
@@ -565,6 +580,7 @@ echo "Generated SERVICE TOKEN for fleet server: $FLEET_SERVICETOKEN"
 sed -i "s|fleettoken|$FLEET_SERVICETOKEN|g" .env docker-compose.yml
 sed -i "s|fleetenroll|$FLEET_ENROLLTOKEN|g" .env docker-compose.yml
 
+docker cp fleet-server:/usr/share/certificates/ca/ca.crt certs/ca.crt
 echo "Setting Elasticsearch URL & Fingerprint & SSL CA"
 FINGERPRINT=`openssl x509 -fingerprint -sha256 -noout -in certs/ca.crt | awk -F"=" {' print $2 '} | sed s/://g `
     
@@ -609,6 +625,16 @@ echo "#########################################"
 echo
 echo
 docker-compose up -d n8n
+docker exec n8n sh -c "n8n import:workflow --input=S1EM_TheHive.json"
+docker exec n8n sh -c "n8n import:credentials --input=user.json"
+echo
+echo
+echo "#########################################"
+echo "###### ACTIVATION WEBHOOK THEHIVE #######"
+echo "#########################################"
+echo
+echo
+curl -XPUT -sk -u$admin_account:$admin_password -H 'Content-type: application/json' https://127.0.0.1/thehive/api/config/organisation/notification -d '{"value": [{"delegate": false,"trigger": { "name": "AnyEvent"},"notifier": { "name": "webhook", "endpoint": "n8n" }}]}'
 echo
 echo
 echo "#########################################"
@@ -616,7 +642,7 @@ echo "####### STARTING OTHER DOCKER ###########"
 echo "#########################################"
 echo
 echo
-docker-compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload syslog-ng tcpreplay clamav heartbeat spiderfoot codimd watchtower
+docker-compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload syslog-ng tcpreplay file4thehive heartbeat spiderfoot codimd watchtower
 echo
 echo
 echo "#########################################"

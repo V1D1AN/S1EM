@@ -1,14 +1,14 @@
 {
-  "name": "Elasticsearch_Hash_Analysis",
+  "name": "Elasticsearch_Domain_Analysis",
   "author": "V1D1AN",
   "license": "AGPL-V3",
-  "url": "https://gitlab.cyber.fr",
+  "url": "https://github.com/V1D1AN/S1EM",
   "version": "1.0",
   "description": "Search for IoCs in a Elasticsearch Instance",
-  "dataTypeList": ["hash"],
+  "dataTypeList": ["domain"],
   "command": "Elasticsearch/elk.py",
   "config": {
-       "service": "hash"
+       "service": "domain"
     },
   "baseConfig": "Elasticsearch",
   "configurationItems": [
@@ -29,12 +29,12 @@
       "defaultValue": [ "filebeat-*","winlogbeat-*","logs-*","auditbeat-*" ]
     },
     {
-      "name": "hash",
-      "description": "Define the field to query for Hash IoCs",
+      "name": "domain",
+      "description": "Define the field to query for Domain IoCs",
       "type": "string",
       "multi": true,
       "required": true,
-      "defaultValue": [ "file.hash.md5","file.hash.sha1","file.hash.sha256" ]
+      "defaultValue": [ "dns.question.name" ]
     },
     {
       "name": "verifyssl",

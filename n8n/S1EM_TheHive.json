@@ -1,0 +1,1808 @@
+[
+{
+  "name": "S1EM TheHive",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -2760,
+        -1320
+      ],
+      "id": "25d5e8cc-a26f-4dc7-afba-bc27af1c078c",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "events": [
+          "alert_create",
+          "alert_update"
+        ]
+      },
+      "name": "TheHive Trigger",
+      "type": "n8n-nodes-base.theHiveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2400,
+        -1320
+      ],
+      "webhookId": "e6787464-22ab-43a0-a049-2dd41ff42b11",
+      "alwaysOutputData": true,
+      "id": "257f2709-a44d-433e-b470-059df8f65f4e"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"TheHive Trigger\"].json[\"body\"][\"object\"][\"type\"]}}",
+              "operation": "notEqual",
+              "value2": "misp"
+            },
+            {
+              "value1": "={{$node[\"TheHive Trigger\"].json[\"event\"]}}",
+              "value2": "alert_create"
+            },
+            {
+              "value1": "={{$node[\"TheHive Trigger\"].json[\"body\"][\"object\"][\"type\"]}}",
+              "operation": "notEqual",
+              "value2": "external"
+            }
+          ]
+        }
+      },
+      "name": "IF Not Alert Misp",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -1320
+      ],
+      "id": "db4d69dd-c8fb-4e0d-b394-ef94e15c160b"
+    },
+    {
+      "parameters": {
+        "operation": "promote",
+        "id": "={{$node[\"Alerts Elastalert\"].json[\"_id\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Create Case From Alerts Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -1340
+      ],
+      "id": "7bba657b-78d6-40f6-866d-6c817b2397ec",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "id": "={{$node[\"TheHive Trigger\"].json[\"body\"][\"object\"][\"_id\"]}}",
+        "options": {}
+      },
+      "name": "Alerts Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        -1340
+      ],
+      "id": "c307618a-32c6-4974-a8d4-d58632d41198",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "case",
+        "operation": "get",
+        "id": "={{$node[\"Create Case From Alerts Elastalert\"].json[\"_id\"]}}"
+      },
+      "name": "Get Case From Case Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        340,
+        -1340
+      ],
+      "id": "645ebed1-063f-4fc7-b185-6f72bf0b61d8",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "name": "Wait For Case Elastalert",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -1340
+      ],
+      "webhookId": "c97ee0b6-ab6f-4ffd-a46c-0ce50a7c4e75",
+      "id": "0f4bb740-3805-46f7-b8de-ac003581e4a5"
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "caseId": "={{$node[\"Get Case From Case Elastalert\"].json[\"_id\"]}}",
+        "returnAll": true,
+        "options": {}
+      },
+      "name": "Get Observables From Case Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        -660
+      ],
+      "alwaysOutputData": true,
+      "id": "9341fbbe-04fb-4912-bc99-4c94d47cc150",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get Observables From Case Elastalert\"].json[\"dataType\"]}}",
+              "value2": "hash"
+            }
+          ]
+        }
+      },
+      "name": "IF Hash From Case Elastalert",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -1060
+      ],
+      "id": "e33cc8d7-e447-4f39-b6a2-563e866e11cf"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get Observables From Case Elastalert\"].json[\"dataType\"]}}",
+              "value2": "ip"
+            }
+          ]
+        }
+      },
+      "name": "IF IP From Case Elastalert",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -820
+      ],
+      "id": "72453c1d-8e46-4c16-af52-8fe39e1fa7db"
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "get",
+        "id": "={{$node[\"IF Hash From Case Elastalert\"].json[\"_id\"]}}"
+      },
+      "name": "Get Hash From Case Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        -1080
+      ],
+      "id": "eec0f4d7-e125-40ad-8ff4-29d2188fca97",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "get",
+        "id": "={{$node[\"IF IP From Case Elastalert\"].json[\"_id\"]}}"
+      },
+      "name": "Get IP From Case Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        -840
+      ],
+      "id": "7aea0fcd-b9a0-44d3-b387-c6a341a769d2",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "get",
+        "id": "={{$node[\"IF Domain From Case Elastalert\"].json[\"_id\"]}}"
+      },
+      "name": "Get Domain From Case Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        -600
+      ],
+      "id": "767a3262-3d9e-4166-81d2-1f75da900f17",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "get",
+        "id": "={{$node[\"IF Registry From Case Elastalert\"].json[\"_id\"]}}"
+      },
+      "name": "Get Registry From Case Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        -360
+      ],
+      "id": "0ea5c50f-76f4-423c-a780-99cfcde03193",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get Hash From Case Elastalert\"].json[\"_id\"]}}",
+        "dataType": "hash",
+        "analyzers": [
+          "s1em_analyzer_misp::CORTEX",
+          "s1em_analyzer_opencti::CORTEX",
+          "s1em_analyzer_otx::CORTEX",
+          "s1em_analyzer_circl::CORTEX"
+        ]
+      },
+      "name": "Analyze Hash From Case Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -1080
+      ],
+      "id": "fb23096b-4cf3-41bd-9e20-24e054e21889",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get IP From Case Elastalert\"].json[\"_id\"]}}",
+        "dataType": "ip",
+        "analyzers": [
+          "s1em_analyzer_misp::CORTEX",
+          "s1em_analyzer_otx::CORTEX",
+          "s1em_analyzer_opencti::CORTEX"
+        ]
+      },
+      "name": "Analyze IP From Case Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -840
+      ],
+      "id": "af64bec8-fb61-4a45-8f0a-b02dbbcf0a4b",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get Domain From Case Elastalert\"].json[\"_id\"]}}",
+        "dataType": "ip",
+        "analyzers": [
+          "s1em_analyzer_misp::CORTEX",
+          "s1em_analyzer_otx::CORTEX",
+          "s1em_analyzer_opencti::CORTEX"
+        ]
+      },
+      "name": "Analyze Domain From Case Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -600
+      ],
+      "id": "68622b10-70dc-4ead-bfb5-e3901c751f73",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get Registry From Case Elastalert\"].json[\"_id\"]}}",
+        "dataType": "registry",
+        "analyzers": [
+          "s1em_analyzer_misp::CORTEX",
+          "s1em_analyzer_opencti::CORTEX"
+        ]
+      },
+      "name": "Analyze Registry From Case Elastalert",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -360
+      ],
+      "id": "98a1fac8-a7f9-443b-b295-8384205d54d4",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"TheHive Trigger\"].json[\"body\"][\"object\"][\"type\"]}}",
+              "value2": "misp"
+            },
+            {
+              "value1": "={{$node[\"TheHive Trigger\"].json[\"event\"]}}",
+              "value2": "alert_create"
+            }
+          ]
+        }
+      },
+      "name": "IF Alert From MISP",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1460,
+        -300
+      ],
+      "id": "39be816f-04f0-4ea7-bd7b-bf1c769d0997"
+    },
+    {
+      "parameters": {
+        "operation": "promote",
+        "id": "={{$node[\"Get Alerts From MISP\"].json[\"_id\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Create Case From Alerts MISP",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -140
+      ],
+      "id": "6dbe9dcf-5553-4f63-aff4-bd67e6974e37",
+      "executeOnce": true,
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "case",
+        "operation": "get",
+        "id": "={{$node[\"Create Case From Alerts MISP\"].json[\"_id\"]}}"
+      },
+      "name": "Get Case From Alert MISP",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        340,
+        -140
+      ],
+      "id": "d026895e-fa8d-4f4a-be1e-28567f8e1c1a",
+      "executeOnce": true,
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "name": "Wait For Case MISP",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -140
+      ],
+      "webhookId": "d337149f-c998-4df1-b3e7-3bf12a13cc0f",
+      "id": "3e9ec2e5-a4f3-4ce4-8654-29ae33ef979d"
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "caseId": "={{$node[\"Get Case From Alert MISP\"].json[\"_id\"]}}",
+        "returnAll": true,
+        "options": {}
+      },
+      "name": "Get Observables From Case MISP",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        380
+      ],
+      "alwaysOutputData": false,
+      "id": "dbd0ab70-03ed-4ec0-ab70-af8ee7de95a6",
+      "executeOnce": true,
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "id": "={{$node[\"TheHive Trigger\"].json[\"body\"][\"object\"][\"_id\"]}}",
+        "options": {}
+      },
+      "name": "Get Alerts From MISP",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        -140
+      ],
+      "id": "8f60b7bb-5efb-4be0-a54f-d5e693fe5c09",
+      "executeOnce": true,
+      "retryOnFail": true,
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get Observables From Case Elastalert\"].json[\"dataType\"]}}",
+              "value2": "registry"
+            }
+          ]
+        }
+      },
+      "name": "IF Registry From Case Elastalert",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -340
+      ],
+      "id": "608041d6-2862-481e-ba69-43ff05a6de27"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get Observables From Case Elastalert\"].json[\"dataType\"]}}",
+              "value2": "domain"
+            }
+          ]
+        }
+      },
+      "name": "IF Domain From Case Elastalert",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -580
+      ],
+      "id": "bafe7017-6041-4106-9fb6-42de17db3b6d"
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "caseId": "={{$node[\"Get Case From Alert MISP\"].json[\"_id\"]}}",
+        "returnAll": true,
+        "options": {}
+      },
+      "name": "Get Observables From Case MISP after Analyze",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        380
+      ],
+      "alwaysOutputData": false,
+      "id": "515f7153-bebc-4cd8-af46-e9a3b88d16ad",
+      "executeOnce": true,
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{    $jmespath($json.reports.Elasticsearch_IP_Analysis_1_0, \"taxonomies[*].level\")    }}",
+              "operation": "contains",
+              "value2": "suspicious"
+            },
+            {
+              "value1": "={{    $jmespath($json.reports.Elasticsearch_Hash_Analysis_1_0, \"taxonomies[*].level\")    }}",
+              "operation": "contains",
+              "value2": "suspicious"
+            },
+            {
+              "value1": "={{    $jmespath($json.reports.Elasticsearch_Domain_Analysis_1_0, \"taxonomies[*].level\")    }}",
+              "operation": "contains",
+              "value2": "suspicious"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "id": "bf06fd34-8d3b-45ab-99e5-98ddfaf2c2f4",
+      "name": "IF after Analyze",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "id": "84f4f961-99d6-41b8-be7e-38c2406e6b16",
+      "name": "Wait2",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        520
+      ],
+      "webhookId": "0c21643c-eb5b-4eca-b2ff-5944f9b69cbb"
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "20acc5b4-a95d-48f8-933e-bdc9846f7780",
+      "name": "Wait3",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        200
+      ],
+      "webhookId": "c8150dec-acef-4f6d-9b11-8ffd1ec533e3"
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "get",
+        "id": "={{ $json._id }}"
+      },
+      "name": "Get Hash From Case MISP",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        180,
+        200
+      ],
+      "id": "a08242d6-3200-4608-bfa1-5fc347e00534",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "get",
+        "id": "={{ $json._id }}"
+      },
+      "name": "Get IP From Case MISP",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        180,
+        380
+      ],
+      "id": "2ba7c7c1-9f89-45ba-a3ea-3f7321b496ec",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get IP From Case MISP\"].json[\"_id\"]}}",
+        "dataType": "ip",
+        "analyzers": [
+          "s1em_analyzer_elasticsearch_ip::CORTEX"
+        ]
+      },
+      "name": "Analyze IP From Case MISP",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        460,
+        380
+      ],
+      "id": "8fbbf15d-3617-4892-84c6-23a35617d725",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get Hash From Case MISP\"].json[\"_id\"]}}",
+        "dataType": "hash",
+        "analyzers": [
+          "s1em_analyzer_elasticsearch_hash::CORTEX"
+        ]
+      },
+      "name": "Analyze Hash From Case MISP",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        460,
+        200
+      ],
+      "id": "89398fe4-c9e9-4030-a003-cfc54845fe9f",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get Domain From Case MISP\"].json[\"_id\"]}}",
+        "dataType": "domain",
+        "analyzers": [
+          "s1em_analyzer_elasticsearch_domain::CORTEX"
+        ]
+      },
+      "name": "Analyze Domain From Case MISP",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        460,
+        580
+      ],
+      "id": "7fae4ac1-e24e-42b5-904c-3276f78f26a1",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "get",
+        "id": "={{ $json._id }}"
+      },
+      "name": "Get Domain From Case MISP",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        180,
+        580
+      ],
+      "id": "00e28f1c-31bf-41f3-924d-267e29192659",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "4eae53c8-b086-4f79-8f6e-2d1bc3b423ff",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        860,
+        380
+      ],
+      "webhookId": "3e2c56b2-7b5c-4755-8e08-ab7248d1f731"
+    },
+    {
+      "parameters": {
+        "resource": "case",
+        "operation": "get",
+        "id": "={{ $node[\"Get Case From Alert MISP\"].json._id }}"
+      },
+      "name": "Get Case From Alert MISP after Analyze",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        380
+      ],
+      "id": "50c726ea-2ebc-46ac-a829-8be47e866535",
+      "executeOnce": true,
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.dataType }}",
+        "rules": {
+          "rules": [
+            {
+              "operation": "contains",
+              "value2": "hash"
+            },
+            {
+              "operation": "contains",
+              "value2": "ip",
+              "output": 1
+            },
+            {
+              "operation": "contains",
+              "value2": "domain",
+              "output": 2
+            }
+          ]
+        },
+        "fallbackOutput": 3
+      },
+      "id": "786dc8a8-639f-4fad-8675-0781d2e274b5",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "get",
+        "id": "={{ $json._id }}"
+      },
+      "name": "Get Others From Case MISP",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        460,
+        840
+      ],
+      "id": "c964755f-f037-4de3-8ec8-e1de4a092a25",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "ae7e2f8b-b0ac-4293-98bc-462421221dac",
+      "name": "Split In Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"TheHive Trigger\"].json[\"body\"][\"object\"][\"type\"]}}",
+              "value2": "misp"
+            },
+            {
+              "value1": "={{$node[\"TheHive Trigger\"].json[\"event\"]}}",
+              "value2": "alert_update"
+            }
+          ]
+        }
+      },
+      "name": "IF Alert From MISP2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1460,
+        -20
+      ],
+      "id": "5d84ab51-36c7-43fa-9843-7b1ff73e4a37"
+    },
+    {
+      "parameters": {
+        "resource": "case",
+        "operation": "update",
+        "id": "={{$node[\"Create Case From Alerts MISP\"].json[\"_id\"]}}",
+        "jsonParameters": false,
+        "updateFields": {
+          "flag": false,
+          "resolutionStatus": "FalsePositive",
+          "status": "Resolved",
+          "summary": "Close summary"
+        }
+      },
+      "id": "336cec90-9fca-4908-902a-362ebb377186",
+      "name": "Close Case TheHive",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        2640,
+        520
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "case",
+        "operation": "update",
+        "id": "={{$node[\"Create Case From Alerts MISP\"].json[\"id\"]}}",
+        "jsonParameters": false,
+        "updateFields": {
+          "status": "Open"
+        }
+      },
+      "id": "c5f4c578-f534-4992-9a5f-4be1ead7c7b7",
+      "name": "Open Case TheHive",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        2640,
+        200
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "id": "={{$node[\"TheHive Trigger\"].json[\"body\"][\"object\"][\"_id\"]}}",
+        "options": {}
+      },
+      "name": "Alerts Elastalert1",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        -3020
+      ],
+      "id": "834a0230-a53c-42f9-906c-7a5263b7678a",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "name": "Wait For Case Elastalert1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -3020
+      ],
+      "webhookId": "5d12c1ea-3ea8-46b2-8a7c-ee67df67e1fb",
+      "id": "fa8ceb5e-6bd2-4649-b707-1a76da8b9a3b"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"TheHive Trigger\"].json[\"body\"][\"object\"][\"type\"]}}",
+              "value2": "external"
+            },
+            {
+              "value1": "={{$node[\"TheHive Trigger\"].json[\"event\"]}}",
+              "value2": "alert_create"
+            }
+          ]
+        }
+      },
+      "name": "IF Alert from external",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -3000
+      ],
+      "id": "78166376-13dc-411a-a959-61aacc560759"
+    },
+    {
+      "parameters": {
+        "operation": "promote",
+        "id": "={{$node[\"Alerts Elastalert1\"].json[\"_id\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Create Case From Alerts External",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -3020
+      ],
+      "id": "4c7687b2-fc48-4e07-a87e-c6dd2b946be4",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "case",
+        "operation": "get",
+        "id": "={{$node[\"Create Case From Alerts External\"].json[\"_id\"]}}"
+      },
+      "name": "Get Case From Case External",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        340,
+        -3020
+      ],
+      "id": "5b817335-5b2b-473e-af40-bf90c1ff55fc",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "caseId": "={{$node[\"Get Case From Case External\"].json[\"_id\"]}}",
+        "returnAll": true,
+        "options": {}
+      },
+      "name": "Get Observables From Case External",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -2180
+      ],
+      "alwaysOutputData": true,
+      "id": "2bb0863f-0725-41e2-9e97-2eda574fa932",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get Observables From Case External\"].json[\"_id\"]}}",
+        "dataType": "file",
+        "analyzers": [
+          "s1em_analyzer_capa::CORTEX"
+        ]
+      },
+      "name": "Analyze File From Capa",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -2420
+      ],
+      "id": "6688b037-26aa-4649-a746-e39f08466bb8",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get Observables From Case External\"].json[\"_id\"]}}",
+        "dataType": "file",
+        "analyzers": [
+          "s1em_analyzer_otx::CORTEX"
+        ]
+      },
+      "name": "Analyze File from OTX",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -2180
+      ],
+      "id": "5b209dbf-2315-4f17-b607-ccb8d1e8266c",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get Observables From Case External\"].json[\"_id\"]}}",
+        "dataType": "file",
+        "analyzers": [
+          "s1em_analyzer_yara::CORTEX"
+        ]
+      },
+      "name": "Analyze File from Yara",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -1940
+      ],
+      "id": "be01ff5b-ee91-4695-837a-06d73ab19dc2",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get Observables From Case External\"].json[\"_id\"]}}",
+        "dataType": "file",
+        "analyzers": [
+          "s1em_analyzer_mwdb::CORTEX"
+        ]
+      },
+      "name": "Upload file to Mwdb",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -1700
+      ],
+      "id": "03fe7243-34bd-4f72-93df-8cc42d0b124a",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "observable",
+        "operation": "executeAnalyzer",
+        "id": "={{$node[\"Get Observables From Case External\"].json[\"_id\"]}}",
+        "dataType": "file",
+        "analyzers": [
+          "s1em_analyzer_fileinfo::CORTEX"
+        ]
+      },
+      "name": "Analyze File From FileInfo",
+      "type": "n8n-nodes-base.theHive",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -2660
+      ],
+      "id": "f43f2ad3-2b47-421a-aeae-c38b92645f22",
+      "credentials": {
+        "theHiveApi": {
+          "id": "1",
+          "name": "The Hive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "TheHive Trigger": {
+      "main": [
+        [
+          {
+            "node": "IF Alert From MISP",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF Not Alert Misp",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF Alert From MISP2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF Alert from external",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Not Alert Misp": {
+      "main": [
+        [
+          {
+            "node": "Alerts Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Case From Alerts Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Get Case From Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alerts Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Create Case From Alerts Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Case From Case Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Wait For Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait For Case Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Get Observables From Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Observables From Case Elastalert": {
+      "main": [
+        [
+          {
+            "node": "IF Hash From Case Elastalert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF IP From Case Elastalert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF Domain From Case Elastalert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF Registry From Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Hash From Case Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Get Hash From Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF IP From Case Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Get IP From Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Hash From Case Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Analyze Hash From Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get IP From Case Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Analyze IP From Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Domain From Case Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Analyze Domain From Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Registry From Case Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Analyze Registry From Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Alert From MISP": {
+      "main": [
+        [
+          {
+            "node": "Get Alerts From MISP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Case From Alerts MISP": {
+      "main": [
+        [
+          {
+            "node": "Get Case From Alert MISP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Case From Alert MISP": {
+      "main": [
+        [
+          {
+            "node": "Wait For Case MISP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait For Case MISP": {
+      "main": [
+        [
+          {
+            "node": "Get Observables From Case MISP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Observables From Case MISP": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Alerts From MISP": {
+      "main": [
+        [
+          {
+            "node": "Create Case From Alerts MISP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Registry From Case Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Get Registry From Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Domain From Case Elastalert": {
+      "main": [
+        [
+          {
+            "node": "Get Domain From Case Elastalert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Observables From Case MISP after Analyze": {
+      "main": [
+        [
+          {
+            "node": "IF after Analyze",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF after Analyze": {
+      "main": [
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Close Case TheHive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Open Case TheHive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Hash From Case MISP": {
+      "main": [
+        [
+          {
+            "node": "Analyze Hash From Case MISP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get IP From Case MISP": {
+      "main": [
+        [
+          {
+            "node": "Analyze IP From Case MISP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze IP From Case MISP": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Hash From Case MISP": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Domain From Case MISP": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Domain From Case MISP": {
+      "main": [
+        [
+          {
+            "node": "Analyze Domain From Case MISP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get Case From Alert MISP after Analyze",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Get Hash From Case MISP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get IP From Case MISP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Domain From Case MISP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Others From Case MISP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Others From Case MISP": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Case From Alert MISP after Analyze": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split In Batches": {
+      "main": [
+        [
+          {
+            "node": "Get Observables From Case MISP after Analyze",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Alert From MISP2": {
+      "main": [
+        [
+          {
+            "node": "Get Alerts From MISP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alerts Elastalert1": {
+      "main": [
+        [
+          {
+            "node": "Create Case From Alerts External",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait For Case Elastalert1": {
+      "main": [
+        [
+          {
+            "node": "Get Observables From Case External",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Alert from external": {
+      "main": [
+        [
+          {
+            "node": "Alerts Elastalert1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Case From Alerts External": {
+      "main": [
+        [
+          {
+            "node": "Get Case From Case External",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Case From Case External": {
+      "main": [
+        [
+          {
+            "node": "Wait For Case Elastalert1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Observables From Case External": {
+      "main": [
+        [
+          {
+            "node": "Analyze File From Capa",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Analyze File from OTX",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Analyze File from Yara",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload file to Mwdb",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Analyze File From FileInfo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "timezone": "Europe/Paris",
+    "errorWorkflow": "1",
+    "saveManualExecutions": false,
+    "callerPolicy": "any"
+  },
+  "versionId": "e57acf98-7bb3-4566-8a0c-d15e1191e24f",
+  "id": "1",
+  "meta": {
+    "instanceId": "ae2c3b36e0c96f988ef0c068ac5443fafc66aace4493a62da8517779eea129d3"
+  },
+  "tags": [
+    {
+      "createdAt": "2022-04-26T20:14:21.384Z",
+      "updatedAt": "2022-04-26T20:14:21.384Z",
+      "id": "1",
+      "name": "misp"
+    },
+    {
+      "createdAt": "2022-04-26T20:15:15.988Z",
+      "updatedAt": "2022-04-26T20:15:15.988Z",
+      "id": "3",
+      "name": "alert"
+    }
+  ]
+}
+]

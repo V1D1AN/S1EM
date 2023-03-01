@@ -54,6 +54,13 @@ if ! command_exists netstat
   else
         echo "netstat installed"
 fi
+if ! command_exists openssl
+  then
+        echo "Please install openssl"
+        exit
+  else
+        echo "openssl installed"
+fi
 echo
 echo
 echo "##########################################"

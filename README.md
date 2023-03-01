@@ -29,13 +29,12 @@ Inside the solution:
 * Syslog-ng
 * Elastalert
 * TheHive
-* Cortex
+* Cortex ( With Mwdb, Capa, Yara, FileInfo )
 * MISP
 * OpenCTI 
 * Arkime
 * Suricata
 * Zeek
-* StoQ
 * Mwdb
 * Traefik
 * Clamav
@@ -69,8 +68,10 @@ Inside the solution:
 - [ ] Upgrade to elastalert2
 - [ ] SSO
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
-- [ ] Add Capa
+- [x] Add Capa ( In cortex )
+- [x] Suppress Stoq
 - [x] Add Zircolite
+- [ ] Installation of S1EM with Ansible
 
 # Related project
 
@@ -81,7 +82,6 @@ https://github.com/blacktop/docker-zeek <br />
 https://github.com/rskntroot/arkime <br />
 https://github.com/coolacid/docker-misp <br />
 https://github.com/m0ns7er/ElasticXDR<br />
-https://github.com/PUNCH-Cyber/stoq <br />
 https://github.com/jertel/elastalert-docker <br />
 https://github.com/OpenCTI-Platform/docker <br />
 https://github.com/CERT-Polska/mwdb-core <br />
@@ -96,6 +96,7 @@ https://www.clamav.net/ <br />
 https://www.syslog-ng.com/ <br />
 https://github.com/bastienwirtz/homer <br />
 https://github.com/wagga40/zircolite <br />
+https://github.com/weslambert <br />
 
 
 
