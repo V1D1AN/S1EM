@@ -322,7 +322,6 @@ services:
     user: root
     volumes:
       - certs:/usr/share/certificates:ro
-      - stoq:/var/log/stoq
       - zircolite:/usr/share/logstash/zircolite:rw
       - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
@@ -1659,8 +1658,6 @@ volumes:
    misp:
     external: false
    misp_tmp:
-    external: false
-   stoq:
     external: false
    arkimelog:
     external: false

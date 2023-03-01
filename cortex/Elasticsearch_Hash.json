@@ -26,7 +26,7 @@
       "type": "string",
       "multi": true,
       "required": true,
-      "defaultValue": [ "filebeat-*","winlogbeat-*","logs-*","auditbeat-*","stoq-*" ]
+      "defaultValue": [ "filebeat-*","winlogbeat-*","logs-*","auditbeat-*" ]
     },
     {
       "name": "hash",
@@ -34,7 +34,7 @@
       "type": "string",
       "multi": true,
       "required": true,
-      "defaultValue": [ "file.hash.md5","file.hash.sha1","file.hash.sha256","results.workers.hash.md5","results.workers.hash.sha1","results.workers.hash.sha256" ]
+      "defaultValue": [ "file.hash.md5","file.hash.sha1","file.hash.sha256" ]
     },
     {
       "name": "verifyssl",
