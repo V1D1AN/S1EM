@@ -580,6 +580,7 @@ echo "Generated SERVICE TOKEN for fleet server: $FLEET_SERVICETOKEN"
 sed -i "s|fleettoken|$FLEET_SERVICETOKEN|g" .env docker-compose.yml
 sed -i "s|fleetenroll|$FLEET_ENROLLTOKEN|g" .env docker-compose.yml
 
+docker cp fleet-server:/usr/share/certificates/ca/ca.crt certs/ca.crt
 echo "Setting Elasticsearch URL & Fingerprint & SSL CA"
 FINGERPRINT=`openssl x509 -fingerprint -sha256 -noout -in certs/ca.crt | awk -F"=" {' print $2 '} | sed s/://g `
     
