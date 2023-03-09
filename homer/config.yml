@@ -145,6 +145,11 @@ services:
   - name: "SIRP"
     icon: "fas fa-sitemap"
     items:
+      - name: "Veliciraptor"
+        logo: "https://repository-images.githubusercontent.com/126576769/4da42780-92cf-11e9-8947-d23162406860"
+        tag: "app"
+        url: "https://s1em_hostname/velociraptor/"
+        target: "_blank" # optional html a tag target attribute
       - name: "Zircolite"
         logo: "https://github.com/wagga40/Zircolite/raw/master/pics/zircolite_400.png"
         tag: "app"

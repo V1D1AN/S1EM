@@ -37,7 +37,6 @@ Inside the solution:
 * Zeek
 * Mwdb
 * Traefik
-* Clamav
 * Codimd
 * Watchtower
 * Homer
@@ -71,6 +70,7 @@ Inside the solution:
 - [x] Add Capa ( In cortex )
 - [x] Suppress Stoq
 - [x] Add Zircolite
+- [ ] Add Velociraptor
 - [ ] Installation of S1EM with Ansible
 
 # Related project
