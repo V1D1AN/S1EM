@@ -1627,6 +1627,37 @@ services:
     networks:
      - s1em
 
+  velociraptor-upload:
+    image: v1d1an/file-upload:1.1
+    container_name: velociraptor-upload
+    hostname: velociraptor-upload
+    restart: always
+    user: root
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - velociraptor_upload:/var/www/upload/server/php/chroot/files
+    environment:
+      - SITE_NAME=Upload for Velociraptor
+      - SITE_USERNAME=upload
+      - SITE_PASSWORD=upload
+      - DESCRIPTION=Upload only Collector offline for Velociraptor.
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.velociraptor.rule=PathPrefix(`/velociraptor-upload`)"
+      - "traefik.http.routers.velociraptor.entryPoints=secure"
+      - "traefik.http.routers.velociraptor.tls=true"
+      - "traefik.http.services.velociraptor.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.velociraptor.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.Velociraptor-stripprefix.stripprefix.prefixes=/velociraptor-upload"
+      - "traefik.http.routers.velociraptor.middlewares=velociraptor-stripprefix"
+    networks:
+      - s1em
+
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
@@ -1703,4 +1734,6 @@ volumes:
    zircolite:
     external: false
    velociraptor:
+    external: false
+   velociraptor_upload:
     external: false
