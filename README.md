@@ -74,6 +74,7 @@ Inside the solution:
 - [x] Add Velociraptor
 - [ ] Installation of S1EM with Ansible
 - [ ] Integration in Secubian (https://github.com/kidrek/secubian)
+- [ ] Integration of T-POT (https://github.com/telekom-security/tpotce)
 
 # Related project
 
