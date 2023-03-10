@@ -202,5 +202,5 @@ services:
       - name: "Velociraptor"
         logo: "https://fileproinfo.com/images/pcap_file_extension.png"
         tag: "app"
-        url: "https://s1em_hostname/velocriaptor-upload/"
+        url: "https://s1em_hostname/velociraptor-upload/"
         target: "_blank" # optional html a tag target attribute

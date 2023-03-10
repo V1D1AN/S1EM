@@ -1623,7 +1623,8 @@ services:
       - "8000:8000"
       - "8001:8001"
     volumes:
-      - velociraptor:/velocirpator
+      - velociraptor:/velociraptor
+      - velociraptor_upload:/velociraptor/upload
     networks:
      - s1em
 
@@ -1647,14 +1648,14 @@ services:
       - DESCRIPTION=Upload only Collector offline for Velociraptor.
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.velociraptor.rule=PathPrefix(`/velociraptor-upload`)"
-      - "traefik.http.routers.velociraptor.entryPoints=secure"
-      - "traefik.http.routers.velociraptor.tls=true"
-      - "traefik.http.services.velociraptor.loadbalancer.server.port=80"
+      - "traefik.http.routers.velociraptor-upload.rule=PathPrefix(`/velociraptor-upload`)"
+      - "traefik.http.routers.velociraptor-upload.entryPoints=secure"
+      - "traefik.http.routers.velociraptor-upload.tls=true"
+      - "traefik.http.services.velociraptor-upload.loadbalancer.server.port=80"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.velociraptor.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.Velociraptor-stripprefix.stripprefix.prefixes=/velociraptor-upload"
-      - "traefik.http.routers.velociraptor.middlewares=velociraptor-stripprefix"
+      - "traefik.http.routers.velociraptor-upload.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.velociraptor-upload-stripprefix.stripprefix.prefixes=/velociraptor-upload"
+      - "traefik.http.routers.velociraptor-upload.middlewares=velociraptor-upload-stripprefix"
     networks:
       - s1em
 
