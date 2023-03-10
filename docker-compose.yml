@@ -963,8 +963,6 @@ services:
     hostname: minio
     volumes:
       - minio:/data
-    ports:
-      - "8889:9000"
     environment:
       MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
       MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
@@ -1602,6 +1600,65 @@ services:
     networks:
      - s1em
 
+  velociraptor:
+    image: wlambert/velociraptor:latest
+    container_name: velociraptor
+    restart: always
+    hostname: velociraptor
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - VELOX_SERVER_URL=${VELOX_SERVER_URL}
+      - VELOX_FRONTEND_HOSTNAME=${HOSTNAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.velociraptor.rule=PathPrefix(`/velociraptor`)"
+      - "traefik.http.routers.velociraptor.entryPoints=secure"
+      - "traefik.http.routers.velociraptor.tls=true"
+      - "traefik.http.services.velociraptor.loadbalancer.server.port=8889"
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    volumes:
+      - velociraptor:/velociraptor
+      - velociraptor_upload:/velociraptor/upload
+    networks:
+     - s1em
+
+  velociraptor-upload:
+    image: v1d1an/file-upload:1.1
+    container_name: velociraptor-upload
+    hostname: velociraptor-upload
+    restart: always
+    user: root
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - velociraptor_upload:/var/www/upload/server/php/chroot/files
+    environment:
+      - SITE_NAME=Upload for Velociraptor
+      - SITE_USERNAME=upload
+      - SITE_PASSWORD=upload
+      - DESCRIPTION=Upload only Collector offline for Velociraptor.
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.velociraptor-upload.rule=PathPrefix(`/velociraptor-upload`)"
+      - "traefik.http.routers.velociraptor-upload.entryPoints=secure"
+      - "traefik.http.routers.velociraptor-upload.tls=true"
+      - "traefik.http.services.velociraptor-upload.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.velociraptor-upload.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.velociraptor-upload-stripprefix.stripprefix.prefixes=/velociraptor-upload"
+      - "traefik.http.routers.velociraptor-upload.middlewares=velociraptor-upload-stripprefix"
+    networks:
+      - s1em
+
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
@@ -1676,4 +1733,8 @@ volumes:
    n8n_data:
     external: false
    zircolite:
+    external: false
+   velociraptor:
+    external: false
+   velociraptor_upload:
     external: false

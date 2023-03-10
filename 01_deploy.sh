@@ -485,6 +485,17 @@ docker-compose up -d logstash
 echo
 echo
 echo "##########################################"
+echo "######### STARTING VELOCIRAPTOR ##########"
+echo "##########################################"
+echo
+echo
+docker-compose up -d velociraptor
+docker exec -ti velociraptor bash -c "/velociraptor/velociraptor config generate > /velociraptor/server.config.yaml --merge '{\"gui\":{\"use_plain_http\":true,\"base_path\":\"/velociraptor\",\"public_url\":\"https://$s1em_hostname/velociraptor\",\"bind_address\":\"0.0.0.0\"}}'" 2>&1
+docker exec -ti velociraptor bash -c "/velociraptor/velociraptor --config /velociraptor/server.config.yaml user add $admin_account $admin_password --role administrator" 2>&1
+docker restart velociraptor
+echo 
+echo
+echo "##########################################"
 echo "########### STARTING ARKIME ##############"
 echo "##########################################"
 echo
@@ -642,7 +653,7 @@ echo "####### STARTING OTHER DOCKER ###########"
 echo "#########################################"
 echo
 echo
-docker-compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload syslog-ng tcpreplay file4thehive heartbeat spiderfoot codimd watchtower
+docker-compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload velociraptor-upload syslog-ng tcpreplay file4thehive heartbeat spiderfoot codimd watchtower
 echo
 echo
 echo "#########################################"

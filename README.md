@@ -25,6 +25,7 @@ Inside the solution:
 * Fleet
 * N8n
 * Zircolite
+* Velociraptor
 * Spiderfoot
 * Syslog-ng
 * Elastalert
@@ -37,7 +38,6 @@ Inside the solution:
 * Zeek
 * Mwdb
 * Traefik
-* Clamav
 * Codimd
 * Watchtower
 * Homer
@@ -71,7 +71,10 @@ Inside the solution:
 - [x] Add Capa ( In cortex )
 - [x] Suppress Stoq
 - [x] Add Zircolite
+- [x] Add Velociraptor
 - [ ] Installation of S1EM with Ansible
+- [ ] Integration in Secubian (https://github.com/kidrek/secubian)
+- [ ] Integration of T-POT (https://github.com/telekom-security/tpotce)
 
 # Related project
 
@@ -92,11 +95,11 @@ https://docs.linuxserver.io/images/docker-heimdall <br />
 https://github.com/cisagov/Malcolm <br />
 https://github.com/blueimp/jQuery-File-Upload <br />
 https://gchq.github.io/CyberChef/ <br />
-https://www.clamav.net/ <br />
 https://www.syslog-ng.com/ <br />
 https://github.com/bastienwirtz/homer <br />
 https://github.com/wagga40/zircolite <br />
 https://github.com/weslambert <br />
+https://github.com/Velocidex/velociraptor <br /> 
 
 
 
