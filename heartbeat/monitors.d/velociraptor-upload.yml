@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: velociraptor
+  name: Velociraptor upload
+  hosts: ["velociraptor-upload"]
+  ports: [80]
+  schedule: '@every 30s'
