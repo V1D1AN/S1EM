@@ -3,5 +3,5 @@
   id: es03
   name: Es03
   hosts: ["es03"]
-  ports: [9200]
+  ports: [9300]
   schedule: '@every 30s'

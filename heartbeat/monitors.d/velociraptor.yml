@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: velociraptor
+  name: Velociraptor
+  hosts: ["velociraptor"]
+  ports: [8000,8001,8889]
+  schedule: '@every 30s'
