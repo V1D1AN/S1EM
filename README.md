@@ -30,7 +30,7 @@ Inside the solution:
 * Syslog-ng
 * Elastalert
 * TheHive
-* Cortex ( With Mwdb, Capa, Yara, FileInfo )
+* Cortex ( With Mwdb, Capa, Yara, FileInfo, AssemblyLine )
 * MISP
 * OpenCTI 
 * Arkime
