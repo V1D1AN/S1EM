@@ -563,7 +563,7 @@ services:
       - s1em
 
   cortex:
-    image: v1d1an/cortex:3.1.7-4
+    image: v1d1an/cortex:3.1.7-6
     container_name: cortex
     hostname: cortex
     restart: always
