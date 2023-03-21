@@ -145,7 +145,7 @@ services:
   - name: "SIRP"
     icon: "fas fa-sitemap"
     items:
-      - name: "Veliciraptor"
+      - name: "Velociraptor"
         logo: "https://repository-images.githubusercontent.com/126576769/4da42780-92cf-11e9-8947-d23162406860"
         tag: "app"
         url: "https://s1em_hostname/velociraptor/"
