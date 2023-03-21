@@ -42,7 +42,7 @@ Inside the solution:
 * Watchtower
 * Homer
 
-![S1EM](https://user-images.githubusercontent.com/18678787/224486192-54c666f5-2e0e-4095-8049-10f55964bd31.png)
+![S1EM](https://user-images.githubusercontent.com/18678787/226611253-91a9f2d5-748f-4900-a3e2-0b38f22e7218.png)
 
 # Guides
 - :exclamation:[Installation Guide](https://github.com/V1D1AN/S1EM/wiki/Installation-Guide)
