@@ -1,0 +1,7 @@
+- type: tcp
+  enabled: true
+  id: metricbeat
+  name: Metricbeat
+  hosts: ["metricbeat"]
+  ports: [5066]
+  schedule: '@every 30s'
