@@ -71,7 +71,6 @@ The serveur discord of S1EM : https://discord.gg/uFBzr8fWmC
 - [ ] SSO
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
 - [x] Add Capa ( In cortex )
-- [x] Suppress Stoq
 - [x] Add Zircolite
 - [x] Add Velociraptor
 - [ ] Installation of S1EM with Ansible
