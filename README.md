@@ -60,6 +60,9 @@ Inside the solution:
 - [Use TPOT with S1EM](https://github.com/V1D1AN/S1EM/wiki/Tpot-guide)
 - [Screenshot of S1EM](https://github.com/V1D1AN/S1EM/wiki/Screenshot-of-S1EM)
 
+# Discord
+
+The serveur discord of S1EM : https://discord.gg/uFBzr8fWmC
 
 # Roadmap
 
