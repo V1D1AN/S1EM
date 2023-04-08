@@ -68,7 +68,6 @@ The serveur discord of S1EM : https://discord.gg/uFBzr8fWmC
 
 - [ ] Add OpenCVE
 - [ ] The complete documentation
-- [ ] Upgrade to elastalert2
 - [ ] SSO
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
 - [x] Add Capa ( In cortex )
