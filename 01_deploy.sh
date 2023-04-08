@@ -190,7 +190,7 @@ echo "######### GENERATE CERTIFICATE ###########"
 echo "##########################################"
 echo
 echo
-docker-compose run --rm certificates
+docker compose run --rm certificates
 echo
 echo
 echo "##########################################"
@@ -198,7 +198,7 @@ echo "########## DOCKER DOWNLOADING ############"
 echo "##########################################"
 echo
 echo
-docker-compose pull
+docker compose pull
 echo
 echo
 echo "##########################################"
@@ -206,7 +206,7 @@ echo "########## STARTING TRAEFIK ##############"
 echo "##########################################"
 echo
 echo
-docker-compose up -d traefik
+docker compose up -d traefik
 echo
 echo
 echo "##########################################"
@@ -214,7 +214,7 @@ echo "############# STARTING HOMER #############"
 echo "##########################################"
 echo
 echo
-docker-compose up -d homer
+docker compose up -d homer
 echo
 echo
 echo "##########################################"
@@ -222,7 +222,7 @@ echo "##### STARTING ELASTICSEARCH/KIBANA ######"
 echo "##########################################"
 echo
 echo
-docker-compose up -d es01 es02 es03 kibana
+docker compose up -d es01 es02 es03 kibana
 while [ "$(docker exec es01 sh -c 'curl -sk https://127.0.0.1:9200 -u elastic:$password')" == "" ]; do
   echo "Waiting for Elasticsearch to come online.";
   sleep 15;
@@ -248,7 +248,7 @@ echo "##### STARTING RabbitMQ Redis Minio ######"
 echo "##########################################"
 echo
 echo
-docker-compose up -d rabbitmq redis minio
+docker compose up -d rabbitmq redis minio
 echo
 echo
 echo "##########################################"
@@ -256,7 +256,7 @@ echo "########## STARTING DATABASES ############"
 echo "##########################################"
 echo
 echo
-docker-compose up -d db postgres
+docker compose up -d db postgres
 echo
 echo
 echo "##########################################"
@@ -264,7 +264,7 @@ echo "############ STARTING MISP ###############"
 echo "##########################################"
 echo
 echo
-docker-compose up -d misp misp-modules
+docker compose up -d misp misp-modules
 echo
 echo
 echo "##########################################"
@@ -298,7 +298,7 @@ echo "###### ###STARTING BEATS AGENT ###########"
 echo "##########################################"
 echo
 echo
-docker-compose up -d filebeat metricbeat auditbeat
+docker compose up -d filebeat metricbeat auditbeat
 echo
 echo
 echo "##########################################"
@@ -306,7 +306,7 @@ echo "############ STARTING MWDB ###############"
 echo "##########################################"
 echo
 echo
-docker-compose up -d mwdb mwdb-web
+docker compose up -d mwdb mwdb-web
 echo
 echo
 echo "##########################################"
@@ -336,10 +336,10 @@ echo "########### STARTING CORTEX ##############"
 echo "##########################################"
 echo
 echo
-docker-compose up -d cortex
+docker compose up -d cortex
 docker exec -ti cortex keytool -delete -alias ca -keystore /usr/local/openjdk-8/jre/lib/security/cacerts --storepass changeit -noprompt >/dev/null
 docker exec -ti cortex keytool -import -alias ca -file /opt/cortex/certificates/ca/ca.crt -keystore /usr/local/openjdk-8/jre/lib/security/cacerts --storepass changeit -noprompt
-docker-compose restart cortex
+docker compose restart cortex
 echo
 echo
 echo "##########################################"
@@ -405,7 +405,7 @@ echo "########### STARTING THEHIVE #############"
 echo "##########################################"
 echo
 echo
-docker-compose up -d thehive
+docker compose up -d thehive
 echo
 echo
 echo "##########################################"
@@ -481,7 +481,7 @@ echo "########## STARTING LOGSTASH #############"
 echo "##########################################"
 echo
 echo
-docker-compose up -d logstash
+docker compose up -d logstash
 echo
 echo
 echo "##########################################"
@@ -489,7 +489,7 @@ echo "######### STARTING VELOCIRAPTOR ##########"
 echo "##########################################"
 echo
 echo
-docker-compose up -d velociraptor
+docker compose up -d velociraptor
 docker exec -ti velociraptor bash -c "/velociraptor/velociraptor config generate > /velociraptor/server.config.yaml --merge '{\"gui\":{\"use_plain_http\":true,\"base_path\":\"/velociraptor\",\"public_url\":\"https://$s1em_hostname/velociraptor\",\"bind_address\":\"0.0.0.0\"}}'" 2>&1
 docker exec -ti velociraptor bash -c "/velociraptor/velociraptor --config /velociraptor/server.config.yaml user add $admin_account $admin_password --role administrator" 2>&1
 docker restart velociraptor
@@ -501,7 +501,7 @@ echo "##########################################"
 echo
 echo
 chmod u=rx ./arkime/scripts/*.sh
-docker-compose up -d arkime
+docker compose up -d arkime
 echo
 echo
 echo "##########################################"
@@ -509,7 +509,7 @@ echo "######## STARTING SURICATA/ZEEK ##########"
 echo "##########################################"
 echo
 echo
-docker-compose up -d suricata zeek
+docker compose up -d suricata zeek
 echo
 echo
 echo "##########################################"
@@ -555,8 +555,8 @@ elif [ "$detection" == SIGMA ];
 then
         docker image rm -f sigma:1.0
         docker container prune -f
-        docker-compose -f sigma.yml build
-        docker-compose -f sigma.yml up -d
+        docker compose -f sigma.yml build
+        docker compose -f sigma.yml up -d
 fi
 echo
 echo
@@ -565,7 +565,7 @@ echo "########## CONFIGURE FLEET ##############"
 echo "#########################################"
 echo
 
-docker-compose up -d fleet-server
+docker compose up -d fleet-server
 
 while [ "$(curl -sk -w "%{http_code}" -o /dev/null --header 'kbn-xsrf: true' -X POST -u "elastic:$password" https://127.0.0.1/kibana/api/fleet/setup)" != "200" ]; do
   echo "Waiting for fleet setup.";
@@ -627,7 +627,7 @@ echo "########## STARTING OPENCTI #############"
 echo "#########################################"
 echo
 echo
-docker-compose up -d opencti
+docker compose up -d opencti
 echo
 echo
 echo "#########################################"
@@ -635,7 +635,7 @@ echo "############ STARTING N8N ###############"
 echo "#########################################"
 echo
 echo
-docker-compose up -d n8n
+docker compose up -d n8n
 docker exec n8n sh -c "n8n import:workflow --input=S1EM_TheHive.json"
 docker exec n8n sh -c "n8n import:credentials --input=user.json"
 echo
@@ -653,7 +653,7 @@ echo "####### STARTING OTHER DOCKER ###########"
 echo "#########################################"
 echo
 echo
-docker-compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload velociraptor-upload syslog-ng tcpreplay file4thehive heartbeat spiderfoot codimd watchtower
+docker compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload velociraptor-upload syslog-ng tcpreplay file4thehive heartbeat spiderfoot codimd watchtower
 echo
 echo
 echo "#########################################"

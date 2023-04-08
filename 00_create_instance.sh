@@ -19,13 +19,6 @@ if ! command_exists docker;
   else
         echo "docker installed"
 fi
-if ! command_exists docker-compose
-  then
-        echo "Please install docker-compose"
-        exit
-  else
-        echo "docker-compose installed"
-fi
 if ! command_exists curl
   then
         echo "Please install curl"

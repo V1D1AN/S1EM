@@ -60,16 +60,17 @@ Inside the solution:
 - [Use TPOT with S1EM](https://github.com/V1D1AN/S1EM/wiki/Tpot-guide)
 - [Screenshot of S1EM](https://github.com/V1D1AN/S1EM/wiki/Screenshot-of-S1EM)
 
+# Discord
+
+The serveur discord of S1EM : https://discord.gg/uFBzr8fWmC
 
 # Roadmap
 
 - [ ] Add OpenCVE
 - [ ] The complete documentation
-- [ ] Upgrade to elastalert2
 - [ ] SSO
 - [ ] Interact with Lab-DFIR-SOC (https://github.com/StevenDias33/Lab-DFIR-SOC)
 - [x] Add Capa ( In cortex )
-- [x] Suppress Stoq
 - [x] Add Zircolite
 - [x] Add Velociraptor
 - [ ] Installation of S1EM with Ansible
