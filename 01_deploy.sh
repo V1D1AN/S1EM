@@ -79,7 +79,7 @@ echo
 echo
 while true; do
     read -r -p "Do you want use 1 node elasticsearch (Single) or 3 nodes elasticsearch (Multi) [S/M] ?" cluster
-    case $rules in
+    case $cluster in
         [Ss]) cluster=SINGLE; break;;
         [Mm]) cluster=MULTI; break;;
         * ) echo "Please answer (S/s) or (M/m).";;
