@@ -58,7 +58,7 @@ echo
 echo
 read -r -p "Enter the hostname of the solution S1EM (ex: s1em.cyber.local):" s1em_hostname
 s1em_hostname=$s1em_hostname
-sed -i "s|s1em_hostname|$s1em_hostname|g" docker-compose.yml thehive/application.conf cortex/MISP.json misp/config.php rules/elastalert/*.yml homer/config.yml filebeat/modules.d/threatintel.yml .env
+sed -i "s|s1em_hostname|$s1em_hostname|g" docker-compose-multi.yml docker-compose-single.yml thehive/application.conf cortex/MISP.json misp/config.php rules/elastalert/*.yml homer/config.yml filebeat/modules.d/threatintel.yml .env
 echo
 echo "##########################################"
 echo "####### CONFIGURING ACCOUNT MWDB #########"
@@ -77,12 +77,35 @@ echo "### CONFIGURING CLUSTER ELASTICSEARCH  ###"
 echo "##########################################"
 echo
 echo
+while true; do
+    read -r -p "Do you want use 1 node elasticsearch (Single) or 3 nodes elasticsearch (Multi) [S/M] ?" cluster
+    case $rules in
+        [Ss]) cluster=SINGLE; break;;
+        [Mm]) cluster=MULTI; break;;
+        * ) echo "Please answer (S/s) or (M/m).";;
+    esac
+done
+if 	 [ "$cluster" == SINGLE ];
+then
+		cp docker-compose-single.yml docker-compose.yml
+		cp instances-single.yml instances.yml
+		rm heartbeat/monitors.d/es02.yml heartbeart/monitors.d/es03.yml
+elif [ "$cluster" == MULTI ];
+then
+        cp docker-compose-multi.yml docker-compose.yml
+		cp instances-multi.yml instances.yml
+fi
 read -p "Enter the RAM in Go of master node elasticsearch [2]: " master_node
 master_node=${master_node:-2}
 sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
-read -p "Enter the RAM in Go of data,ingest node elasticsearch [4]: " data_node
-data_node=${data_node:-4}
-sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
+if 	 [ "$cluster" == SINGLE ];
+then
+elif [ "$cluster" == MULTI ];
+then
+        read -p "Enter the RAM in Go of data,ingest node elasticsearch [4]: " data_node
+		data_node=${data_node:-4}
+		sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
+fi
 echo
 echo
 echo "##########################################"
@@ -166,6 +189,7 @@ echo
 echo "The administration account: $admin_account"
 echo "The organization: $organization"
 echo "The S1EM hostname: $s1em_hostname"
+echo "The cluster Elasticsearch: $cluster"
 echo "The RAM of Master node of Elasticsearch: $master_node"
 echo "The RAM of Data node of Elasticsearch: $data_node"
 echo "The RAM of TheHive: $ram_thehive"
