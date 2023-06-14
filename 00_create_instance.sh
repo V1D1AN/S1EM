@@ -54,6 +54,13 @@ if ! command_exists openssl
   else
         echo "openssl installed"
 fi
+if ! command_exists rsync
+  then
+        echo "Please install rsync"
+        exit
+  else
+        echo "rsync installed"
+fi
 echo
 echo
 echo "##########################################"

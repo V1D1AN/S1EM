@@ -1,0 +1,39 @@
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: true
+
+processors:
+- add_host_metadata: ~
+
+http.enabled: true
+http.host: 0.0.0.0
+monitoring.enabled: false
+setup.kibana.host: "https://kibana:5601/kibana"
+setup.kibana.ssl.enabled: true
+setup.kibana.ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
+setup.kibana.ssl.certificate: "/usr/share/certificates/kibana/kibana.crt"
+setup.kibana.ssl.key: "/usr/share/certificates/kibana/kibana.key"
+setup.ilm.enabled: true
+setup.ilm.policy_name: "ILM"
+setup.ilm.policy_file: "/usr/share/metricbeat/ilm.json"
+setup.ilm_pattern: "{now/d}-000001"
+setup.ilm_rollover_alias: "%{[@metadata][beat]}-%{[@metadata][version]}"
+setup.dashboards.enabled: true
+setup.template.overwrite: true
+setup.template.settings:
+  index:
+    number_of_replicas: 0
+    refresh_interval: 30s
+    mapping:
+      total_fields:
+        limit: 8192
+
+output.elasticsearch:
+   hosts: ["https://es01:9200"]
+   username: "elastic"
+   password: "changeme"
+   ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
+   ssl.certificate: "/usr/share/certificates/metricbeat/metricbeat.crt"
+   ssl.key: "/usr/share/certificates/metricbeat/metricbeat.key"
+
+
