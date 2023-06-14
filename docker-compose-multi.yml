@@ -1623,7 +1623,7 @@ services:
       - "8000:8000"
       - "8001:8001"
     volumes:
-      - velociraptor:/velociraptor
+      - ./velociraptor:/velociraptor
       - velociraptor_upload:/velociraptor/upload
     networks:
      - s1em
