@@ -324,9 +324,9 @@ done
 misp_apikey=$(docker exec misp sh -c "mysql -u misp --password=misppass -D misp -e'select authkey from users;'" | sed "1d")
 sed -i "s|misp_api_key|$misp_apikey|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml .env
 echo
-curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" 'https://127.0.0.1/misp/admin/organisations/add' -d "{\"name\" :\"$organization\"}" >/dev/null 2>&1
+curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" 'https://127.0.0.1/misp/admin/organisations/add' -d "{\"name\" :\"$organization\"}"
 sleep 5
-curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" 'https://127.0.0.1/misp/admin/users/edit/1' -d "{\"password\":\"$admin_password\", \"email\": \"$admin_account\",\"change_pw\":false, \"org_id\":\"2\"}" >/dev/null 2>&1
+curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" 'https://127.0.0.1/misp/admin/users/edit/1' -d "{\"password\":\"$admin_password\", \"email\": \"$admin_account\",\"change_pw\":false, \"org_id\":\"2\"}"
 echo
 echo "Load external Feed List"
 curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/loadDefaultFeeds >/dev/null 2>&1
