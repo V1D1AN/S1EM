@@ -1,0 +1,34 @@
+heartbeat.config.monitors:
+  path: /usr/share/heartbeat/monitors.d/*.yml
+  reload.enabled: true
+  reload.period: 10s
+
+processors:
+  - add_docker_metadata: ~
+  - add_host_metadata: ~
+
+http.enabled: true
+http.host: 0.0.0.0
+monitoring.enabled: false
+setup.template.overwrite: true
+setup.ilm.enabled: true
+setup.ilm.policy_name: "ILM"
+setup.ilm.policy_file: "/usr/share/heartbeat/ilm.json"
+setup.ilm_pattern: "{now/d}-000001"
+setup.ilm_rollover_alias: "%{[@metadata][beat]}-%{[@metadata][version]}"
+setup.template.settings:
+  index:
+    number_of_replicas: 0
+    refresh_interval: 30s
+    mapping:
+      total_fields:
+        limit: 8192
+
+output.elasticsearch:
+  hosts: ["https://es01:9200"]
+  username: "elastic"
+  password: "changeme"
+  ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
+  ssl.certificate: "/usr/share/certificates/heartbeat/heartbeat.crt"
+  ssl.key: "/usr/share/certificates/heartbeat/heartbeat.key"
+

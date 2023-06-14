@@ -16,7 +16,6 @@ echo "The master password Elastic set in .env:" $password
 echo "The master password Kibana set in .env:" $kibana_password
 echo "The Kibana api key is : " $kibana_api_key
 sed -i "s|kibana_api_key|$kibana_api_key|g" kibana/kibana.yml
-sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/zircolite/300_output_zircolite.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_Domain.json cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
 sed -i "s|kibana_changeme|$kibana_password|g" .env
 echo
 echo
@@ -89,23 +88,39 @@ if 	 [ "$cluster" == SINGLE ];
 then
 		cp docker-compose-single.yml docker-compose.yml
 		cp instances-single.yml instances.yml
-		rm heartbeat/monitors.d/es02.yml heartbeart/monitors.d/es03.yml
+		cp auditbeat/auditbeat-single.yml auditbeat/auditbeat.yml
+		cp filebeat/filebeat-single.yml filebeat/filebeat.yml
+		cp heartbeat/heartbeat-single.yml heartbeat/heartbeat.yml
+		cp metricbeat/metricbeat-single.yml metricbeat/metricbeat.yml
+                cp cortex/application-single.conf cortex/application.conf
+                cp thehive/application-single.conf thehive/application.conf
+		rm heartbeat/monitors.d/es02.yml heartbeat/monitors.d/es03.yml
 elif [ "$cluster" == MULTI ];
 then
-        cp docker-compose-multi.yml docker-compose.yml
+        	cp docker-compose-multi.yml docker-compose.yml
 		cp instances-multi.yml instances.yml
+		cp auditbeat/auditbeat-multi.yml auditbeat/auditbeat.yml
+		cp filebeat/filebeat-multi.yml filebeat/filebeat.yml
+		cp heartbeat/heartbeat-multi.yml heartbeat/heartbeat.yml
+		cp metricbeat/metricbeat-multi.yml metricbeat/metricbeat.yml
+                cp cortex/application-multi.conf cortex/application.conf
+                cp thehive/application-multi.conf thehive/application.conf
 fi
-read -p "Enter the RAM in Go of master node elasticsearch [2]: " master_node
-master_node=${master_node:-2}
-sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
 if 	 [ "$cluster" == SINGLE ];
 then
+		read -p "Enter the RAM in Go of node elasticsearch [2]: " master_node
+		master_node=${master_node:-2}
+		sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
 elif [ "$cluster" == MULTI ];
 then
-        read -p "Enter the RAM in Go of data,ingest node elasticsearch [4]: " data_node
+        read -p "Enter the RAM in Go of master node elasticsearch [2]: " master_node
+		master_node=${master_node:-2}
+		sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
+		read -p "Enter the RAM in Go of data,ingest node elasticsearch [4]: " data_node
 		data_node=${data_node:-4}
 		sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
 fi
+sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/zircolite/300_output_zircolite.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_Domain.json cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
 echo
 echo
 echo "##########################################"
@@ -246,7 +261,13 @@ echo "##### STARTING ELASTICSEARCH/KIBANA ######"
 echo "##########################################"
 echo
 echo
-docker compose up -d es01 es02 es03 kibana
+if 	 [ "$cluster" == SINGLE ];
+then
+		docker compose up -d es01 kibana
+elif [ "$cluster" == MULTI ];
+then
+		docker compose up -d es01 es02 es03 kibana 
+fi
 while [ "$(docker exec es01 sh -c 'curl -sk https://127.0.0.1:9200 -u elastic:$password')" == "" ]; do
   echo "Waiting for Elasticsearch to come online.";
   sleep 15;
@@ -322,7 +343,9 @@ echo "###### ###STARTING BEATS AGENT ###########"
 echo "##########################################"
 echo
 echo
-docker compose up -d filebeat metricbeat auditbeat
+docker compose up -d filebeat 
+docker compose up -d metricbeat 
+docker compose up -d auditbeat
 echo
 echo
 echo "##########################################"

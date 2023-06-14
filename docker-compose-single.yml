@@ -943,6 +943,7 @@ services:
       - ELASTICSEARCH__SSL__KEY=/usr/share/certificates/opencti/opencti.key
       - ELASTICSEARCH__SSL__CERT=/usr/share/certificates/opencti/opencti.crt
       - ELASTICSEARCH__SSL__REJECT_UNAUTHORIZED=false      
+      - ELASTICSEARCH__NUMBER_OF_REPLICAS=0      
       - MINIO__ENDPOINT=minio
       - MINIO__PORT=9000
       - MINIO__USE_SSL=false

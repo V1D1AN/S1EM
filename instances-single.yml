@@ -2,12 +2,6 @@ instances:
   - name: es01
     dns:
        - es01
-  - name: es02
-    dns:
-       - es02
-  - name: es03
-    dns:
-       - es03
   - name: kibana
     dns:
        - kibana
