@@ -92,19 +92,17 @@ then
 		cp filebeat/filebeat-single.yml filebeat/filebeat.yml
 		cp heartbeat/heartbeat-single.yml heartbeat/heartbeat.yml
 		cp metricbeat/metricbeat-single.yml metricbeat/metricbeat.yml
-                cp cortex/application-single.conf cortex/application.conf
-                cp thehive/application-single.conf thehive/application.conf
+        cp cortex/application-single.conf cortex/application.conf
 		rm heartbeat/monitors.d/es02.yml heartbeat/monitors.d/es03.yml
 elif [ "$cluster" == MULTI ];
 then
-        	cp docker-compose-multi.yml docker-compose.yml
+        cp docker-compose-multi.yml docker-compose.yml
 		cp instances-multi.yml instances.yml
 		cp auditbeat/auditbeat-multi.yml auditbeat/auditbeat.yml
 		cp filebeat/filebeat-multi.yml filebeat/filebeat.yml
 		cp heartbeat/heartbeat-multi.yml heartbeat/heartbeat.yml
 		cp metricbeat/metricbeat-multi.yml metricbeat/metricbeat.yml
-                cp cortex/application-multi.conf cortex/application.conf
-                cp thehive/application-multi.conf thehive/application.conf
+        cp cortex/application-multi.conf cortex/application.conf
 fi
 if 	 [ "$cluster" == SINGLE ];
 then
@@ -324,9 +322,10 @@ done
 misp_apikey=$(docker exec misp sh -c "mysql -u misp --password=misppass -D misp -e'select authkey from users;'" | sed "1d")
 sed -i "s|misp_api_key|$misp_apikey|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml .env
 echo
-curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" 'https://127.0.0.1/misp/admin/organisations/add' -d "{\"name\" :\"$organization\"}"
+sleep 30
+curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" 'https://127.0.0.1/misp/admin/organisations/add' -d "{\"name\" :\"$organization\"}" >/dev/null 2>&1
 sleep 5
-curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" 'https://127.0.0.1/misp/admin/users/edit/1' -d "{\"password\":\"$admin_password\", \"email\": \"$admin_account\",\"change_pw\":false, \"org_id\":\"2\"}"
+curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" 'https://127.0.0.1/misp/admin/users/edit/1' -d "{\"password\":\"$admin_password\", \"email\": \"$admin_account\",\"change_pw\":false, \"org_id\":\"2\"}" >/dev/null 2>&1
 echo
 echo "Load external Feed List"
 curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/loadDefaultFeeds >/dev/null 2>&1
