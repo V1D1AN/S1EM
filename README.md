@@ -15,7 +15,7 @@ S1EM is a SIEM with SIRP and Threat Intel, a full packet capture, all in one.
 
 Inside the solution:
 
-* Cluster Elasticsearch
+* Elasticsearch ( 1 node or Cluster )
 * Kibana
 * Filebeat
 * Logstash
