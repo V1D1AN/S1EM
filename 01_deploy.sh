@@ -536,6 +536,8 @@ echo "##########################################"
 echo
 echo
 docker compose up -d velociraptor
+echo "Waiting for the start of velociraptor."
+sleep 30
 docker exec -ti velociraptor bash -c "/velociraptor/velociraptor config generate > /velociraptor/server.config.yaml --merge '{\"gui\":{\"use_plain_http\":true,\"base_path\":\"/velociraptor\",\"public_url\":\"https://$s1em_hostname/velociraptor\",\"bind_address\":\"0.0.0.0\"}}'" 2>&1
 docker exec -ti velociraptor bash -c "/velociraptor/velociraptor --config /velociraptor/server.config.yaml user add $admin_account $admin_password --role administrator" 2>&1
 docker restart velociraptor
