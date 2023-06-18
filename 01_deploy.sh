@@ -706,11 +706,15 @@ echo "#########################################"
 echo
 echo
 docker compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload velociraptor-upload syslog-ng tcpreplay file4thehive heartbeat spiderfoot codimd watchtower
+echo
+echo
 if [ "$cluster" == SINGLE ];
 then
 		echo "#########################################"
 		echo "######## MODIFY INDEX ELASTIC ###########"
 		echo "#########################################"
+		echo
+		echo
 		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/thehive_global/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
 		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/.siem-signals-default/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
 		while [ "$(docker logs elastalert | grep -i "Done!")" == "" ]; do
