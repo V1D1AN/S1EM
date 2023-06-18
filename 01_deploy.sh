@@ -92,17 +92,21 @@ then
 		cp filebeat/filebeat-single.yml filebeat/filebeat.yml
 		cp heartbeat/heartbeat-single.yml heartbeat/heartbeat.yml
 		cp metricbeat/metricbeat-single.yml metricbeat/metricbeat.yml
-        cp cortex/application-single.conf cortex/application.conf
+        	cp cortex/application-single.conf cortex/application.conf
+      		cp arkime/config-single.ini arkime/config.ini
+      		cp arkime/scripts/init-db-single.sh arkime/scripts/init-db.sh
 		rm heartbeat/monitors.d/es02.yml heartbeat/monitors.d/es03.yml
 elif [ "$cluster" == MULTI ];
 then
-        cp docker-compose-multi.yml docker-compose.yml
+        	cp docker-compose-multi.yml docker-compose.yml
 		cp instances-multi.yml instances.yml
 		cp auditbeat/auditbeat-multi.yml auditbeat/auditbeat.yml
 		cp filebeat/filebeat-multi.yml filebeat/filebeat.yml
 		cp heartbeat/heartbeat-multi.yml heartbeat/heartbeat.yml
 		cp metricbeat/metricbeat-multi.yml metricbeat/metricbeat.yml
-        cp cortex/application-multi.conf cortex/application.conf
+        	cp cortex/application-multi.conf cortex/application.conf
+      		cp arkime/config-multi.ini arkime/config.ini
+      		cp arkime/scripts/init-db-multi.sh arkime/scripts/init-db.sh
 fi
 if 	 [ "$cluster" == SINGLE ];
 then
@@ -702,6 +706,26 @@ echo "#########################################"
 echo
 echo
 docker compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload velociraptor-upload syslog-ng tcpreplay file4thehive heartbeat spiderfoot codimd watchtower
+if [ "$cluster" == SINGLE ];
+then
+		echo "#########################################"
+		echo "######## MODIFY INDEX ELASTIC ###########"
+		echo "#########################################"
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/thehive_global/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/.siem-signals-default/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		while [ "$(docker logs elastalert | grep -i "Done!")" == "" ]; do
+  			echo "Waiting for the creation of elastalert";
+  			sleep 15;
+		done
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/elastalert_status/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/elastalert_status_status/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/elastalert_status_silence/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/elastalert_status_error/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/elastalert_status_past/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+elif [ "$cluster" == MULTI ];
+then
+		echo "nothing to modify"
+fi
 echo
 echo
 echo "#########################################"

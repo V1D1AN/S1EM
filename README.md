@@ -60,6 +60,11 @@ Inside the solution:
 - [Use TPOT with S1EM](https://github.com/V1D1AN/S1EM/wiki/Tpot-guide)
 - [Screenshot of S1EM](https://github.com/V1D1AN/S1EM/wiki/Screenshot-of-S1EM)
 
+# Try S1EM
+
+For EVTX File, you can try S1EM (Zircolite) with [EVTX-ATTACK-SAMPLES](https://github.com/sbousseaden/EVTX-ATTACK-SAMPLES).
+For Pcap File, you can try S1EM (Suricata/Zeek/Mwdb) with [MALWARE-TRAFFIC-ANALYSIS](https://www.malware-traffic-analysis.net/index.html).
+
 # Discord
 
 The serveur discord of S1EM : https://discord.gg/uFBzr8fWmC
