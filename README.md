@@ -15,7 +15,7 @@ S1EM is a SIEM with SIRP and Threat Intel, a full packet capture, all in one.
 
 Inside the solution:
 
-* Cluster Elasticsearch
+* Elasticsearch ( 1 node or Cluster )
 * Kibana
 * Filebeat
 * Logstash
@@ -59,6 +59,11 @@ Inside the solution:
 - [Use EDR Elastic with S1EM](https://github.com/V1D1AN/S1EM/wiki/Edr-guide)
 - [Use TPOT with S1EM](https://github.com/V1D1AN/S1EM/wiki/Tpot-guide)
 - [Screenshot of S1EM](https://github.com/V1D1AN/S1EM/wiki/Screenshot-of-S1EM)
+
+# Try S1EM
+
+For EVTX File, you can try S1EM (Zircolite) with [EVTX-ATTACK-SAMPLES](https://github.com/sbousseaden/EVTX-ATTACK-SAMPLES).
+For Pcap File, you can try S1EM (Suricata/Zeek/Mwdb) with [MALWARE-TRAFFIC-ANALYSIS](https://www.malware-traffic-analysis.net/index.html).
 
 # Discord
 

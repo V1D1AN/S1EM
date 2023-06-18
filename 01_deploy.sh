@@ -16,7 +16,6 @@ echo "The master password Elastic set in .env:" $password
 echo "The master password Kibana set in .env:" $kibana_password
 echo "The Kibana api key is : " $kibana_api_key
 sed -i "s|kibana_api_key|$kibana_api_key|g" kibana/kibana.yml
-sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/zircolite/300_output_zircolite.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_Domain.json cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
 sed -i "s|kibana_changeme|$kibana_password|g" .env
 echo
 echo
@@ -58,7 +57,7 @@ echo
 echo
 read -r -p "Enter the hostname of the solution S1EM (ex: s1em.cyber.local):" s1em_hostname
 s1em_hostname=$s1em_hostname
-sed -i "s|s1em_hostname|$s1em_hostname|g" docker-compose.yml thehive/application.conf cortex/MISP.json misp/config.php rules/elastalert/*.yml homer/config.yml filebeat/modules.d/threatintel.yml .env
+sed -i "s|s1em_hostname|$s1em_hostname|g" docker-compose-multi.yml docker-compose-single.yml thehive/application.conf cortex/MISP.json misp/config.php rules/elastalert/*.yml homer/config.yml filebeat/modules.d/threatintel.yml .env
 echo
 echo "##########################################"
 echo "####### CONFIGURING ACCOUNT MWDB #########"
@@ -77,12 +76,53 @@ echo "### CONFIGURING CLUSTER ELASTICSEARCH  ###"
 echo "##########################################"
 echo
 echo
-read -p "Enter the RAM in Go of master node elasticsearch [2]: " master_node
-master_node=${master_node:-2}
-sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
-read -p "Enter the RAM in Go of data,ingest node elasticsearch [4]: " data_node
-data_node=${data_node:-4}
-sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
+while true; do
+    read -r -p "Do you want use 1 node elasticsearch (Single) or 3 nodes elasticsearch (Multi) [S/M] ?" cluster
+    case $cluster in
+        [Ss]) cluster=SINGLE; break;;
+        [Mm]) cluster=MULTI; break;;
+        * ) echo "Please answer (S/s) or (M/m).";;
+    esac
+done
+if 	 [ "$cluster" == SINGLE ];
+then
+		cp docker-compose-single.yml docker-compose.yml
+		cp instances-single.yml instances.yml
+		cp auditbeat/auditbeat-single.yml auditbeat/auditbeat.yml
+		cp filebeat/filebeat-single.yml filebeat/filebeat.yml
+		cp heartbeat/heartbeat-single.yml heartbeat/heartbeat.yml
+		cp metricbeat/metricbeat-single.yml metricbeat/metricbeat.yml
+        	cp cortex/application-single.conf cortex/application.conf
+      		cp arkime/config-single.ini arkime/config.ini
+      		cp arkime/scripts/init-db-single.sh arkime/scripts/init-db.sh
+		rm heartbeat/monitors.d/es02.yml heartbeat/monitors.d/es03.yml
+elif [ "$cluster" == MULTI ];
+then
+        	cp docker-compose-multi.yml docker-compose.yml
+		cp instances-multi.yml instances.yml
+		cp auditbeat/auditbeat-multi.yml auditbeat/auditbeat.yml
+		cp filebeat/filebeat-multi.yml filebeat/filebeat.yml
+		cp heartbeat/heartbeat-multi.yml heartbeat/heartbeat.yml
+		cp metricbeat/metricbeat-multi.yml metricbeat/metricbeat.yml
+        	cp cortex/application-multi.conf cortex/application.conf
+      		cp arkime/config-multi.ini arkime/config.ini
+      		cp arkime/scripts/init-db-multi.sh arkime/scripts/init-db.sh
+fi
+if 	 [ "$cluster" == SINGLE ];
+then
+		read -p "Enter the RAM in Go of node elasticsearch [2]: " master_node
+		master_node=${master_node:-2}
+		sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
+elif [ "$cluster" == MULTI ];
+then
+        read -p "Enter the RAM in Go of master node elasticsearch [2]: " master_node
+		master_node=${master_node:-2}
+		sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
+		read -p "Enter the RAM in Go of data,ingest node elasticsearch [4]: " data_node
+		data_node=${data_node:-4}
+		sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
+fi
+sed -i "s|changeme|$password|g" .env cortex/application.conf thehive/application.conf elastalert/elastalert.yaml filebeat/filebeat.yml metricbeat/metricbeat.yml heartbeat/heartbeat.yml metricbeat/modules.d/elasticsearch-xpack.yml metricbeat/modules.d/kibana-xpack.yml kibana/kibana.yml auditbeat/auditbeat.yml logstash/config/logstash.yml logstash/pipeline/beats/300_output_beats.conf logstash/pipeline/zircolite/300_output_zircolite.conf sigma/dockerfile arkime/scripts/capture.sh arkime/scripts/config.sh arkime/scripts/import.sh arkime/scripts/init-db.sh arkime/scripts/viewer.sh arkime/config.ini cortex/Elasticsearch_Domain.json cortex/Elasticsearch_IP.json cortex/Elasticsearch_Hash.json
 echo
 echo
 echo "##########################################"
@@ -166,6 +206,7 @@ echo
 echo "The administration account: $admin_account"
 echo "The organization: $organization"
 echo "The S1EM hostname: $s1em_hostname"
+echo "The cluster Elasticsearch: $cluster"
 echo "The RAM of Master node of Elasticsearch: $master_node"
 echo "The RAM of Data node of Elasticsearch: $data_node"
 echo "The RAM of TheHive: $ram_thehive"
@@ -222,7 +263,13 @@ echo "##### STARTING ELASTICSEARCH/KIBANA ######"
 echo "##########################################"
 echo
 echo
-docker compose up -d es01 es02 es03 kibana
+if 	 [ "$cluster" == SINGLE ];
+then
+		docker compose up -d es01 kibana
+elif [ "$cluster" == MULTI ];
+then
+		docker compose up -d es01 es02 es03 kibana 
+fi
 while [ "$(docker exec es01 sh -c 'curl -sk https://127.0.0.1:9200 -u elastic:$password')" == "" ]; do
   echo "Waiting for Elasticsearch to come online.";
   sleep 15;
@@ -279,6 +326,7 @@ done
 misp_apikey=$(docker exec misp sh -c "mysql -u misp --password=misppass -D misp -e'select authkey from users;'" | sed "1d")
 sed -i "s|misp_api_key|$misp_apikey|g" thehive/application.conf cortex/MISP.json filebeat/modules.d/threatintel.yml .env
 echo
+sleep 30
 curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" 'https://127.0.0.1/misp/admin/organisations/add' -d "{\"name\" :\"$organization\"}" >/dev/null 2>&1
 sleep 5
 curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" 'https://127.0.0.1/misp/admin/users/edit/1' -d "{\"password\":\"$admin_password\", \"email\": \"$admin_account\",\"change_pw\":false, \"org_id\":\"2\"}" >/dev/null 2>&1
@@ -298,7 +346,9 @@ echo "###### ###STARTING BEATS AGENT ###########"
 echo "##########################################"
 echo
 echo
-docker compose up -d filebeat metricbeat auditbeat
+docker compose up -d filebeat 
+docker compose up -d metricbeat 
+docker compose up -d auditbeat
 echo
 echo
 echo "##########################################"
@@ -490,6 +540,8 @@ echo "##########################################"
 echo
 echo
 docker compose up -d velociraptor
+echo "Waiting for the start of velociraptor."
+sleep 30
 docker exec -ti velociraptor bash -c "/velociraptor/velociraptor config generate > /velociraptor/server.config.yaml --merge '{\"gui\":{\"use_plain_http\":true,\"base_path\":\"/velociraptor\",\"public_url\":\"https://$s1em_hostname/velociraptor\",\"bind_address\":\"0.0.0.0\"}}'" 2>&1
 docker exec -ti velociraptor bash -c "/velociraptor/velociraptor --config /velociraptor/server.config.yaml user add $admin_account $admin_password --role administrator" 2>&1
 docker restart velociraptor
@@ -654,6 +706,30 @@ echo "#########################################"
 echo
 echo
 docker compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload velociraptor-upload syslog-ng tcpreplay file4thehive heartbeat spiderfoot codimd watchtower
+echo
+echo
+if [ "$cluster" == SINGLE ];
+then
+		echo "#########################################"
+		echo "######## MODIFY INDEX ELASTIC ###########"
+		echo "#########################################"
+		echo
+		echo
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/thehive_global/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/.siem-signals-default/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		while [ "$(docker logs elastalert | grep -i "Done!")" == "" ]; do
+  			echo "Waiting for the creation of elastalert";
+  			sleep 15;
+		done
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/elastalert_status/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/elastalert_status_status/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/elastalert_status_silence/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/elastalert_status_error/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+		docker exec es01 sh -c "curl -sk -X PUT 'https://127.0.0.1:9200/elastalert_status_past/_settings' -u 'elastic:$password' -H 'Content-Type: application/json' -d '{\"index\": { \"number_of_replicas\" : 0 }}'" >/dev/null 2>&1
+elif [ "$cluster" == MULTI ];
+then
+		echo "nothing to modify"
+fi
 echo
 echo
 echo "#########################################"

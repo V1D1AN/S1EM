@@ -1,0 +1,1658 @@
+version: "3.3"
+services:
+  certificates:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.10
+    container_name: certificates
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - ./instances.yml:/usr/share/elasticsearch/config/certs/instances.yml
+      - certs:/target_ca_cert_dir
+    user: "0"
+    networks:
+      - s1em
+    command: >
+        bash -c '
+        if [ x${ELASTIC_PASSWORD} == x ]; then
+          echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
+          exit 1;
+        elif [ x${KIBANA_PASSWORD} == x ]; then
+          echo "Set the KIBANA_PASSWORD environment variable in the .env file";
+          exit 1;
+        fi;
+        if [ ! -f certs/ca.zip ]; then
+          echo "Creating CA";
+          bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
+          unzip config/certs/ca.zip -d config/certs;
+        fi;
+        if [ ! -f certs/certs.zip ]; then
+          bin/elasticsearch-certutil cert --silent --pem -out config/certs/certs.zip --in config/certs/instances.yml --ca-cert config/certs/ca/ca.crt --ca-key config/certs/ca/ca.key;
+          unzip config/certs/certs.zip -d config/certs;
+        fi;
+        echo "Setting file permissions"
+        chown -R 1000:0 config/certs;
+        find . -type d -exec chmod 755 \{\} \;;
+        find . -type f -exec chmod 644 \{\} \;;
+        cp config/certs/ca/ca.crt /target_ca_cert_dir/ ;
+        echo "All done!";'
+
+  traefik:
+    image: traefik:2.4
+    container_name: traefik
+    restart: always
+    hostname: ${HOSTNAME}
+    ports:
+      - "443:443"
+    volumes:
+      - ./traefik/userfile:/etc/traefik/userfile:ro
+      - ./traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - ./traefik/dyn.toml:/etc/traefik/dyn.toml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - traefikdata:/tmp
+      - certs:/etc/ssl:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "traefik.enable=true"
+    networks:
+      - s1em
+      
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.10
+    container_name: es01
+    hostname: es01
+    restart: always
+    environment:
+      - node.name=es01
+      - cluster.name=s1em
+      - cluster.initial_master_nodes=es01
+      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
+      - "ES_JAVA_OPTS=-XmsRAM_MASTERg -XmxRAM_MASTERg"
+      - network.host=0.0.0.0
+      - bootstrap.memory_lock=true
+      - xpack.license.self_generated.type=basic
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=$CERTS_DIR/es01/es01.key
+      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es01/es01.crt
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
+      - xpack.security.transport.ssl.certificate=$CERTS_DIR/es01/es01.crt
+      - xpack.security.transport.ssl.key=$CERTS_DIR/es01/es01.key
+    volumes: ['data01:/usr/share/elasticsearch/data', 'certs:$CERTS_DIR:ro']
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+    healthcheck:
+      test: curl --cacert $CERTS_DIR/ca/ca.crt -s https://localhost:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  filebeat:
+    image: 'docker.elastic.co/beats/filebeat:7.17.10'
+    container_name: filebeat
+    hostname: filebeat
+    user: root
+    restart: always
+    depends_on:
+      - es01
+    volumes:
+      - /var/log:/var/log
+      - syslog-ng-data:/var/log/syslog-ng
+      - suricatadata:/var/log/suricata
+      - traefikdata:/var/log/traefik
+      - zeekdata:/var/log/bro/current
+      - certs:/usr/share/certificates:ro
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./filebeat/ilm.json:/usr/share/filebeat/ilm.json:ro
+      - ./filebeat/modules.d/system.yml:/usr/share/filebeat/modules.d/system.yml:ro
+      - ./filebeat/modules.d/suricata.yml:/usr/share/filebeat/modules.d/suricata.yml:ro
+      - ./filebeat/modules.d/threatintel.yml:/usr/share/filebeat/modules.d/threatintel.yml:ro
+      - ./filebeat/modules.d/traefik.yml:/usr/share/filebeat/modules.d/traefik.yml:ro
+      - ./filebeat/modules.d/zeek.yml:/usr/share/filebeat/modules.d/zeek.yml:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+      
+  kibana:
+    image: 'docker.elastic.co/kibana/kibana:7.17.10'
+    container_name: kibana
+    hostname: kibana
+    restart: always
+    depends_on:
+      - es01
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+      - ./kibana/node.options:/usr/share/kibana/config/node.options:ro
+      - ./kibana/index:/usr/share/kibana/index:ro
+      - ./kibana/dashboard:/usr/share/kibana/dashboard:ro
+      - kibanadata:/usr/share/kibana/data
+      - certs:/usr/share/certificates:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kibana.rule=PathPrefix(`/kibana`)"
+      - "traefik.http.routers.kibana.entryPoints=secure"
+      - "traefik.http.routers.kibana.tls=true"
+      - "traefik.http.services.kibana.loadbalancer.server.scheme=https"
+    networks:
+      - s1em
+
+  auditbeat:
+    image: 'docker.elastic.co/beats/auditbeat:7.17.10'
+    container_name: auditbeat
+    hostname: auditbeat
+    restart: always
+    user: root
+    command: auditbeat -e -strict.perms=false
+    cap_add: 
+      - AUDIT_CONTROL
+      - AUDIT_READ
+    privileged: true
+    pid: host
+    depends_on:
+      - es01
+    volumes:
+      - ./auditbeat/auditbeat.yml:/usr/share/auditbeat/auditbeat.yml:ro
+      - ./auditbeat/ilm.json:/usr/share/auditbeat/ilm.json:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - certs:/usr/share/certificates:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+
+  heartbeat:
+    image: 'docker.elastic.co/beats/heartbeat:7.17.10'
+    container_name: heartbeat
+    restart: always
+    hostname: heartbeat
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - ./heartbeat/heartbeat.yml:/usr/share/heartbeat/heartbeat.yml:ro
+      - ./heartbeat/ilm.json:/usr/share/heartbeat/ilm.json:ro
+      - ./heartbeat/monitors.d:/usr/share/heartbeat/monitors.d:ro
+      - certs:/usr/share/certificates:ro
+    networks:
+      - s1em
+
+  metricbeat:
+    image: 'docker.elastic.co/beats/metricbeat:7.17.10'
+    container_name: metricbeat
+    restart: always
+    depends_on:
+      - es01
+    hostname: ${HOSTNAME}
+    command: ["-system.hostfs=/hostfs", "-e"]
+    user: root
+    networks:
+      - s1em
+    volumes:
+      - ./metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - ./metricbeat/ilm.json:/usr/share/metricbeat/ilm.json:ro
+      - ./metricbeat/modules.d/docker.yml:/usr/share/metricbeat/modules.d/docker.yml:ro
+      - ./metricbeat/modules.d/redis.yml:/usr/share/metricbeat/modules.d/redis.yml:ro
+      - ./metricbeat/modules.d/rabbitmq.yml:/usr/share/metricbeat/modules.d/rabbitmq.yml:ro
+      - ./metricbeat/modules.d/elasticsearch-xpack.yml:/usr/share/metricbeat/modules.d/elasticsearch-xpack.yml:ro
+      - ./metricbeat/modules.d/kibana-xpack.yml:/usr/share/metricbeat/modules.d/kibana-xpack.yml:ro
+      - ./metricbeat/modules.d/logstash-xpack.yml:/usr/share/metricbeat/modules.d/logstash-xpack.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /proc:/hostfs/proc:ro
+      - /:/hostfs:ro
+      - certs:/usr/share/certificates:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"        
+
+  logstash:
+    image: 'docker.elastic.co/logstash/logstash:7.17.10'
+    container_name: logstash
+    hostname: logstash
+    restart: always
+    user: root
+    volumes:
+      - certs:/usr/share/certificates:ro
+      - zircolite:/usr/share/logstash/zircolite:rw
+      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./logstash/templates:/usr/share/logstash/templates:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+    ports:
+      - "5044:5044"
+
+
+  fleet-server:
+    container_name: fleet-server
+    hostname: fleet-server    
+    user: root
+    image: docker.elastic.co/beats/elastic-agent:7.17.10
+    environment:
+      - FLEET_SERVER_ENABLE=true
+      - FLEET_URL=https://${ADMINISTRATION_IP}:8220
+      - FLEET_ENROLLMENT_TOKEN=fleetenroll
+      - FLEET_CA=/usr/share/certificates/ca/ca.crt
+      - FLEET_SERVER_ELASTICSEARCH_HOST=https://es01:9200
+      - FLEET_SERVER_ELASTICSEARCH_CA=/usr/share/certificates/ca/ca.crt
+      - FLEET_SERVER_CERT=/usr/share/certificates/fleet-server/fleet-server.crt
+      - FLEET_SERVER_CERT_KEY=/usr/share/certificates/fleet-server/fleet-server.key
+      - FLEET_SERVER_SERVICE_TOKEN=fleettoken
+      - CERTIFICATE_AUTHORITIES=/usr/share/certificates/ca/ca.crt
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/usr/share/certificates:ro
+      - ./fleet/fleet.yml:/usr/share/elastic-agent/fleet.yml      
+    ports:
+      - "8220:8220"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+      
+  syslog-ng:
+    image: 'balabit/syslog-ng:latest'
+    container_name: syslog-ng
+    hostname: syslog-ng
+    restart: always
+    networks:
+      - s1em
+    ports:
+      - "514:514/udp"
+    volumes:
+      - syslog-ng-data:/var/log
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"  
+
+  suricata:
+    image: jasonish/suricata:6.0
+    command: -c /etc/suricata/suricata.yaml -i network_monitoring
+    container_name: suricata
+    hostname: suricata
+    network_mode: "host"
+    privileged: true
+    user: root
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+      - SYS_NICE
+    restart: always
+    depends_on:
+      - filebeat
+    volumes:
+      - ./rules/suricata:/etc/suricata/rules
+      - ./suricata/suricata.yaml:/etc/suricata/suricata.yaml
+      - ./suricata/threshold.config:/etc/suricata/threshold.config
+      - suricatadata:/var/log/suricata
+      - suricatapcap:/var/log/suricata/pcap
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  file4thehive:
+    image: v1d1an/file4thehive:1.6
+    container_name: file4thehive
+    hostname: file4thehive
+    user: root
+    restart: always
+    volumes:
+      - zeekfiles:/file
+    environment:
+      - THE_HIVE_KEY=${THE_HIVE_KEY}
+      - THE_HIVE_HOST=${THE_HIVE_HOST}
+      - SOURCE=S1EM
+      - EXCLUDE=${EXCLUDE}
+      - MONITOR_FILE=${MONITOR_FILE}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+  
+  zeek:
+    image: blacktop/zeek:4.1-elastic
+    container_name: zeek
+    hostname: zeek
+    network_mode: "host"
+    privileged: true
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+      - SYS_NICE
+    restart: always
+    command: -C -i af_packet::network_monitoring local
+    volumes:
+      - zeekdata:/pcap
+      - zeekfiles:/extract_files
+      - ./zeek/config.zeek:/usr/local/zeek/share/zeek/site/file-extraction/config.zeek:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  tcpreplay:
+    image: v1d1an/tcpreplay:1.0
+    container_name: tcpreplay
+    hostname: tcpreplay
+    restart: always
+    user: root
+    network_mode: "host"
+    privileged: true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      MONITOR: network_monitoring
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    volumes:
+      - upload:/pcap
+
+  file-upload:
+    image: v1d1an/file-upload:1.1
+    container_name: file-upload
+    hostname: file-upload
+    restart: always
+    user: root
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - upload:/var/www/upload/server/php/chroot/files
+    environment:
+      - SITE_NAME=Upload for PCAP
+      - SITE_USERNAME=upload
+      - SITE_PASSWORD=upload
+      - DESCRIPTION=Upload only PCAP file.
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.upload.rule=PathPrefix(`/upload`)"
+      - "traefik.http.routers.upload.entryPoints=secure"
+      - "traefik.http.routers.upload.tls=true"
+      - "traefik.http.services.upload.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.upload.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.upload-stripprefix.stripprefix.prefixes=/upload"
+      - "traefik.http.routers.upload.middlewares=upload-stripprefix"
+    networks:
+      - s1em
+
+  zircolite:
+    image: docker.io/wagga40/zircolite:latest
+    container_name: zircolite
+    hostname: zircolite
+    restart: always
+    user: root
+    tty: true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - zircolite:/case
+    command:  "--ruleset rules/rules_windows_sysmon_full.json --evtx /case/ --outfile /case/detected_events.json --remote 'https://es01:9200' --index 'zircolite' --eslogin '${ZIRCOLITE_USER}' --espass '${ZIRCOLITE_PASSWORD}' --forwardall --remove-events --nolog"
+    networks:
+      - s1em
+
+  zircolite-upload:
+    image: v1d1an/file-upload:1.1
+    container_name: zircolite-upload
+    hostname: zircolite-upload
+    restart: always
+    user: root
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - zircolite:/var/www/upload/server/php/chroot/files
+    environment:
+      - SITE_NAME=Upload for Zircolite
+      - SITE_USERNAME=upload
+      - SITE_PASSWORD=upload
+      - DESCRIPTION=Upload only EVTX file or JSON file (Use template exportForELK.tmpl).
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.zircolite.rule=PathPrefix(`/zircolite`)"
+      - "traefik.http.routers.zircolite.entryPoints=secure"
+      - "traefik.http.routers.zircolite.tls=true"
+      - "traefik.http.services.zircolite.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.zircolite.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.zircolite-stripprefix.stripprefix.prefixes=/zircolite"
+      - "traefik.http.routers.zircolite.middlewares=zircolite-stripprefix"
+    networks:
+      - s1em
+
+  cortex:
+    image: v1d1an/cortex:3.1.7-6
+    container_name: cortex
+    hostname: cortex
+    restart: always
+    volumes:
+      - ./cortex/application.conf:/etc/cortex/application.conf:ro
+      - ./cortex/MISP.json:/opt/Cortex-Analyzers/analyzers/MISP/MISP.json:ro
+      - ./cortex/OpenCTI_SearchObservables.json:/opt/Cortex-Analyzers/analyzers/OpenCTI/OpenCTI_SearchObservables.json:ro
+      - ./cortex/OTXQuery.json:/opt/Cortex-Analyzers/analyzers/OTXQuery/OTXQuery.json:ro
+      - ./cortex/Elasticsearch_IP.json:/opt/Cortex-Analyzers/analyzers/Elasticsearch/Elasticsearch_IP.json:ro
+      - ./cortex/Elasticsearch_Hash.json:/opt/Cortex-Analyzers/analyzers/Elasticsearch/Elasticsearch_Hash.json:ro
+      - ./cortex/Elasticsearch_Domain.json:/opt/Cortex-Analyzers/analyzers/Elasticsearch/Elasticsearch_Domain.json:ro
+      - ./cortex/Capa.json:/opt/Cortex-Analyzers/analyzers/Capa/Capa.json:ro
+      - ./cortex/Yara.json:/opt/Cortex-Analyzers/analyzers/Yara/Yara.json:ro
+      - ./cortex/Mwdb.json:/opt/Cortex-Analyzers/analyzers/Mwdb/mwdb.json:ro
+      - ./rules/yara:/opt/rules/yara:ro
+      - certs:/opt/cortex/certificates:ro
+      - ./cortex/cacerts:/usr/local/openjdk-8/jre/lib/security/cacerts
+    environment:
+      - JVM_OPTS="-XmsRAM_CORTEXG -XmxRAM_CORTEXG"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      - es01
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cortex.rule=PathPrefix(`/cortex`)"
+      - "traefik.http.routers.cortex.entryPoints=secure"
+      - "traefik.http.routers.cortex.tls=true"
+    networks:
+      - s1em
+
+  cassandra:
+    image: cassandra:3.11
+    container_name: cassandra
+    hostname: cassandra
+    restart: always
+    environment:
+      - MAX_HEAP_SIZE=1G
+      - HEAP_NEWSIZE=1G
+      - CASSANDRA_CLUSTER_NAME=thp
+    volumes:
+      - cassandra:/var/lib/cassandra/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+    healthcheck:
+      test: ["CMD-SHELL", "[ $$(nodetool statusgossip -Dcom.sun.jndi.rmiURLParsing=legacy) = running ]"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  thehive:
+    image: 'thehiveproject/thehive4:latest'
+    container_name: thehive
+    hostname: thehive
+    user: root
+    restart: always
+    depends_on:
+      - cassandra
+      - es01
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.thehive.rule=PathPrefix(`/thehive`)"
+      - "traefik.http.routers.thehive.entryPoints=secure"
+      - "traefik.http.routers.thehive.tls=true"
+    volumes:
+      - ./thehive/application.conf:/etc/thehive/application.conf:ro
+      - thehivedata:/opt/data
+    environment:
+      - JVM_OPTS="-XmsRAM_THEHIVEG -XmxRAM_THEHIVEG"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command: '--no-config --no-config-secret'
+    networks:
+      - s1em
+
+  elastalert:
+    image: 'jertel/elastalert-docker:latest'
+    container_name: elastalert
+    hostname: elastalert
+    restart: always
+    depends_on:
+      - es01
+    volumes:
+      - ./elastalert/elastalert.yaml:/opt/config/elastalert_config.yaml:ro
+      - ./rules/elastalert:/opt/elastalert/rules:ro
+      - certs:/usr/share/certificates:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+
+  redis:
+    image: redis:7
+    hostname: redis
+    container_name: redis
+    restart: always
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    volumes:
+      - redis:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+
+
+  db:
+    image: mysql:latest
+    container_name: db
+    hostname: db
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    cap_add:
+      - SYS_NICE
+    environment:
+      - "MYSQL_ROOT_PASSWORD=password"
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
+      - mysql:/var/lib/mysql
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+
+  misp:
+    image: coolacid/misp-docker:core-v2.4.163a
+    container_name: misp
+    hostname: misp
+    restart: always
+    depends_on:
+      - redis
+      - db
+    expose:
+      - "80"
+      - "443"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.misp.rule=PathPrefix(`/misp`)"
+      - "traefik.http.routers.misp.entryPoints=secure"
+      - "traefik.http.routers.misp.tls=true"
+      - "traefik.http.middlewares.misp-stripprefix.stripprefix.prefixes=/misp"
+      - "traefik.http.routers.misp.middlewares=misp-stripprefix"
+    environment:
+      - "HOSTNAME=https://${HOSTNAME}/misp"
+      - "REDIS_FQDN=redis"
+      - "INIT=true"             # Initialze MISP, things includes, attempting to import SQL and the Files DIR
+      - "CRON_USER_ID=1"        # The MISP user ID to run cron jobs as
+      - "NOREDIR=true"
+      - "DISIPV6=true" # Disable IPV6 in nginx
+      - "MYSQL_HOST=db"
+      - "MYSQL_USER=misp"
+      - "MYSQL_PASSWORD=misppass"
+      - "MYSQL_DATABASE=misp"
+      - "SECURESSL=false" # Enable higher security SSL in nginx
+      - "MISP_MODULES_FQDN=http://misp-modules" # Set the MISP Modules FQDN, used for Enrichment_services_url/Import_services_url/Export_services_url
+      - "WORKERS=4"
+    volumes:
+      - ./misp/config.php:/var/www/MISP/app/Config/config.php:rw
+      - misp:/var/www/MISP/app/tmp/logs
+      - misp:/var/www/MISP/app/files
+      - misp:/etc/nginx/certs
+      - misp_tmp:/tmp
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+
+  misp-modules:
+    image: coolacid/misp-docker:modules-latest
+    container_name: misp-modules
+    hostname: misp-modules
+    restart: always
+    environment:
+      - "REDIS_BACKEND=redis"
+    depends_on:
+      - redis
+      - db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+
+  mwdb:
+    image: certpl/mwdb:master
+    container_name: mwdb
+    hostname: mwdb
+    restart: always
+    env_file:
+      - mwdb/mwdb-vars.env
+    volumes:
+      - mwdb-uploads:/app/uploads
+      - ./mwdb/karton.ini:/etc/karton/karton.ini
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      - postgres
+      - redis
+      - minio
+      - karton-system
+      - karton-classifier
+      - karton-yaramatcher
+      - karton-asciimagic
+      - karton-mwdb-reporter
+      - karton-archive-extractor
+    environment:
+      UWSGI_PY_AUTORELOAD: 1
+      UWSGI_ENABLE_THREADS: 1
+      MWDB_ENABLE_KARTON: 1
+      MWDB_RECAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+      MWDB_RECAPTCHA_SECRET: "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+      MWDB_ENABLE_OIDC: 1
+      MWDB_ENABLE_REGISTRATION: 1
+    networks:
+      - s1em
+
+  mwdb-web:
+    image: certpl/mwdb-web:master
+    container_name: mwdb-web
+    hostname: mwdb-web
+    restart: always
+    depends_on:
+      - mwdb
+    ports:
+      - 8080:80
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    hostname: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
+      - mwdb-postgres:/var/lib/postgresql/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+
+  karton-system:
+    image: certpl/karton-system:master
+    container_name: karton-system
+    hostname: karton-system
+    depends_on:
+      - redis
+      - minio
+    volumes:
+      - "./mwdb/karton.ini:/etc/karton/karton.ini"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    entrypoint: karton-system
+    command: --setup-bucket
+    restart: always
+    networks:
+      - s1em
+
+  karton-classifier:
+    image: certpl/karton-classifier
+    container_name: karton-classifier
+    hostname: karton-classifier
+    depends_on:
+      - redis
+      - minio
+    volumes:
+      - "./mwdb/karton.ini:/etc/karton/karton.ini"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  karton-yaramatcher:
+    image: certpl/karton-yaramatcher
+    container_name: karton-yaramatcher
+    hostname: karton-yaramatcher
+    command: karton-yaramatcher --rules /rules
+    depends_on:
+      - redis
+      - minio
+    volumes:
+      - "./mwdb/karton.ini:/etc/karton/karton.ini"
+      - ./rules/yara:/rules
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  karton-asciimagic:
+    image: certpl/karton-asciimagic
+    container_name: karton-asciimagic
+    hostname: karton-asciimagic
+    depends_on:
+      - redis
+      - minio
+    volumes:
+      - "./mwdb/karton.ini:/etc/karton/karton.ini"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+      
+  karton-archive-extractor:
+    image: certpl/karton-archive-extractor
+    container_name: karton-archive-extractor
+    hostname: karton-archive-extractor
+    depends_on:
+      - redis
+      - minio
+    volumes:
+      - "./mwdb/karton.ini:/etc/karton/karton.ini"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  karton-mwdb-reporter:
+    image: certpl/karton-mwdb-reporter
+    container_name: karton-mwdb-reporter
+    hostname: karton-mwdb-reporter
+    depends_on:
+      - redis
+      - minio
+    volumes:
+      - "./mwdb/karton.ini:/etc/karton/karton.ini"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    hostname: minio
+    volumes:
+      - minio:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    command: server /data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    volumes:
+      - amqpdata:/var/lib/rabbitmq
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  opencti:
+    image: opencti/platform:latest
+    container_name: opencti
+    hostname: opencti
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=8096
+      - APP__PORT=8080
+      - APP__ADMIN__EMAIL=${OPENCTI_ADMIN_EMAIL}
+      - APP__ADMIN__PASSWORD=${OPENCTI_ADMIN_PASSWORD}
+      - APP__ADMIN__TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - APP__LOGS_LEVEL=error
+      - APP__LOGS=./logs
+      - APP__REACTIVE=true
+      - APP__BASE_PATH=/opencti
+      - REDIS__HOSTNAME=redis
+      - REDIS__PORT=6379
+      - ELASTICSEARCH__URL=["https://es01:9200"]
+      - ELASTICSEARCH__USERNAME=elastic
+      - ELASTICSEARCH__PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTICSEARCH__SSL__CA=/usr/share/certificates/ca/ca.crt
+      - ELASTICSEARCH__SSL__KEY=/usr/share/certificates/opencti/opencti.key
+      - ELASTICSEARCH__SSL__CERT=/usr/share/certificates/opencti/opencti.crt
+      - ELASTICSEARCH__SSL__REJECT_UNAUTHORIZED=false      
+      - ELASTICSEARCH__NUMBER_OF_REPLICAS=0      
+      - MINIO__ENDPOINT=minio
+      - MINIO__PORT=9000
+      - MINIO__USE_SSL=false
+      - MINIO__ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO__SECRET_KEY=${MINIO_SECRET_KEY}
+      - RABBITMQ__HOSTNAME=rabbitmq
+      - RABBITMQ__PORT=5672
+      - RABBITMQ__PORT_MANAGEMENT=15672
+      - RABBITMQ__MANAGEMENT_SSL=false
+      - RABBITMQ__USERNAME=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ__PASSWORD=${RABBITMQ_DEFAULT_PASS}
+      - PROVIDERS__LOCAL__STRATEGY=LocalStrategy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.opencti.rule=PathPrefix(`/opencti`)"
+      - "traefik.http.routers.opencti.entryPoints=secure"
+      - "traefik.http.routers.opencti.tls=true"
+    expose:
+      - "8080"
+    depends_on:
+      - redis
+      - es01
+      - minio
+      - rabbitmq
+      - worker
+      - connector-amitt
+      - connector-cve
+      - connector-export-file-csv
+      - connector-export-file-stix
+      - connector-import-document
+      - connector-import-file-stix
+      - connector-misp
+      - connector-mitre
+      - connector-alienvault
+      - connector-opencti
+      - connector-mwdb
+      - connector-disarm-framework
+    restart: always
+    volumes:
+      - certs:/usr/share/certificates:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+
+  worker:
+    image: opencti/worker:latest
+    container_name: worker
+    hostname: worker
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - WORKER_LOG_LEVEL=info
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+
+  connector-export-file-stix:
+    image: opencti/connector-export-file-stix:latest
+    container_name: connector-export-file-stix
+    hostname: connector-export-file-stix
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_EXPORT_FILE_STIX_ID} # Valid UUIDv4
+      - CONNECTOR_TYPE=INTERNAL_EXPORT_FILE
+      - CONNECTOR_NAME=ExportFileStix2
+      - CONNECTOR_SCOPE=application/json
+      - CONNECTOR_CONFIDENCE_LEVEL=3
+      - CONNECTOR_LOG_LEVEL=info
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  connector-export-file-csv:
+    image: opencti/connector-export-file-csv:latest
+    container_name: connector-export-file-csv
+    hostname: connector-export-file-csv
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_EXPORT_FILE_CSV_ID} # Valid UUIDv4
+      - CONNECTOR_TYPE=INTERNAL_EXPORT_FILE
+      - CONNECTOR_NAME=ExportFileCsv
+      - CONNECTOR_SCOPE=text/csv
+      - CONNECTOR_CONFIDENCE_LEVEL=3
+      - CONNECTOR_LOG_LEVEL=info
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  connector-import-file-stix:
+    image: opencti/connector-import-file-stix:latest
+    container_name: connector-import-file-stix
+    hostname: connector-import-file-stix
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_IMPORT_FILE_STIX_ID} # Valid UUIDv4
+      - CONNECTOR_TYPE=INTERNAL_IMPORT_FILE
+      - CONNECTOR_NAME=ImportFileStix
+      - CONNECTOR_SCOPE=application/json,text/xml
+      - CONNECTOR_CONFIDENCE_LEVEL=3
+      - CONNECTOR_LOG_LEVEL=info
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  connector-import-document:
+    image: opencti/connector-import-document:latest
+    container_name: connector-import-document
+    hostname: connector-import-document
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_IMPORT_DOCUMENT_ID} # Valid UUIDv4
+      - CONNECTOR_TYPE=INTERNAL_IMPORT_FILE
+      - CONNECTOR_NAME=ImportDocument
+      - CONNECTOR_VALIDATE_BEFORE_IMPORT=true # Validate any bundle before import
+      - CONNECTOR_SCOPE=application/pdf,text/plain,text/html
+      - CONNECTOR_AUTO=true # Enable/disable auto-import of file
+      - CONNECTOR_ONLY_CONTEXTUAL=false # Only extract data related to an entity (a report, a threat actor, etc.)
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_LOG_LEVEL=info
+      - IMPORT_DOCUMENT_CREATE_INDICATOR=true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  connector-misp:
+    image: opencti/connector-misp:latest
+    container_name: connector-misp
+    hostname: connector-misp
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_MISP_ID}
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=MISP
+      - CONNECTOR_SCOPE=misp
+      - CONNECTOR_CONFIDENCE_LEVEL=3
+      - CONNECTOR_UPDATE_EXISTING_DATA=false
+      - CONNECTOR_LOG_LEVEL=info
+      - MISP_URL=https://${HOSTNAME}/misp/ # Required
+      - MISP_KEY=${MISP_KEY} # Required
+      - MISP_SSL_VERIFY=False # Required
+      - MISP_INTERVAL=1440 # Required, in minutes
+      - MISP_DATETIME_ATTRIBUTE=timestamp # Required, filter to be used in query for new MISP events
+      - MISP_CREATE_REPORTS=True # Required, create report for MISP event
+      - MISP_CREATE_INDICATORS=True # Required, create indicators from attributes
+      - MISP_CREATE_OBSERVABLES=True # Required, create observables from attributes
+      - MISP_REPORT_CLASS=MISP Event # Optional, report_class if creating report for event
+      - MISP_IMPORT_FROM_DATE=2020-01-01 # Optional, import all event from this date
+      - MISP_IMPORT_DISTRIBUTION_LEVELS=0,1,2,3 # Optional, only import events with the given distribution levels
+      - MISP_IMPORT_THREAT_LEVELS=1,2,3,4 # Optional only import events with the given threat levels
+      - MISP_IMPORT_ONLY_PUBLISHED=True
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  connector-mitre:
+    image: opencti/connector-mitre:latest
+    container_name: connector-mitre
+    hostname: connector-mitre
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_MITRE_ID}
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=MITRE ATT&CK
+      - CONNECTOR_SCOPE=identity,attack-pattern,course-of-action,intrusion-set,malware,tool,report,external-reference-as-report
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_UPDATE_EXISTING_DATA=true
+      - CONNECTOR_LOG_LEVEL=info
+      - MITRE_ENTERPRISE_FILE_URL=https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json
+      - MITRE_PRE_ATTACK_FILE_URL=https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json
+      - MITRE_MOBILE_ATTACK_FILE_URL=https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json
+      - MITRE_INTERVAL=7 # In days, must be strictly greater than 1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+      
+  connector-cve:
+    image: opencti/connector-cve:latest
+    container_name: connector-cve
+    hostname: connector-cve
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_CVE_ID}
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=Common Vulnerabilities and Exposures
+      - CONNECTOR_SCOPE=identity,vulnerability
+      - CONNECTOR_CONFIDENCE_LEVEL=75 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_UPDATE_EXISTING_DATA=true
+      - CONNECTOR_LOG_LEVEL=info
+      - CVE_IMPORT_HISTORY=true # Import history at the first run (after only recent), reset the connector state if you want to re-import
+      - CVE_NVD_DATA_FEED=https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-recent.json.gz
+      - CVE_HISTORY_DATA_FEED=https://nvd.nist.gov/feeds/json/cve/1.1/
+      - CVE_INTERVAL=7 # In days, must be strictly greater than 1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  connector-alienvault:
+    image: opencti/connector-alienvault:latest
+    container_name: connector-alienvault
+    hostname: connector-alienvault
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_ALIENVAULT_ID}
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=AlienVault
+      - CONNECTOR_SCOPE=alienvault
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_UPDATE_EXISTING_DATA=false
+      - CONNECTOR_LOG_LEVEL=info
+      - ALIENVAULT_BASE_URL=https://otx.alienvault.com
+      - ALIENVAULT_API_KEY=${ALIENVAULT_API_KEY}
+      - ALIENVAULT_TLP=White
+      - ALIENVAULT_CREATE_OBSERVABLES=true
+      - ALIENVAULT_CREATE_INDICATORS=true
+      - ALIENVAULT_PULSE_START_TIMESTAMP=2021-05-01T00:00:00                  # BEWARE! Could be a lot of pulses!
+      - ALIENVAULT_REPORT_TYPE=threat-report
+      - ALIENVAULT_REPORT_STATUS=New
+      - ALIENVAULT_GUESS_MALWARE=false                                        # Use tags to guess malware.
+      - ALIENVAULT_GUESS_CVE=false                                            # Use tags to guess CVE.
+      - ALIENVAULT_EXCLUDED_PULSE_INDICATOR_TYPES=FileHash-MD5,FileHash-SHA1  # Excluded Pulse indicator types.
+      - ALIENVAULT_ENABLE_RELATIONSHIPS=true                                  # Enable/Disable relationship creation between SDOs.
+      - ALIENVAULT_ENABLE_ATTACK_PATTERNS_INDICATES=true                      # Enable/Disable "indicates" relationships between indicators and attack patterns
+      - ALIENVAULT_INTERVAL_SEC=1800
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  connector-amitt:
+    image: opencti/connector-amitt:latest
+    container_name: connector-amitt
+    hostname: connector-amitt
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_AMITT_ID}
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=AM!TT
+      - CONNECTOR_SCOPE=identity,attack-pattern,course-of-action,intrusion-set,malware,tool,report
+      - CONNECTOR_CONFIDENCE_LEVEL=15 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_UPDATE_EXISTING_DATA=true
+      - CONNECTOR_LOG_LEVEL=info
+      - AMITT_FILE_URL=https://raw.githubusercontent.com/VVX7/cti/master/amitt-attack/amitt-attack.json
+      - PRE_AMITT_FILE_URL=https://raw.githubusercontent.com/VVX7/cti/master/amitt-pre-attack/amitt-pre-attack.json
+      - AMITT_INTERVAL=7 # In days, must be strictly greater than 1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  connector-opencti:
+    image: opencti/connector-opencti:latest
+    container_name: connector-opencti
+    hostname: connector-opencti
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_OPENCTI_ID}
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=OpenCTI
+      - CONNECTOR_SCOPE=marking-definition,identity,location
+      - CONNECTOR_CONFIDENCE_LEVEL=90 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_UPDATE_EXISTING_DATA=true
+      - CONNECTOR_RUN_AND_TERMINATE=false
+      - CONNECTOR_LOG_LEVEL=info
+      - CONFIG_SECTORS_FILE_URL=https://raw.githubusercontent.com/OpenCTI-Platform/datasets/master/data/sectors.json
+      - CONFIG_GEOGRAPHY_FILE_URL=https://raw.githubusercontent.com/OpenCTI-Platform/datasets/master/data/geography.json
+      - CONFIG_INTERVAL=7 # In days, must be strictly greater than 1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  connector-mwdb:
+    image: opencti/connector-mwdb:latest
+    container_name: connector-mwdb
+    hostname: connector-mwdb
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_MWDB_ID}
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - CONNECTOR_NAME=MWDB connector
+      - CONNECTOR_SCOPE=mwdb
+      - CONNECTOR_LOG_LEVEL=info
+      - MWDB_URL=http://mwdb-web/
+      - MWDB_CONFIDENCE_LEVEL=40 # From 0 (Unknown) to 100 (Fully trusted)
+      - MWDB_INTERVAL=1 # In days, must be strictly greater than 1
+      - MWDB_TOKEN=${MWDB_API}
+      - MWDB_IMPORT_CONFIG=True
+      - MWDB_CREATE_INDICATORS=True
+      - MWDB_CREATE_OBSERVABLES=True
+      - MWDB_UPDATE_EXISTING_DATA=True
+      - MWDB_ORG_DESCRIPTION=Cyber
+      - MWDB_ORG_NAME=${ORGANIZATION}
+      - MWDB_START_DATE=2022-04-01T00:00:00.000Z  # ISO 8601
+      - MWDB_TAG_FILTER=.*
+      - MWDB_MAX_START_RETENTION=6
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  connector-disarm-framework:
+    image: opencti/connector-disarm-framework:latest
+    container_name: connector-disarm-framework
+    hostname: connector-disarm-framework
+    environment:
+      - OPENCTI_URL=http://opencti:8080/opencti
+      - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - CONNECTOR_ID=${CONNECTOR_DISARM_ID}
+      - CONNECTOR_TYPE=EXTERNAL_IMPORT
+      - "CONNECTOR_NAME=DISARM Framework"
+      - CONNECTOR_SCOPE=marking-definition,identity,attack-pattern,course-of-action,intrusion-set,campaign,malware,tool,report,narrative,event,channel
+      - CONNECTOR_CONFIDENCE_LEVEL=75 # From 0 (Unknown) to 100 (Fully trusted)
+      - CONNECTOR_UPDATE_EXISTING_DATA=false
+      - CONNECTOR_RUN_AND_TERMINATE=false
+      - CONNECTOR_LOG_LEVEL=info
+      - DISARM_FRAMEWORK_URL=https://raw.githubusercontent.com/DISARMFoundation/DISARMframeworks/main/generated_files/DISARM_STIX/DISARM.json
+      - DISARM_FRAMEWORK_INTERVAL=7 # In days, must be strictly greater than 1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
+    networks:
+      - s1em
+
+  cyberchef:
+    image: mpepping/cyberchef:latest
+    container_name: cyberchef
+    hostname: cyberchef
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cyberchef.rule=PathPrefix(`/cyberchef`)"
+      - "traefik.http.routers.cyberchef.entryPoints=secure"
+      - "traefik.http.routers.cyberchef.tls=true"
+      - "traefik.http.middlewares.cyberchef-stripprefix.stripprefix.prefixes=/cyberchef"
+      - "traefik.http.routers.cyberchef.middlewares=cyberchef-stripprefix"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+    expose:
+      - "8000"
+
+  homer:
+    image: b4bz/homer:latest
+    container_name: homer
+    hostname: homer
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+      - INIT_ASSETS=0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homer.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.homer.entryPoints=secure"
+      - "traefik.http.routers.homer.tls=true"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+        - ./homer:/www/assets
+    networks:
+      - s1em
+    expose:
+      - "8080"
+
+
+  arkime:
+    image: v1d1an/arkime:4.0.2
+    container_name: arkime
+    restart: always
+    hostname: arkime
+    env_file:
+      - .env
+    depends_on:
+      - es01
+    volumes:
+      - ./arkime/scripts:/arkime/bin:ro
+      - ./arkime/config.ini:/data/moloch/etc/config.ini.sample:ro
+      - suricatapcap:/import:ro
+      - arkimelog:/arkime/log
+      - certs:/data/moloch/etc/certs:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - s1em
+    entrypoint: /bin/sh -c "/arkime/bin/import.sh & /arkime/bin/viewer.sh"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.arkime.rule=PathPrefix(`/arkime`)"
+      - "traefik.http.routers.arkime.entryPoints=secure"
+      - "traefik.http.routers.arkime.tls=true"
+     
+  spiderfoot:
+    image: "dtagdevsec/spiderfoot:2204"
+    container_name: spiderfoot
+    hostname: spiderfoot
+    restart: always
+    labels:
+     - "traefik.enable=true"
+     - "traefik.http.routers.spiderfoot.rule=PathPrefix(`/spiderfoot`)"
+     - "traefik.http.routers.spiderfoot.entryPoints=secure"
+     - "traefik.http.routers.spiderfoot.tls=true"
+    expose:
+     - "8080"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+     - spiderfoot:/home/spiderfoot/.spiderfoot
+    networks:
+     - s1em
+
+  codimd:
+    image: hackmdio/hackmd:2.4.1
+    container_name: codimd
+    hostname: codimd
+    environment:
+      - CMD_DB_URL=mysql://codiuser:codipass@db/codimd
+      - CMD_USECDN=true
+      - CMD_PROTOCOL_USESSL=true
+      - CMD_DOMAIN=${HOSTNAME}
+      - CMD_URL_PATH=codimd
+      - CMD_SESSION_SECRET=1337h4x0r
+      - CMD_HSTS_ENABLE=false
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.codimd.rule=PathPrefix(`/codimd`)"
+      - "traefik.http.routers.codimd.entryPoints=secure"
+      - "traefik.http.routers.codimd.tls=true"
+      - "traefik.http.middlewares.codimd-stripprefix.stripprefix.prefixes=/codimd"
+      - "traefik.http.routers.codimd.middlewares=codimd-stripprefix"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - codimd:/home/hackmd/app/public/uploads
+    restart: always
+    networks:
+      - s1em
+
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n
+    hostname: n8n
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.n8n.rule=Host(`${HOSTNAME}`)
+      - traefik.http.routers.n8n.tls=true
+      - traefik.http.routers.n8n.entrypoints=secure
+      - "traefik.http.routers.n8n.rule=PathPrefix(`/${SUBFOLDER}{regex:$$|/.*}`)"
+      - "traefik.http.middlewares.n8n-stripprefix.stripprefix.prefixes=/${SUBFOLDER}"
+      - "traefik.http.routers.n8n.middlewares=n8n-stripprefix"
+      - traefik.http.middlewares.n8n.headers.SSLRedirect=true
+      - traefik.http.middlewares.n8n.headers.STSSeconds=315360000
+      - traefik.http.middlewares.n8n.headers.browserXSSFilter=true
+      - traefik.http.middlewares.n8n.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.n8n.headers.forceSTSHeader=true
+      - traefik.http.middlewares.n8n.headers.SSLHost=${HOSTNAME}
+      - traefik.http.middlewares.n8n.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.n8n.headers.STSPreload=true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER
+      - N8N_BASIC_AUTH_PASSWORD
+      - N8N_HOST=${HOSTNAME}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - N8N_ENDPOINT_WEBHOOK=prod
+      - N8N_PATH
+      - WEBHOOK_URL=https://${HOSTNAME}${N8N_PATH}
+      - QUEUE_BULL_REDIS_HOST=redis
+      - QUEUE_BULL_REDIS_PORT=6379
+      - N8N_PAYLOAD_SIZE_MAX=32
+      - NODE_EXTRA_CA_CERTS=/home/node/certificates/ca/ca.crt
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - certs:/home/node/certificates:ro
+      - n8n_data:/root/.n8n
+      - ./n8n/S1EM_TheHive.json:/data/S1EM_TheHive.json
+      - ./n8n/user.json:/data/user.json
+    restart: always
+    networks:
+     - s1em
+
+  velociraptor:
+    image: wlambert/velociraptor:latest
+    container_name: velociraptor
+    restart: always
+    hostname: velociraptor
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - VELOX_SERVER_URL=${VELOX_SERVER_URL}
+      - VELOX_FRONTEND_HOSTNAME=${HOSTNAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.velociraptor.rule=PathPrefix(`/velociraptor`)"
+      - "traefik.http.routers.velociraptor.entryPoints=secure"
+      - "traefik.http.routers.velociraptor.tls=true"
+      - "traefik.http.services.velociraptor.loadbalancer.server.port=8889"
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    volumes:
+      - ./velociraptor:/velociraptor
+      - velociraptor_upload:/velociraptor/upload
+    networks:
+     - s1em
+
+  velociraptor-upload:
+    image: v1d1an/file-upload:1.1
+    container_name: velociraptor-upload
+    hostname: velociraptor-upload
+    restart: always
+    user: root
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - velociraptor_upload:/var/www/upload/server/php/chroot/files
+    environment:
+      - SITE_NAME=Upload for Velociraptor
+      - SITE_USERNAME=upload
+      - SITE_PASSWORD=upload
+      - DESCRIPTION=Upload only Collector offline for Velociraptor.
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.velociraptor-upload.rule=PathPrefix(`/velociraptor-upload`)"
+      - "traefik.http.routers.velociraptor-upload.entryPoints=secure"
+      - "traefik.http.routers.velociraptor-upload.tls=true"
+      - "traefik.http.services.velociraptor-upload.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.velociraptor-upload.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.velociraptor-upload-stripprefix.stripprefix.prefixes=/velociraptor-upload"
+      - "traefik.http.routers.velociraptor-upload.middlewares=velociraptor-upload-stripprefix"
+    networks:
+      - s1em
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - WATCHTOWER_CLEANUP=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+     - s1em
+
+networks:
+   s1em:
+    driver: bridge
+    
+volumes:
+   data01:
+    external: false
+   kibanadata:
+    external: false
+   certs:
+    external: false   
+   zeekdata:
+    external: false
+   zeekfiles:
+    external: false
+   suricatadata:
+    external: false
+   suricatapcap:
+    external: false
+   amqpdata:
+    external: false
+   redis:
+    external: false
+   thehivedata:
+    external: false
+   cassandra: 
+    external: false
+   minio:
+    external: false
+   traefikdata:
+    external: false
+   mysql:
+    external: false
+   misp:
+    external: false
+   misp_tmp:
+    external: false
+   arkimelog:
+    external: false
+   syslog-ng-data:
+    external: false
+   mwdb-postgres:
+    external: false
+   mwdb-uploads:
+    external: false
+   upload:
+    external: false
+   spiderfoot:
+    external: false
+   codimd:
+    external: false
+   n8n_data:
+    external: false
+   zircolite:
+    external: false
+   velociraptor:
+    external: false
+   velociraptor_upload:
+    external: false

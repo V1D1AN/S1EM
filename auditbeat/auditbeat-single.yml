@@ -1,0 +1,58 @@
+auditbeat.modules:
+
+- module: file_integrity
+  paths:
+    - /bin
+    - /usr/bin
+    - /sbin
+    - /usr/sbin
+    - /etc
+
+- module: system
+  datasets:
+    - host
+    - login
+    - package
+    - process
+    - socket
+    - user
+  period: 30s
+  state.period: 12h
+  socket.include_localhost: false
+  user.detect_password_changes: true
+
+processors:
+  - add_docker_metadata: ~
+
+
+http.enabled: true
+http.host: 0.0.0.0
+monitoring.enabled: false
+setup.template.overwrite: true
+setup.kibana.host: "https://kibana:5601/kibana"
+setup.kibana.ssl.enabled: true
+setup.kibana.ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
+setup.kibana.ssl.certificate: "/usr/share/certificates/kibana/kibana.crt"
+setup.kibana.ssl.key: "/usr/share/certificates/kibana/kibana.key"
+setup.ilm.enabled: true
+setup.ilm.policy_name: "ILM"
+setup.ilm.policy_file: "/usr/share/auditbeat/ilm.json"
+setup.ilm_pattern: "{now/d}-000001"
+setup.ilm_rollover_alias: "%{[@metadata][beat]}-%{[@metadata][version]}"
+setup.dashboards.enabled: true
+setup.template.settings:
+  index:
+    number_of_replicas: 0
+    refresh_interval: 30s
+    mapping:
+      total_fields:
+        limit: 8192
+
+output.elasticsearch:
+  hosts: ["https://es01:9200"]
+  username: "elastic"
+  password: "changeme"
+  ssl.certificate_authorities: "/usr/share/certificates/ca/ca.crt"
+  ssl.certificate: "/usr/share/certificates/auditbeat/auditbeat.crt"
+  ssl.key: "/usr/share/certificates/auditbeat/auditbeat.key"
+
