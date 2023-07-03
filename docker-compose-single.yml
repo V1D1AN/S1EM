@@ -385,19 +385,26 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  tcpreplay:
-    image: v1d1an/tcpreplay:2.0
-    container_name: tcpreplay
-    hostname: tcpreplay
+  replay:
+    image: v1d1an/replay:1.0
+    container_name: replay
+    hostname: replay
     restart: always
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
+    environment:
+      - ZIRCOLITE_USER=${ZIRCOLITE_USER}
+      - ZIRCOLITE_PASSWORD=${ZIRCOLITE_PASSWORD}
     volumes:
+      - ./replay/replay.sh:/data/tcpreplay.sh
+      - zircolite:/evtx
       - upload:/pcap
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - s1em
 
   file-upload:
     image: v1d1an/file-upload:1.1
@@ -427,24 +434,6 @@ services:
       - "traefik.http.routers.upload.middlewares=redirect-to-https"
       - "traefik.http.middlewares.upload-stripprefix.stripprefix.prefixes=/upload"
       - "traefik.http.routers.upload.middlewares=upload-stripprefix"
-    networks:
-      - s1em
-
-  zircolite:
-    image: docker.io/wagga40/zircolite:latest
-    container_name: zircolite
-    hostname: zircolite
-    restart: always
-    user: root
-    tty: true
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    volumes:
-      - zircolite:/case
-    command:  "--ruleset rules/rules_windows_sysmon_full.json --evtx /case/ --outfile /case/detected_events.json --remote 'https://es01:9200' --index 'zircolite' --eslogin '${ZIRCOLITE_USER}' --espass '${ZIRCOLITE_PASSWORD}' --forwardall --remove-events --nolog"
     networks:
       - s1em
 
