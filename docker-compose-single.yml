@@ -326,6 +326,7 @@ services:
       - ./rules/suricata:/etc/suricata/rules
       - ./suricata/suricata.yaml:/etc/suricata/suricata.yaml
       - ./suricata/threshold.config:/etc/suricata/threshold.config
+      - upload:/pcap
       - suricatadata:/var/log/suricata
       - suricatapcap:/var/log/suricata/pcap
     logging:
@@ -372,9 +373,11 @@ services:
       - SYS_NICE
     restart: always
     command: -C -i af_packet::network_monitoring local
+    working_dir: /zeek
     volumes:
-      - zeekdata:/pcap
-      - zeekfiles:/extract_files
+      - upload:/pcap
+      - zeekdata:/zeek
+      - zeekfiles:/zeek/extract_files
       - ./zeek/config.zeek:/usr/local/zeek/share/zeek/site/file-extraction/config.zeek:ro
     logging:
       driver: "json-file"
@@ -383,25 +386,18 @@ services:
         max-file: "3"
 
   tcpreplay:
-    image: v1d1an/tcpreplay:1.0
+    image: v1d1an/tcpreplay:2.0
     container_name: tcpreplay
     hostname: tcpreplay
     restart: always
-    user: root
-    network_mode: "host"
-    privileged: true
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
-    environment:
-      MONITOR: network_monitoring
-    cap_add:
-      - NET_RAW
-      - NET_ADMIN
     volumes:
       - upload:/pcap
+      - /var/run/docker.sock:/var/run/docker.sock
 
   file-upload:
     image: v1d1an/file-upload:1.1
