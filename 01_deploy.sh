@@ -701,6 +701,15 @@ curl -XPUT -sk -u$admin_account:$admin_password -H 'Content-type: application/js
 echo
 echo
 echo "#########################################"
+echo "###### CONFIGURATION DE REPLAY ##########"
+echo "#########################################"
+echo
+echo
+instance=$(grep -oP 'INSTANCE=\K.*' .env)
+sed -i "s|instance_name|$instance|g" replay/replay.sh
+echo
+echo
+echo "#########################################"
 echo "####### STARTING OTHER DOCKER ###########"
 echo "#########################################"
 echo

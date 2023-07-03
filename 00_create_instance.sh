@@ -81,11 +81,9 @@ then
     rsync -r ./ $WORKDIR
     sleep 5
     cd $WORKDIR
+	echo "INSTANCE=$name" >> env.sample
     sudo bash 01_deploy.sh
     cd ..
 else
     echo "directory/instance name found, deployment stopped"
 fi
-
-
-
