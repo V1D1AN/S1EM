@@ -37,9 +37,9 @@ sed -i "s|n8n_account|$admin_account|g" .env
 sed -i "s|zircolite_account|$admin_account|g" .env
 echo
 while true; do
-    read -s -p "Password (Must be a password with at least 6 characters): " admin_password
+    read -s -p "Password (Must be a password with at least 6 characters):" admin_password
     echo
-    read -s -p "Password (again): " admin_password2
+    read -s -p "Password (again):" admin_password2
     echo
     [ "$admin_password" = "$admin_password2" ] && break
     echo "Please try again"
@@ -77,7 +77,7 @@ echo "##########################################"
 echo
 echo
 while true; do
-    read -r -p "Do you want use 1 node elasticsearch (Single) or 3 nodes elasticsearch (Multi) [S/M] ?" cluster
+    read -r -p "Do you want use 1 node elasticsearch (Single) or 3 nodes elasticsearch (Multi) [S/M]?" cluster
     case $cluster in
         [Ss]) cluster=SINGLE; break;;
         [Mm]) cluster=MULTI; break;;
@@ -110,15 +110,15 @@ then
 fi
 if 	 [ "$cluster" == SINGLE ];
 then
-		read -p "Enter the RAM in Go of node elasticsearch [2]: " master_node
+		read -p "Enter the RAM in Go of node elasticsearch [2]:" master_node
 		master_node=${master_node:-2}
 		sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
 elif [ "$cluster" == MULTI ];
 then
-        read -p "Enter the RAM in Go of master node elasticsearch [2]: " master_node
+        read -p "Enter the RAM in Go of master node elasticsearch [2]:" master_node
 		master_node=${master_node:-2}
 		sed -i "s|RAM_MASTER|$master_node|g" docker-compose.yml
-		read -p "Enter the RAM in Go of data,ingest node elasticsearch [4]: " data_node
+		read -p "Enter the RAM in Go of data,ingest node elasticsearch [4]:" data_node
 		data_node=${data_node:-4}
 		sed -i "s|RAM_DATA|$data_node|g" docker-compose.yml
 fi
@@ -130,7 +130,7 @@ echo "########## CONFIGURING THEHIVE ###########"
 echo "##########################################"
 echo
 echo
-read -p "Enter the RAM in Go of TheHive [1]: " ram_thehive
+read -p "Enter the RAM in Go of TheHive [1]:" ram_thehive
 ram_thehive=${ram_thehive:-1}
 sed -i "s|RAM_THEHIVE|$ram_thehive|g" docker-compose.yml
 echo
@@ -140,7 +140,7 @@ echo "########### CONFIGURING CORTEX ###########"
 echo "##########################################"
 echo
 echo
-read -p "Enter the RAM in Go of Cortex [1]: " ram_cortex
+read -p "Enter the RAM in Go of Cortex [1]:" ram_cortex
 ram_cortex=${ram_cortex:-1}
 sed -i "s|RAM_CORTEX|$ram_cortex|g" docker-compose.yml
 echo
@@ -714,7 +714,7 @@ echo "####### STARTING OTHER DOCKER ###########"
 echo "#########################################"
 echo
 echo
-docker compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload velociraptor-upload syslog-ng replay file4thehive heartbeat spiderfoot codimd watchtower
+docker compose up -d fleet-server elastalert cyberchef zircolite-upload file-upload velociraptor-upload syslog-ng replay file4thehive heartbeat spiderfoot codimd watchtower
 echo
 echo
 if [ "$cluster" == SINGLE ];
