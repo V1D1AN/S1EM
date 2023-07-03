@@ -399,7 +399,7 @@ services:
       - ZIRCOLITE_USER=${ZIRCOLITE_USER}
       - ZIRCOLITE_PASSWORD=${ZIRCOLITE_PASSWORD}
     volumes:
-      - ./replay/replay.sh:/data/tcpreplay.sh
+      - ./replay/replay.sh:/data/replay.sh
       - zircolite:/evtx
       - upload:/pcap
       - /var/run/docker.sock:/var/run/docker.sock
