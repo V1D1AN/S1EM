@@ -397,6 +397,7 @@ services:
         max-file: "3"
     volumes:
       - upload:/pcap
+      - /var/run/docker.sock:/var/run/docker.sock
 
   file-upload:
     image: v1d1an/file-upload:1.1
