@@ -705,6 +705,7 @@ echo "###### CONFIGURATION DE REPLAY ##########"
 echo "#########################################"
 echo
 echo
+chmod 755 replay/replay.sh
 instance=$(grep -oP 'INSTANCE=\K.*' .env)
 sed -i "s|instance_name|$instance|g" replay/replay.sh
 echo
