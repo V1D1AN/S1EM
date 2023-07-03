@@ -705,7 +705,7 @@ echo "####### STARTING OTHER DOCKER ###########"
 echo "#########################################"
 echo
 echo
-docker compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload velociraptor-upload syslog-ng tcpreplay file4thehive heartbeat spiderfoot codimd watchtower
+docker compose up -d fleet-server elastalert cyberchef zircolite zircolite-upload file-upload velociraptor-upload syslog-ng replay file4thehive heartbeat spiderfoot codimd watchtower
 echo
 echo
 if [ "$cluster" == SINGLE ];
