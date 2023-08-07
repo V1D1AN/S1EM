@@ -120,17 +120,7 @@ services:
         tag: "app"
         url: "https://s1em_hostname/arkime/"
         target: "_blank" # optional html a tag target attribute
-
-  - name: "CVE"
-    icon: "fas fa-bug"
-    items:
-      - name: "Cvetrends"
-        logo: "https://cveproject.github.io/img/cve_logo_tagline.png"
-        tag: "site"
-        tagstyle: "is-success"
-        url: "https://cvetrends.com/"
-        target: "_blank" # optional html a tag target attribute
-        
+     
   - name: "MITRE"
     icon: "fas fa-cogs"
     items:
@@ -187,7 +177,7 @@ services:
         target: "_blank" # optional html a tag target attribute
 
   - name: "UPLOAD"
-    icon: "fas fa-tools"
+    icon: "fas fa-cloud-arrow-up"
     items:
       - name: "PCAP"
         logo: "https://fileproinfo.com/images/pcap_file_extension.png"
