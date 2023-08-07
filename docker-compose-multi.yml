@@ -694,7 +694,7 @@ services:
       - s1em
 
   misp:
-    image: coolacid/misp-docker:core-v2.4.163a
+    image: coolacid/misp-docker:core-latest
     container_name: misp
     hostname: misp
     restart: always
@@ -704,12 +704,14 @@ services:
     expose:
       - "80"
       - "443"
+    tmpfs:
+      - /tmp
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.misp.rule=PathPrefix(`/misp`)"
       - "traefik.http.routers.misp.entryPoints=secure"
       - "traefik.http.routers.misp.tls=true"
-      - "traefik.http.middlewares.misp-stripprefix.stripprefix.prefixes=/misp"
+      - "traefik.http.middlewares.misp-stripprefix.stripprefix.prefixes=/misp/misp,/misp"
       - "traefik.http.routers.misp.middlewares=misp-stripprefix"
     environment:
       - "HOSTNAME=https://${HOSTNAME}/misp"
@@ -730,8 +732,6 @@ services:
       - misp:/var/www/MISP/app/tmp/logs
       - misp:/var/www/MISP/app/files
       - misp:/etc/nginx/certs
-      - misp_tmp:/tmp
-
     logging:
       driver: "json-file"
       options:
@@ -1698,8 +1698,6 @@ volumes:
    mysql:
     external: false
    misp:
-    external: false
-   misp_tmp:
     external: false
    arkimelog:
     external: false
