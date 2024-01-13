@@ -64,7 +64,7 @@ services:
         url: "https://s1em_hostname/misp"
         target: "_blank" # optional html a tag target attribute
       - name: "Opencti"
-        logo: "https://www.opencti.io/wp-content/uploads/2022/03/logo_menu.png"
+        logo: "https://filigran.io/wp-content/uploads/2023/10/opencti_github.png"
         tag: "app"
         url: "https://s1em_hostname/opencti"
         target: "_blank" # optional html a tag target attribute
@@ -107,7 +107,7 @@ services:
     icon: "fas fa-fingerprint"
     items:
       - name: "Spiderfoot"
-        logo: "https://www.spiderfoot.net/wp-content/themes/spiderfoot/img/logo.svg"
+        logo: "https://github.com/smicallef/spiderfoot/blob/master/spiderfoot/static/img/spiderfoot-icon.png?raw=true"
         tag: "app"
         url: "https://s1em_hostname/spiderfoot/"
         target: "_blank" # optional html a tag target attribute
