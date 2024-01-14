@@ -186,6 +186,21 @@ systemctl start S1EM-promiscuous
 echo
 echo
 echo "##########################################"
+echo "########## CONFIGURE FEED MISP ###########"
+echo "##########################################"
+echo
+echo
+while true; do
+    read -r -p "Enable feed for MISP [Y/N]?" feed
+    case $feed in
+        [Yy]) feed=YES; break;;
+        [Nn]) feed=NO; break;;
+        * ) echo "Please answer (Y/y) or (N/N).";;
+    esac
+done
+echo
+echo
+echo "##########################################"
 echo "########## CONFIGURE DETECTION ###########"
 echo "##########################################"
 echo
@@ -216,6 +231,7 @@ echo "The RAM of Cortex: $ram_cortex"
 echo "The administration interface: $administration_interface"
 echo "The administration ip: $ADMINISTRATION_IP"
 echo "The monitoring interface: $monitoring_interface"
+echo "The feed of MISP: $feed"
 echo "The choice of rules: $detection"
 echo
 while true; do
@@ -336,11 +352,17 @@ echo
 echo "Load external Feed List"
 curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/loadDefaultFeeds >/dev/null 2>&1
 sleep 30
-echo "Enable Feeds "
-curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/enable/1 >/dev/null 2>&1
-curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/enable/2 >/dev/null 2>&1
-echo "Starting Feed synchronisation in background"
-curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/fetchFromAllFeeds >/dev/null 2>&1
+if       [ "$feed" == YES ];
+then
+        echo "Enable Feeds "
+        curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/enable/1 >/dev/null 2>&1
+        curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/enable/2 >/dev/null 2>&1
+        echo "Starting Feed synchronisation in background"
+        curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/fetchFromAllFeeds >/dev/null 2>&1
+elif     [ "$feed" == NO ];
+then
+        :
+fi
 echo
 echo
 echo "##########################################"
