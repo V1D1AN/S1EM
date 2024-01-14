@@ -681,7 +681,7 @@ services:
     cap_add:
       - SYS_NICE
     environment:
-      - "MYSQL_ROOT_PASSWORD=password"
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
     volumes:
       - ./mysql:/docker-entrypoint-initdb.d
       - mysql:/var/lib/mysql
@@ -1515,7 +1515,7 @@ services:
       - s1em
 
   n8n:
-    image: n8nio/n8n:1.18.3
+    image: n8nio/n8n:1.17.1
     container_name: n8n
     hostname: n8n
     labels:

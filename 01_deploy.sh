@@ -12,11 +12,13 @@ password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 kibana_password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 kibana_api_key=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 cortex_api=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
+mysql_password==$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 echo "The master password Elastic set in .env:" $password
 echo "The master password Kibana set in .env:" $kibana_password
 echo "The Kibana api key is : " $kibana_api_key
 sed -i "s|kibana_api_key|$kibana_api_key|g" kibana/kibana.yml
 sed -i "s|kibana_changeme|$kibana_password|g" .env
+sed -i "s|mysql_password|$mysql_password|g" .env
 echo
 echo
 echo "##########################################"
@@ -688,8 +690,9 @@ echo "#########################################"
 echo
 echo
 docker compose up -d n8n
-docker exec n8n sh -c "n8n import:workflow --input=S1EM_TheHive.json"
-docker exec n8n sh -c "n8n import:credentials --input=user.json"
+docker exec n8n sh -c "n8n import:credentials --input=/data/user.json"
+docker exec n8n sh -c "n8n import:workflow --input=/data/S1EM_TheHive.json"
+docker exec n8n sh -c "n8n update:workflow --id=1 --active=true"
 echo
 echo
 echo "#########################################"
