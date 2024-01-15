@@ -12,7 +12,7 @@ password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 kibana_password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 kibana_api_key=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 cortex_api=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
-mysql_password==$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
+mysql_password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 echo "The master password Elastic set in .env:" $password
 echo "The master password Kibana set in .env:" $kibana_password
 echo "The Kibana api key is : " $kibana_api_key
