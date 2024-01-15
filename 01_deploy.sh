@@ -12,11 +12,13 @@ password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 kibana_password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 kibana_api_key=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 cortex_api=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
+mysql_password==$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 echo "The master password Elastic set in .env:" $password
 echo "The master password Kibana set in .env:" $kibana_password
 echo "The Kibana api key is : " $kibana_api_key
 sed -i "s|kibana_api_key|$kibana_api_key|g" kibana/kibana.yml
 sed -i "s|kibana_changeme|$kibana_password|g" .env
+sed -i "s|mysql_password|$mysql_password|g" .env
 echo
 echo
 echo "##########################################"
@@ -184,6 +186,21 @@ systemctl start S1EM-promiscuous
 echo
 echo
 echo "##########################################"
+echo "########## CONFIGURE FEED MISP ###########"
+echo "##########################################"
+echo
+echo
+while true; do
+    read -r -p "Enable feed for MISP [Y/N]?" feed
+    case $feed in
+        [Yy]) feed=YES; break;;
+        [Nn]) feed=NO; break;;
+        * ) echo "Please answer (Y/y) or (N/N).";;
+    esac
+done
+echo
+echo
+echo "##########################################"
 echo "########## CONFIGURE DETECTION ###########"
 echo "##########################################"
 echo
@@ -214,6 +231,7 @@ echo "The RAM of Cortex: $ram_cortex"
 echo "The administration interface: $administration_interface"
 echo "The administration ip: $ADMINISTRATION_IP"
 echo "The monitoring interface: $monitoring_interface"
+echo "The feed of MISP: $feed"
 echo "The choice of rules: $detection"
 echo
 while true; do
@@ -334,11 +352,17 @@ echo
 echo "Load external Feed List"
 curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/loadDefaultFeeds >/dev/null 2>&1
 sleep 30
-echo "Enable Feeds "
-curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/enable/1 >/dev/null 2>&1
-curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/enable/2 >/dev/null 2>&1
-echo "Starting Feed synchronisation in background"
-curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/fetchFromAllFeeds >/dev/null 2>&1
+if       [ "$feed" == YES ];
+then
+        echo "Enable Feeds "
+        curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/enable/1 >/dev/null 2>&1
+        curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/enable/2 >/dev/null 2>&1
+        echo "Starting Feed synchronisation in background"
+        curl -sk -X POST --header "Authorization: $misp_apikey" --header "Accept: application/json" --header "Content-Type: application/json" https://127.0.0.1/misp/feeds/fetchFromAllFeeds >/dev/null 2>&1
+elif     [ "$feed" == NO ];
+then
+        :
+fi
 echo
 echo
 echo "##########################################"
@@ -688,8 +712,9 @@ echo "#########################################"
 echo
 echo
 docker compose up -d n8n
-docker exec n8n sh -c "n8n import:workflow --input=S1EM_TheHive.json"
-docker exec n8n sh -c "n8n import:credentials --input=user.json"
+docker exec n8n sh -c "n8n import:credentials --input=/data/user.json"
+docker exec n8n sh -c "n8n import:workflow --input=/data/S1EM_TheHive.json"
+docker exec n8n sh -c "n8n update:workflow --id=1 --active=true"
 echo
 echo
 echo "#########################################"

@@ -64,7 +64,7 @@ services:
         url: "https://s1em_hostname/misp"
         target: "_blank" # optional html a tag target attribute
       - name: "Opencti"
-        logo: "https://www.opencti.io/wp-content/uploads/2022/03/logo_menu.png"
+        logo: "https://filigran.io/wp-content/uploads/2023/10/opencti_github.png"
         tag: "app"
         url: "https://s1em_hostname/opencti"
         target: "_blank" # optional html a tag target attribute
@@ -107,7 +107,7 @@ services:
     icon: "fas fa-fingerprint"
     items:
       - name: "Spiderfoot"
-        logo: "https://www.spiderfoot.net/wp-content/themes/spiderfoot/img/logo.svg"
+        logo: "https://github.com/smicallef/spiderfoot/blob/master/spiderfoot/static/img/spiderfoot-icon.png?raw=true"
         tag: "app"
         url: "https://s1em_hostname/spiderfoot/"
         target: "_blank" # optional html a tag target attribute
@@ -170,7 +170,7 @@ services:
         url: "https://s1em_hostname/codimd/"
         target: "_blank" # optional html a tag target attribute
       - name: "StartMe"
-        logo: "https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco,dpr_1/v1477931274/aq1yfkwbl5yslbedhkyj.png"
+        logo: "https://c.start.me/assets/favicons/favicon-256-30ad53fce117b8776ce0b85ba1a147f770c010f7a8fa33d423e65e98abd69f35.png"
         tag: "site"
         tagstyle: "is-success"
         url: "https://start.me/p/6r66da/cybersecurity"
