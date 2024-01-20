@@ -4,11 +4,11 @@
 
 #title: "S1EM Dashboard"
 subtitle: "S1EM"
-logo: "https://user-images.githubusercontent.com/18678787/119020235-49428680-b99e-11eb-8621-935a62b966e1.png"
-# icon: "fas fa-skull-crossbones" # Optional icon
+#logo: "/assets/icons/s1em.png"
+icon: "/assets/icons/s1em.ico" # Optional icon
 
 header: true
-footer: '<p>Created with <span class="has-text-danger">❤️</span> with <a href="https://bulma.io/">bulma</a>, <a href="https://vuejs.org/">vuejs</a> & <a href="https://fontawesome.com/">font awesome</a> // Fork me on <a href="https://github.com/V1D1AN/S1EM"><i class="fab fa-github-alt"></i></a></p>' # set false if you want to hide it.
+footer: false
 columns: 5
 # Optional theme customization
 theme: default
@@ -59,12 +59,12 @@ services:
     icon: "fas fa-globe"
     items:
       - name: "Misp"
-        logo: "https://www.misp-project.org/img/logo.png"
+        logo: "/assets/icons/misp.png"
         tag: "app"
         url: "https://s1em_hostname/misp"
         target: "_blank" # optional html a tag target attribute
       - name: "Opencti"
-        logo: "https://filigran.io/wp-content/uploads/2023/10/opencti_github.png"
+        logo: "/assets/icons/opencti.png"
         tag: "app"
         url: "https://s1em_hostname/opencti"
         target: "_blank" # optional html a tag target attribute
@@ -73,12 +73,12 @@ services:
     icon: "fas fa-desktop"
     items:
       - name: "Elastic SIEM"
-        logo: "https://elastic-content-share.eu/wp-content/uploads/edd/2020/06/security-logo-color-150x150.png"
+        logo: "/assets/icons/kibana-security.png"
         tag: "app"
         url: "https://s1em_hostname/kibana/app/security/overview"
         target: "_blank" # optional html a tag target attribute
       - name: "Monitoring"
-        logo: "https://cdn.freebiesupply.com/logos/thumbs/2x/elastic-kibana-logo.png"
+        logo: "/assets/icons/kibana.png"
         tag: "app"
         url: "https://s1em_hostname/kibana/app/uptime"
         target: "_blank" # optional html a tag target attribute
@@ -87,8 +87,8 @@ services:
   - name: "SOAR"
     icon: "fas fa-project-diagram"
     items:
-      - name: "N8n"
-        logo: "https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-logo.png"
+      - name: "n8n"
+        logo: "/assets/icons/n8n.png"
         tag: "app"
         url: "https://s1em_hostname/n8n/signin"
         target: "_blank" # optional html a tag target attribute
@@ -98,7 +98,7 @@ services:
     icon: "fas fa-radiation"
     items:
       - name: "Mwdb"
-        logo: "https://github.com/CERT-Polska/mwdb-core/raw/master/mwdb/web/src/assets/logo.png"
+        logo: "/assets/icons/mwdb.png"
         tag: "app"
         url: "http://s1em_hostname:8080"
         target: "_blank" # optional html a tag target attribute
@@ -107,7 +107,7 @@ services:
     icon: "fas fa-fingerprint"
     items:
       - name: "Spiderfoot"
-        logo: "https://github.com/smicallef/spiderfoot/blob/master/spiderfoot/static/img/spiderfoot-icon.png?raw=true"
+        logo: "/assets/icons/spiderfoot.png"
         tag: "app"
         url: "https://s1em_hostname/spiderfoot/"
         target: "_blank" # optional html a tag target attribute
@@ -116,7 +116,7 @@ services:
     icon: "fas fa-save"
     items:
       - name: "Arkime"
-        logo: "https://avatars.githubusercontent.com/u/71138764?s=200&v=4"
+        logo: "/assets/icons/arkime.png"
         tag: "app"
         url: "https://s1em_hostname/arkime/"
         target: "_blank" # optional html a tag target attribute
@@ -125,7 +125,7 @@ services:
     icon: "fas fa-cogs"
     items:
       - name: "Elastic Rules"
-        logo: "http://attack.mitre.org/theme/images/ATT&CK_red.png"
+        logo: "/assets/icons/attck.png"
         tag: "site"
         tagstyle: "is-success"
         url: "https://ela.st/detection-rules-navigator"
@@ -136,22 +136,22 @@ services:
     icon: "fas fa-sitemap"
     items:
       - name: "Velociraptor"
-        logo: "https://repository-images.githubusercontent.com/126576769/4da42780-92cf-11e9-8947-d23162406860"
+        logo: "/assets/icons/velociraptor.png"
         tag: "app"
         url: "https://s1em_hostname/velociraptor/"
         target: "_blank" # optional html a tag target attribute
       - name: "Zircolite"
-        logo: "https://github.com/wagga40/Zircolite/raw/master/pics/zircolite_400.png"
+        logo: "/assets/icons/zircolite.png"
         tag: "app"
         url: "https://s1em_hostname/kibana/app/dashboards#/view/832a98e0-9ef0-11ed-bedc-f9813e7df557"
         target: "_blank" # optional html a tag target attribute
       - name: "TheHive"
-        logo: "https://github.com/TheHive-Project/TheHive/raw/main/images/thehive-logo.png"
+        logo: "/assets/icons/thehive.png"
         tag: "app"
         url: "https://s1em_hostname/thehive"
         target: "_blank" # optional html a tag target attribute
       - name: "Cortex"
-        logo: "https://github.com/TheHive-Project/Cortex/raw/master/images/cortex-logo.png"
+        logo: "/assets/icons/cortex.png"
         tag: "app"
         url: "https://s1em_hostname/cortex"
         target: "_blank" # optional html a tag target attribute
@@ -160,17 +160,17 @@ services:
     icon: "fas fa-tools"
     items:
       - name: "CyberChef"
-        logo: "https://www.gchq.gov.uk/images/CyberChef768x512.jpg"
+        logo: "/assets/icons/cyberchef.jpg"
         tag: "app"
         url: "https://s1em_hostname/cyberchef/"
         target: "_blank" # optional html a tag target attribute
       - name: "CodiMD"
-        logo: "https://cdn.futura-sciences.com/buildsv6/images/wide1920/4/b/e/4be0f23a59_122541_markdown.jpg"
+        logo: "/assets/icons/codimd.jpg"
         tag: "app"
         url: "https://s1em_hostname/codimd/"
         target: "_blank" # optional html a tag target attribute
       - name: "StartMe"
-        logo: "https://c.start.me/assets/favicons/favicon-256-30ad53fce117b8776ce0b85ba1a147f770c010f7a8fa33d423e65e98abd69f35.png"
+        logo: "/assets/icons/startme.png"
         tag: "site"
         tagstyle: "is-success"
         url: "https://start.me/p/6r66da/cybersecurity"
@@ -180,17 +180,17 @@ services:
     icon: "fas fa-cloud-arrow-up"
     items:
       - name: "PCAP"
-        logo: "https://fileproinfo.com/images/pcap_file_extension.png"
+        logo: "/assets/icons/pcap.png"
         tag: "app"
         url: "https://s1em_hostname/upload/"
         target: "_blank" # optional html a tag target attribute
       - name: "Zircolite"
-        logo: "https://fileproinfo.com/images/pcap_file_extension.png"
+        logo: "/assets/icons/evtx.png"
         tag: "app"
         url: "https://s1em_hostname/zircolite/"
         target: "_blank" # optional html a tag target attribute
       - name: "Velociraptor"
-        logo: "https://fileproinfo.com/images/pcap_file_extension.png"
+        logo: "/assets/icons/zip.png"
         tag: "app"
         url: "https://s1em_hostname/velociraptor-upload/"
         target: "_blank" # optional html a tag target attribute

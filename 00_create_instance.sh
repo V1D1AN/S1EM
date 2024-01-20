@@ -61,6 +61,17 @@ if ! command_exists rsync
   else
         echo "rsync installed"
 fi
+motif="vm.max_map_count"
+file="/etc/sysctl.conf"
+for file in "${file[@]}"
+do
+    if grep -q "$motif" "$file"; then
+        echo "The pattern '$motif' is present in the $file."
+    else
+        echo "The pattern '$motif' is not present in the $file."
+        exit 1
+    fi
+done
 echo
 echo
 echo "##########################################"

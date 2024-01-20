@@ -12,7 +12,7 @@ password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 kibana_password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c14)
 kibana_api_key=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 cortex_api=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
-mysql_password==$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
+mysql_password=$(< /dev/urandom tr -dc A-Za-z0-9 | head -c32)
 echo "The master password Elastic set in .env:" $password
 echo "The master password Kibana set in .env:" $kibana_password
 echo "The Kibana api key is : " $kibana_api_key
@@ -772,6 +772,6 @@ echo "############ DEPLOY FINISH ##############"
 echo "#########################################"
 echo
 echo "Access url: https://$s1em_hostname"
-echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime / TheHive / Cortex / MISP"
+echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime / TheHive / Cortex / MISP / Velociraptor"
 echo "The user admin for MWDB have password $mwdb_password "
 echo "The master password of elastic is in \".env\" "
