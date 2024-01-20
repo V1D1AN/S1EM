@@ -772,6 +772,6 @@ echo "############ DEPLOY FINISH ##############"
 echo "#########################################"
 echo
 echo "Access url: https://$s1em_hostname"
-echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime / TheHive / Cortex / MISP"
+echo "Use the user account $admin_account for access to Kibana / OpenCTI / Arkime / TheHive / Cortex / MISP / Velociraptor"
 echo "The user admin for MWDB have password $mwdb_password "
 echo "The master password of elastic is in \".env\" "
