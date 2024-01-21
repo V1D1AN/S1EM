@@ -207,6 +207,8 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    expose:
+      - 5066
     networks:
       - s1em
       
@@ -262,6 +264,8 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    expose:
+      - 5066
     networks:
       - s1em
 
@@ -308,6 +312,8 @@ services:
       - /proc:/hostfs/proc:ro
       - /:/hostfs:ro
       - certs:/usr/share/certificates:ro
+    expose:
+      - 5066    
     logging:
       driver: "json-file"
       options:
@@ -1515,7 +1521,7 @@ services:
       - s1em
 
   n8n:
-    image: n8nio/n8n:1.17.1
+    image: n8nio/n8n:1.24.1
     container_name: n8n
     hostname: n8n
     labels:
